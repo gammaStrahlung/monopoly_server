@@ -25,7 +25,6 @@ public class Game {
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
 
-
     /**
      * Creates a new game and sets the gameId
      */
@@ -64,13 +63,22 @@ public class Game {
         gameId = -1;
     }
 
+    public static boolean joinByGameId(int gameId, Player player) {
+        Game g = games.get(gameId);
+
+        if (g == null)
+            return false; // Game with id does not exist
+        else
+            return g.join(player);
+    }
+
     /**
      * Allows a player to join a game if the prerequisites are met.
      *
      * @param player The player that should join this game.
      * @return If the join was successful.
      */
-    public boolean playerJoin(Player player) {
+    public boolean join(Player player) {
         if (state != GameState.STARTED)
             return false; // Can't join when already playing
         if (players.size() > maxPlayers)
