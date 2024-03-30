@@ -18,7 +18,7 @@ public class Game {
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
 
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
-    private int gameId = -1;
+    private int gameId;
     // Current state of the game
     private GameState state = GameState.STARTED;
 
@@ -44,7 +44,7 @@ public class Game {
      *
      * @return If the game was successfully started.
      */
-    private boolean startGame() {
+    public boolean startGame() {
         if (state != GameState.STARTED)
             return false; // Can't start an already playing game or an ended game
         if (players.size() < minPlayers)
