@@ -63,13 +63,17 @@ public class Game {
         gameId = -1;
     }
 
-    public static boolean joinByGameId(int gameId, Player player) {
+    public static Game joinByGameId(int gameId, Player player) {
         Game g = games.get(gameId);
 
-        if (g == null)
-            return false; // Game with id does not exist
-        else
-            return g.join(player);
+        if (g != null) {
+            boolean ok = g.join(player);
+
+            if (!ok)
+                return null; // Join was not successful
+        }
+
+        return g;
     }
 
     /**
@@ -79,11 +83,17 @@ public class Game {
      * @return If the join was successful.
      */
     public boolean join(Player player) {
-        if (state != GameState.STARTED)
-            return false; // Can't join when already playing
-        if (players.size() > maxPlayers)
-            return false; // Can't join when game is full
+        // Check if player is new and does not re-join the game.
+        // If the player re-joins the game, skip the join checks.
+        if (!players.containsKey(player.getID())) {
+            if (state != GameState.STARTED)
+                return false; // Can't join when already playing
 
+            if (players.size() > maxPlayers)
+                return false; // Can't join when game is full
+        }
+
+        // Add player to list of players.
         players.put(player.getID(), player);
         return true;
     }
