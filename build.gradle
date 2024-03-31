@@ -31,11 +31,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
+	dependsOn test
     reports {
         xml.required = true
+		html.outputLocation = layout.buildDirectory.dir("jacocoHTML")
     }
 }
 
