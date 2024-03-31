@@ -38,7 +38,7 @@ public class Game {
         // Ensure the gameId is unique.
         do {
             gameId = rand.nextInt(minGameId, maxGameId);
-        } while (!games.containsKey(gameId));
+        } while (games.containsKey(gameId));
 
         // Add this game to all currently played games
         games.put(gameId, this);
@@ -65,7 +65,7 @@ public class Game {
     public void endGame() {
         state = GameState.ENDED;
         games.remove(gameId);
-        gameId = -1;
+        gameId = 0;
     }
 
     public static Game joinByGameId(int gameId, Player player) {
@@ -94,7 +94,7 @@ public class Game {
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
-            if (players.size() > maxPlayers)
+            if (players.size() >= maxPlayers)
                 return false; // Can't join when game is full
         }
 
