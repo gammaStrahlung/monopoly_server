@@ -1,5 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import lombok.Getter;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -17,9 +19,12 @@ public class Game {
     // Contains all games that are currently being played, that allows us to find a specific game
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
 
+    // Getters and Setters below:
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
+    @Getter
     private int gameId;
     // Current state of the game
+    @Getter
     private GameState state = GameState.STARTED;
 
     // Contains all players connected to the game
@@ -96,15 +101,6 @@ public class Game {
         // Add player to list of players.
         players.put(player.getID(), player);
         return true;
-    }
-
-    // Getters and Setters below:
-    public int getGameId() {
-        return gameId;
-    }
-
-    public GameState getState() {
-        return state;
     }
 
     public List<Player> getPlayers() {
