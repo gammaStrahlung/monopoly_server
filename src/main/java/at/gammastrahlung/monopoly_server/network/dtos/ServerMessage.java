@@ -1,20 +1,23 @@
 package at.gammastrahlung.monopoly_server.network.dtos;
 
 import at.gammastrahlung.monopoly_server.game.Player;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ServerMessage {
+@Builder
+public class ServerMessage<T> {
+
+    /**
+     * Used for matching the message to the message handler
+     */
+    private String messagePath;
 
     private MessageType type;
 
-    private String message;
+    private T message;
     private Player player;
 
     public enum MessageType {
