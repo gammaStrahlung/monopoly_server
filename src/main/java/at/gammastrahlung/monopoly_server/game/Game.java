@@ -96,11 +96,16 @@ public class Game {
 
             if (players.size() >= maxPlayers)
                 return false; // Can't join when game is full
-        }
 
-        // Add player to list of players.
-        players.put(player.getID(), player);
-        return true;
+            // Add player to list of players.
+            player.currentGame = this;
+            players.put(player.getID(), player);
+            return true;
+        } else {
+            // Player is re-joining -> update old player object
+            players.get(player.getID()).update(player);
+            return true;
+        }
     }
 
     public List<Player> getPlayers() {
