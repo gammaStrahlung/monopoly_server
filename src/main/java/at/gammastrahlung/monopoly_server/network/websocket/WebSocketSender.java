@@ -11,14 +11,14 @@ import org.springframework.web.socket.WebSocketSession;
 
 
 @NoArgsConstructor
-public class WebSocketSender<T> {
+public class WebSocketSender {
     /**
      * Sends a message only to the given WebSocketSession
      *
      * @param webSocketSession The WebSocketSession of the player.
      * @param message          The message to be sent.
      */
-    public void sendToPlayer(WebSocketSession webSocketSession, ServerMessage<T> message) {
+    public static void sendToPlayer(WebSocketSession webSocketSession, ServerMessage message) {
         try {
             Gson gson = new Gson();
             // Send a message serialized as Json to the WebSocket client
@@ -37,8 +37,8 @@ public class WebSocketSender<T> {
      * @param excludeGivenSession If true, the message is not sent to the given webSocketSession
      *                            (Used for disconnect handler).
      */
-    public void sendToAllGamePlayers(WebSocketSession webSocketSession,
-                                     ServerMessage<T> message,
+    public static void sendToAllGamePlayers(WebSocketSession webSocketSession,
+                                     ServerMessage message,
                                      boolean excludeGivenSession) {
         WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(webSocketSession.getId());
         Game g = p.getCurrentGame();
@@ -71,8 +71,8 @@ public class WebSocketSender<T> {
      * @param webSocketSession The WebSocketSession of the player.
      * @param message          The message to be sent.
      */
-    public void sendToAllGamePlayers(WebSocketSession webSocketSession,
-                                     ServerMessage<T> message) {
+    public static void sendToAllGamePlayers(WebSocketSession webSocketSession,
+                                     ServerMessage message) {
         sendToAllGamePlayers(webSocketSession, message, false);
     }
 }
