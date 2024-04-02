@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,6 +25,20 @@ public class WebSocketPlayer extends Player {
      */
     @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     private WebSocketSession webSocketSession;
+
+    WebSocketPlayer(UUID id, String name, Game currentGame, WebSocketSession webSocketSession) {
+        super(id, name, currentGame);
+        setWebSocketSession(webSocketSession);
+    }
+
+    public void setWebSocketSession(WebSocketSession webSocketSession) {
+        if (webSocketSession != null)
+            players.remove(webSocketSession.getId());
+
+        this.webSocketSession = webSocketSession;
+
+        players.put(webSocketSession.getId(), this);
+    }
 
     @Override
     protected void finalize() throws Throwable {

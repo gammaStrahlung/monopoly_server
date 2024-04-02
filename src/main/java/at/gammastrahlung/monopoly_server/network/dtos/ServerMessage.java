@@ -1,6 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.dtos;
 
-import at.gammastrahlung.monopoly_server.game.Player;
+import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import lombok.*;
 
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class ServerMessage {
     private MessageType type;
 
     private String message;
-    private Player player;
+    private WebSocketPlayer player;
 
     public enum MessageType {
         /**

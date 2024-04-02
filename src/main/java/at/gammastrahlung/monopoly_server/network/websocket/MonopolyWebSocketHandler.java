@@ -22,9 +22,11 @@ public class MonopolyWebSocketHandler implements WebSocketHandler {
         try {
             switch (clientMessage.getMessagePath()) {
             case "create":
+                clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
                 response = MonopolyMessageHandler.createGame(clientMessage.getPlayer());
                 break;
             case "join":
+                clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
                 response = MonopolyMessageHandler.joinGame(Integer.parseInt(clientMessage.getMessage()),
                         clientMessage.getPlayer());
                 break;
