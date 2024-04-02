@@ -5,6 +5,7 @@ import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.NoArgsConstructor;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,7 +21,7 @@ public class WebSocketSender {
      */
     public static void sendToPlayer(WebSocketSession webSocketSession, ServerMessage message) {
         try {
-            Gson gson = new Gson();
+            Gson gson =  new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
             // Send a message serialized as Json to the WebSocket client
             webSocketSession.sendMessage(new TextMessage(gson.toJson(message)));
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class WebSocketSender {
         WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(webSocketSession.getId());
         Game g = p.getCurrentGame();
         if (g != null) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
             for (Player player : g.getPlayers()) {
                 if (player.getClass() != WebSocketPlayer.class)
                     continue; // Skip non WebSocketPlayers

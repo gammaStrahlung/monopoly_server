@@ -17,6 +17,7 @@ public class WebSocketPlayer extends Player {
      * Contains all players with the ID of the WebSocketSession as the key.
      * This allows the disconnect handler to find the associated user for the WebSocketConnection.
      */
+    @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     private static final ConcurrentHashMap<String, WebSocketPlayer> players = new ConcurrentHashMap<>();
 
     /**
