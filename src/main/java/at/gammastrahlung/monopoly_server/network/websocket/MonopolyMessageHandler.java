@@ -4,28 +4,35 @@ import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.web.socket.WebSocketSession;
 
 public class MonopolyMessageHandler {
+
+    private static final Gson gson =  new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 
     public static void handleMessage(ClientMessage clientMessage, WebSocketSession session) {
         ServerMessage response;
 
         // Call the different Message Handlers
         try {
-            switch (clientMessage.getMessagePath()) {
-                case "create":
+            response = switch (clientMessage.getMessagePath()) {
+                case "create" -> {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
-                    response = MonopolyMessageHandler.createGame(clientMessage.getPlayer());
-                    break;
-                case "join":
+                    yield createGame(clientMessage.getPlayer());
+                }
+                case "join" -> {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
-                    response = MonopolyMessageHandler.joinGame(Integer.parseInt(clientMessage.getMessage()),
+                    yield joinGame(Integer.parseInt(clientMessage.getMessage()),
                             clientMessage.getPlayer());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid MessagePath");
-            }
+                }
+                case "players" -> {
+                    clientMessage.setPlayer(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
+                    yield getPlayers(clientMessage.getPlayer());
+                }
+                default -> throw new IllegalArgumentException("Invalid MessagePath");
+            };
         } catch (Exception e) {
             response = ServerMessage.builder()
                     .messagePath(clientMessage.getMessagePath())
@@ -79,5 +86,28 @@ public class MonopolyMessageHandler {
         return new ServerMessage("join",
                 ServerMessage.MessageType.SUCCESS,
                 String.valueOf(g.getGameId()), player);
+    }
+
+    /**
+     * Returns all Players playing the same game as the client.
+     *
+     * @param player The player calling.
+     * @return ServerMessage containing an array of Players.
+     */
+    public static ServerMessage getPlayers(WebSocketPlayer player) {
+        try {
+            var players = player.getCurrentGame().getPlayers().toArray();
+
+            return new ServerMessage("create",
+                    ServerMessage.MessageType.SUCCESS,
+                    gson.toJson(players),
+                    player);
+
+        } catch (Exception e) {
+            return new ServerMessage("create",
+                    ServerMessage.MessageType.ERROR,
+                    "",
+                    player);
+        }
     }
 }
