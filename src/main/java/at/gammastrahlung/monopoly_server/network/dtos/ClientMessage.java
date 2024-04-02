@@ -8,13 +8,13 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ClientMessage<T> {
+public class ClientMessage {
 
     /**
      * Used for matching the message to the message handler
      */
     private String messagePath;
 
-    private T message;
+    private String message;
     private Player player;
 }

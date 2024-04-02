@@ -11,7 +11,7 @@ public class MonopolyMessageHandler {
      * @param player The player creating the game
      * @return ServerMessage that contains the GameId, that can be used by other clients to join the game.
      */
-    public ServerMessage<Integer> createGame(Player player) {
+    public ServerMessage createGame(Player player) {
 
         // Create a new game
         Game g = new Game();
@@ -19,7 +19,9 @@ public class MonopolyMessageHandler {
         // Player that creates the game should also join the game
         g.join(player);
 
-        return new ServerMessage<Integer>("create", ServerMessage.MessageType.SUCCESS, g.getGameId(), player);
+        return new ServerMessage("create",
+                ServerMessage.MessageType.SUCCESS,
+                String.valueOf(g.getGameId()), player);
     }
 
 
@@ -29,15 +31,17 @@ public class MonopolyMessageHandler {
      * @return ServerMessage with MessageType SUCCESS containing the GameId as the Message if joining was successful,
      * else ServerMessage has MessageType ERROR.
      */
-    public ServerMessage<Integer> joinGame(int gameId, Player player) {
+    public ServerMessage joinGame(int gameId, Player player) {
 
         // Try to join the game
         Game g = Game.joinByGameId(gameId, player);
 
         // Joining the game was unsuccessful
         if (g == null)
-            return new ServerMessage<Integer>("join", ServerMessage.MessageType.ERROR, -1, player);
+            return new ServerMessage("join", ServerMessage.MessageType.ERROR, "", player);
 
-        return new ServerMessage<Integer>("join", ServerMessage.MessageType.SUCCESS, g.getGameId(), player);
+        return new ServerMessage("join",
+                ServerMessage.MessageType.SUCCESS,
+                String.valueOf(g.getGameId()), player);
     }
 }

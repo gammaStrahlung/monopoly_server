@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ServerMessage<T> {
+public class ServerMessage {
 
     /**
      * Used for matching the message to the message handler
@@ -17,7 +17,7 @@ public class ServerMessage<T> {
 
     private MessageType type;
 
-    private T message;
+    private String message;
     private Player player;
 
     public enum MessageType {
