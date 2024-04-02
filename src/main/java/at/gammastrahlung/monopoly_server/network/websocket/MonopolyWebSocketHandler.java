@@ -63,9 +63,14 @@ public class MonopolyWebSocketHandler implements WebSocketHandler {
      * @param session the WebSocketSession that disconnected
      */
     private void notifyPlayersOfDisconnect(WebSocketSession session) {
+        WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
+
+        if (p == null)
+            return; // Player was not playing a game
+
         ServerMessage message = ServerMessage.<String>builder()
                 .messagePath("disconnect")
-                .player(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()))
+                .player(p)
                 .type(ServerMessage.MessageType.INFO)
                 .build();
 
