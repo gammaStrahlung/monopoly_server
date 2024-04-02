@@ -32,12 +32,13 @@ public class WebSocketPlayer extends Player {
     }
 
     public void setWebSocketSession(WebSocketSession webSocketSession) {
-        if (webSocketSession != null)
-            players.remove(webSocketSession.getId());
+        if (this.webSocketSession != null)
+            players.remove(this.webSocketSession.getId());
 
         this.webSocketSession = webSocketSession;
 
-        players.put(webSocketSession.getId(), this);
+        if (webSocketSession != null)
+            players.put(webSocketSession.getId(), this);
     }
 
     @Override
