@@ -1,11 +1,10 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
+import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketMessage;
-import org.springframework.web.socket.WebSocketSession;
+import com.google.gson.Gson;
+import org.springframework.web.socket.*;
 
 public class MonopolyWebSocketHandler implements WebSocketHandler {
 
@@ -14,7 +13,37 @@ public class MonopolyWebSocketHandler implements WebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
+        Gson gson = new Gson();
+        ClientMessage clientMessage = gson.fromJson(message.getPayload().toString(), ClientMessage.class);
 
+        ServerMessage response;
+
+        // Call the different Message Handlers
+        try {
+            switch (clientMessage.getMessagePath()) {
+            case "create":
+                response = MonopolyMessageHandler.createGame(clientMessage.getPlayer());
+                break;
+            case "join":
+                response = MonopolyMessageHandler.joinGame(Integer.parseInt(clientMessage.getMessage()),
+                        clientMessage.getPlayer());
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid MessagePath");
+            }
+        } catch (Exception e) {
+            response = ServerMessage.builder()
+                    .messagePath(clientMessage.getMessagePath())
+                    .player(clientMessage.getPlayer())
+                    .message(e.getMessage())
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+
+            WebSocketSender.sendToPlayer(session, response);
+            return;
+        }
+
+        WebSocketSender.sendToAllGamePlayers(session, response);
     }
 
     @Override
@@ -32,13 +61,13 @@ public class MonopolyWebSocketHandler implements WebSocketHandler {
      * @param session the WebSocketSession that disconnected
      */
     private void notifyPlayersOfDisconnect(WebSocketSession session) {
-        ServerMessage<String> message = ServerMessage.<String>builder()
+        ServerMessage message = ServerMessage.<String>builder()
                 .messagePath("disconnect")
                 .player(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()))
                 .type(ServerMessage.MessageType.INFO)
                 .build();
 
-        new WebSocketSender<String>().sendToAllGamePlayers(session, message, true);
+        WebSocketSender.sendToAllGamePlayers(session, message, true);
     }
 
     @Override
