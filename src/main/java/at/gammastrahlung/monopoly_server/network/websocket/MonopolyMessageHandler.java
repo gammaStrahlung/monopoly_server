@@ -98,13 +98,13 @@ public class MonopolyMessageHandler {
         try {
             var players = player.getCurrentGame().getPlayers().toArray();
 
-            return new ServerMessage("create",
+            return new ServerMessage("players",
                     ServerMessage.MessageType.SUCCESS,
                     gson.toJson(players),
                     player);
 
         } catch (Exception e) {
-            return new ServerMessage("create",
+            return new ServerMessage("players",
                     ServerMessage.MessageType.ERROR,
                     "",
                     player);
