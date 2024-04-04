@@ -2,10 +2,7 @@ package at.gammastrahlung.monopoly_server.game;
 
 import lombok.Getter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Game {
@@ -71,8 +68,8 @@ public class Game {
         games.remove(gameId);
 
         // Change current game of all players to null
-        for (UUID uuid : players.keySet()) {
-            players.get(uuid).setCurrentGame(null);
+        for (Map.Entry<UUID, Player> entry : players.entrySet()) {
+            entry.getValue().setCurrentGame(null);
         }
 
         // Clear players
