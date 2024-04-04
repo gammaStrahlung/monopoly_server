@@ -17,7 +17,7 @@ public abstract class Player {
      * The unique ID of the player, this can be used by the player to allow for re-joining the ga
      */
     @Expose
-    protected UUID ID;
+    protected UUID id;
 
     /**
      * The name of the player (this is shown to other players)

@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class GameTests {
+class GameTests {
 
     private Game game;
 
@@ -27,7 +27,7 @@ public class GameTests {
         players = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
             Player mockPlayer = Mockito.mock(Player.class);
-            Mockito.when(mockPlayer.getID()).thenReturn(UUID.randomUUID());
+            Mockito.when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
             Mockito.when(mockPlayer.getName()).thenReturn("Player " + i);
 
             players.add(mockPlayer);
@@ -40,13 +40,13 @@ public class GameTests {
     }
 
     @Test
-    public void newGame() {
-        assertTrue(game.getGameId() != 0); // GameId was set to something other than Java default
+    void newGame() {
+        assertNotEquals(0, game.getGameId()); // GameId was set to something other than Java default
         assertEquals(Game.GameState.STARTED, game.getState()); // When created the game is started but not jet playing
     }
 
     @Test
-    public void startGame() {
+    void startGame() {
         // Can't start a game without players
         assertFalse(game.startGame());
 
@@ -61,7 +61,7 @@ public class GameTests {
     }
 
     @Test
-    public void endGame() {
+    void endGame() {
         game.endGame();
 
         assertEquals(0, game.getGameId()); // Game ID is default int value
@@ -69,7 +69,7 @@ public class GameTests {
     }
 
     @Test
-    public void joinByGameId() {
+    void joinByGameId() {
         int gameId = game.getGameId() + 100; // Game ID that does not exist
 
         // Can't join a game that doesn't exist
@@ -85,7 +85,7 @@ public class GameTests {
     }
 
     @Test
-    public void join() {
+    void join() {
         // First 8 unique players can join
         for (int i = 0; i < 8; i++) {
             assertTrue(game.join(players.get(i)));
@@ -104,7 +104,7 @@ public class GameTests {
     }
 
     @Test
-    public void getPlayers() {
+    void getPlayers() {
         // No players added -> players has to be empty
         List<Player> gamePlayers = game.getPlayers();
 
