@@ -66,6 +66,17 @@ public class Game {
         state = GameState.ENDED;
         games.remove(gameId);
         gameId = 0;
+
+        // Remove this game from the games to free the gameId
+        games.remove(gameId);
+
+        // Change current game of all players to null
+        for (UUID uuid : players.keySet()) {
+            players.get(uuid).setCurrentGame(null);
+        }
+
+        // Clear players
+        players.clear();
     }
 
     public static Game joinByGameId(int gameId, Player player) {
