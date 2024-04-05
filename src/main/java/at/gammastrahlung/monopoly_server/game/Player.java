@@ -25,11 +25,30 @@ public abstract class Player {
     @Expose
     protected String name;
 
+    protected int balance;
+
     /**
      * The game the player is currently playing
      */
     @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     protected Game currentGame;
+
+    public Player(UUID ID, String name, Game currentGame, int startingBalance) {
+        this.ID = ID;
+        this.name = name;
+        this.currentGame = currentGame;
+        this.balance = startingBalance; //balance gets initialized with a starting balance
+    }
+
+    // increases player balance
+    public synchronized void addBalance(int amount) {
+        this.balance += amount;
+    }
+
+    // decreases player balance - balance can also gio into the negatives
+    public synchronized void subtractBalance(int amount) {
+            this.balance -= amount;
+    }
 
     /**
      * Updates the player Object with needed properties depending on the Player Implementation
