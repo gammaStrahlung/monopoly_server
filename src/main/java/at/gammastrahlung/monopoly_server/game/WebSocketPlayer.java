@@ -27,7 +27,7 @@ public class WebSocketPlayer extends Player {
     private WebSocketSession webSocketSession;
 
     WebSocketPlayer(UUID id, String name, Game currentGame, WebSocketSession webSocketSession) {
-        super(id, name, currentGame);
+        //super(id, name, currentGame);
         setWebSocketSession(webSocketSession);
     }
 

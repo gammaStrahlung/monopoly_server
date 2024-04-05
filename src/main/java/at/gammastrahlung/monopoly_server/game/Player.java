@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class Player {
+public  class Player {
     /**
      * The unique ID of the player, this can be used by the player to allow for re-joining the ga
      */
@@ -25,6 +25,7 @@ public abstract class Player {
     @Expose
     protected String name;
 
+    @Expose
     protected int balance;
 
     /**
@@ -50,9 +51,18 @@ public abstract class Player {
             this.balance -= amount;
     }
 
+    public int getBalance() {
+        return this.balance;
+    }
+
     /**
      * Updates the player Object with needed properties depending on the Player Implementation
+     *
      * @param player The player object with changed properties
      */
-    public abstract void update(Player player);
+    public void update(Player player) {
+
+    }
+
+
 }
