@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
+
 
 @NoArgsConstructor
 public class WebSocketSender {
@@ -41,10 +43,11 @@ public class WebSocketSender {
     public static void sendToAllGamePlayers(WebSocketSession webSocketSession,
                                      ServerMessage message,
                                      boolean excludeGivenSession) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+
         WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(webSocketSession.getId());
         Game g = p.getCurrentGame();
         if (g != null) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
             for (Player player : g.getPlayers()) {
                 if (player.getClass() != WebSocketPlayer.class)
                     continue; // Skip non WebSocketPlayers
@@ -61,6 +64,13 @@ public class WebSocketSender {
                     System.err.println(e.getMessage());
                 }
 
+            }
+        } else {
+            // Game does not exist -> only send to given session
+            try {
+                webSocketSession.sendMessage(new TextMessage(gson.toJson(message)));
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
             }
         }
     }
