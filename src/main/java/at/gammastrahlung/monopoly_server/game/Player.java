@@ -55,6 +55,12 @@ public  class Player {
         return this.balance;
     }
 
+    public UUID getID(){return this.ID;}
+
+    public Game getCurrentGame(){return this.currentGame;}
+
+    public String getName() {return this.name;}
+
     /**
      * Updates the player Object with needed properties depending on the Player Implementation
      *

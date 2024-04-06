@@ -19,6 +19,7 @@ public class WebSocketPlayer extends Player {
      */
     @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     private static final ConcurrentHashMap<String, WebSocketPlayer> players = new ConcurrentHashMap<>();
+    private static final int startingBalance = 1500000;
 
     /**
      * The WebSocketSession, the user is connected through.
@@ -27,7 +28,7 @@ public class WebSocketPlayer extends Player {
     private WebSocketSession webSocketSession;
 
     WebSocketPlayer(UUID id, String name, Game currentGame, WebSocketSession webSocketSession) {
-        //super(id, name, currentGame);
+        super(id, name, currentGame, startingBalance);
         setWebSocketSession(webSocketSession);
     }
 
@@ -45,7 +46,7 @@ public class WebSocketPlayer extends Player {
     protected void finalize() throws Throwable {
         // Remove player from players list
         players.remove(this.getWebSocketSession().getId());
-
+;
         super.finalize();
     }
 
