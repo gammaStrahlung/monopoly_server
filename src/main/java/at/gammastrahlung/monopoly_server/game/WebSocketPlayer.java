@@ -42,13 +42,7 @@ public class WebSocketPlayer extends Player {
             players.put(webSocketSession.getId(), this);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        // Remove player from players list
-        players.remove(this.getWebSocketSession().getId());
-;
-        super.finalize();
-    }
+
 
     /**
      * Updates the player Object with the new WebSocketSession if player is of type WebSocketPlayer.
