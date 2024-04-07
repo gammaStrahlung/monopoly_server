@@ -11,7 +11,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class WebSocketPlayerTest {
+class WebSocketPlayerTest {
     WebSocketSession webSocketSession;
     WebSocketSession webSocketSession2;
     Game game;
@@ -28,13 +28,13 @@ public class WebSocketPlayerTest {
     }
 
     @Test
-    public void newWebSocketPlayer() {
+    void newWebSocketPlayer() {
         WebSocketPlayer p1 = new WebSocketPlayer();
 
         // Default constructor -> all fields should be null
         assertNull(p1.getWebSocketSession());
         assertNull(p1.getName());
-        assertNull(p1.getID());
+        assertNull(p1.getId());
         assertNull(p1.getCurrentGame());
 
 
@@ -43,7 +43,7 @@ public class WebSocketPlayerTest {
 
         assertEquals(game, p2.getCurrentGame());
         assertEquals("NAME", p2.getName());
-        assertEquals(id, p2.getID());
+        assertEquals(id, p2.getId());
         assertEquals(webSocketSession, p2.getWebSocketSession());
 
         WebSocketPlayer p3 = WebSocketPlayer.getPlayerByWebSocketSessionID(webSocketSession.getId());
@@ -52,7 +52,7 @@ public class WebSocketPlayerTest {
     }
 
     @Test
-    public void updatePlayer() {
+    void updatePlayer() {
         WebSocketPlayer p1 = new WebSocketPlayer();
         p1.setWebSocketSession(webSocketSession);
 
@@ -79,7 +79,7 @@ public class WebSocketPlayerTest {
     }
 
     @Test
-    public void setWebSocketSession() {
+    void setWebSocketSession() {
         WebSocketPlayer p = new WebSocketPlayer();
 
         p.setWebSocketSession(webSocketSession);

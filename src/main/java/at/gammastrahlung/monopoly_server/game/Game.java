@@ -2,18 +2,15 @@ package at.gammastrahlung.monopoly_server.game;
 
 import lombok.Getter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Game {
     // Game configuration
-    private static final int minGameId = 100000;
-    private static final int maxGameId = 999999;
-    private static final int minPlayers = 2;
-    private static final int maxPlayers = 8;
+    private static final int MIN_GAME_ID = 100000;
+    private static final int MAX_GAME_ID = 999999;
+    private static final int MIN_PLAYERS = 2;
+    private static final int MAX_PLAYERS = 8;
 
 
     // Contains all games that are currently being played, that allows us to find a specific game
@@ -37,7 +34,7 @@ public class Game {
         Random rand = new Random();
         // Ensure the gameId is unique.
         do {
-            gameId = rand.nextInt(minGameId, maxGameId);
+            gameId = rand.nextInt(MIN_GAME_ID, MAX_GAME_ID);
         } while (games.containsKey(gameId));
 
         // Add this game to all currently played games
@@ -52,7 +49,7 @@ public class Game {
     public boolean startGame() {
         if (state != GameState.STARTED)
             return false; // Can't start an already playing game or an ended game
-        if (players.size() < minPlayers)
+        if (players.size() < MIN_PLAYERS)
             return false; // Not enough players
 
         state = GameState.PLAYING;
@@ -66,6 +63,17 @@ public class Game {
         state = GameState.ENDED;
         games.remove(gameId);
         gameId = 0;
+
+        // Remove this game from the games to free the gameId
+        games.remove(gameId);
+
+        // Change current game of all players to null
+        for (Map.Entry<UUID, Player> entry : players.entrySet()) {
+            entry.getValue().setCurrentGame(null);
+        }
+
+        // Clear players
+        players.clear();
     }
 
     public static Game joinByGameId(int gameId, Player player) {
@@ -90,20 +98,20 @@ public class Game {
     public boolean join(Player player) {
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
-        if (!players.containsKey(player.getID())) {
+        if (!players.containsKey(player.getId())) {
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
-            if (players.size() >= maxPlayers)
+            if (players.size() >= MAX_PLAYERS)
                 return false; // Can't join when game is full
 
             // Add player to list of players.
             player.currentGame = this;
-            players.put(player.getID(), player);
+            players.put(player.getId(), player);
             return true;
         } else {
             // Player is re-joining -> update old player object
-            players.get(player.getID()).update(player);
+            players.get(player.getId()).update(player);
             return true;
         }
     }
