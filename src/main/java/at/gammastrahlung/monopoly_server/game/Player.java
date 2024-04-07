@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -51,15 +50,6 @@ public  class Player {
             this.balance -= amount;
     }
 
-    public int getBalance() {
-        return this.balance;
-    }
-
-    public UUID getID(){return this.ID;}
-
-    public Game getCurrentGame(){return this.currentGame;}
-
-    public String getName() {return this.name;}
 
     /**
      * Updates the player Object with needed properties depending on the Player Implementation

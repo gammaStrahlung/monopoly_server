@@ -1,12 +1,13 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
+
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
+@SpringBootTest
 public abstract class PlayerTest {
 
     @Test
@@ -14,7 +15,7 @@ public abstract class PlayerTest {
         UUID id = UUID.randomUUID();
         String name = "Test Player";
         int balance = 100;
-        Player player = new Player(id, name, null, balance); // Angenommen, der Konstruktor wird entsprechend angepasst
+        Player player = new Player(id, name, null, balance);
 
         assertEquals(id, player.getID());
         assertEquals(name, player.getName());
