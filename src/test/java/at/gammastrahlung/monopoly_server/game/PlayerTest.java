@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 @SpringBootTest
-public class PlayerTest {
+class PlayerTest {
 
     @Test
      void constructorTest() {
