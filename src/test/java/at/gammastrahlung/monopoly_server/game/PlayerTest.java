@@ -11,7 +11,7 @@ import java.util.UUID;
 public class PlayerTest {
 
     @Test
-    public void constructorTest() {
+     void constructorTest() {
         UUID id = UUID.randomUUID();
         String name = "Test Player";
         int balance = 100;
@@ -24,7 +24,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void addBalanceTest() {
+     void addBalanceTest() {
         Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
         player.addBalance(50);
         assertEquals(150, player.getBalance());
@@ -34,7 +34,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void subtractBalanceTest() {
+     void subtractBalanceTest() {
         Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
         player.subtractBalance(50);
         assertEquals(50, player.getBalance());
@@ -43,7 +43,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void updateTest() {
+     void updateTest() {
 
         Player player1 = new Player(UUID.randomUUID(), "Test Player", 100, null);
         Player player2 = new Player(UUID.randomUUID(), "Another Player", 200, null);
