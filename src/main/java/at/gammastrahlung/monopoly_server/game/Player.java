@@ -57,7 +57,7 @@ public  class Player {
      * @param player The player object with changed properties
      */
     public void update(Player player) {
-
+        // will get implemented in next sprint
     }
 
 

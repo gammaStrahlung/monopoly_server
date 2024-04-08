@@ -49,6 +49,8 @@ class PlayerTest {
         Player player2 = new Player(UUID.randomUUID(), "Another Player", 200, null);
 
         player1.update(player2);
+
+        //tests updatePlayer
     }
 
 }
