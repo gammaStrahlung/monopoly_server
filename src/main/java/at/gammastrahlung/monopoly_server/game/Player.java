@@ -16,7 +16,7 @@ public  class Player {
      * The unique ID of the player, this can be used by the player to allow for re-joining the ga
      */
     @Expose
-    protected UUID ID;
+    protected UUID id;
 
     /**
      * The name of the player (this is shown to other players)
@@ -33,8 +33,8 @@ public  class Player {
     @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     protected Game currentGame;
 
-    public Player(UUID ID, String name, Game currentGame, int startingBalance) {
-        this.ID = ID;
+    public Player(UUID id, String name, Game currentGame, int startingBalance) {
+        this.id = id;
         this.name = name;
         this.currentGame = currentGame;
         this.balance = startingBalance; //balance gets initialized with a starting balance

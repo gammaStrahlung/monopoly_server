@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 @SpringBootTest
-public abstract class PlayerTest {
+public class PlayerTest {
 
     @Test
     public void constructorTest() {
@@ -17,7 +17,7 @@ public abstract class PlayerTest {
         int balance = 100;
         Player player = new Player(id, name, null, balance);
 
-        assertEquals(id, player.getID());
+        assertEquals(id, player.getId());
         assertEquals(name, player.getName());
         assertEquals(balance, player.getBalance());
         assertNull(player.getCurrentGame());
