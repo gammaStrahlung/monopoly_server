@@ -44,14 +44,6 @@ public class WebSocketPlayer extends Player {
 
 
 
-
-
-
-
-
-
-
-
     /**
      * Updates the player Object with the new WebSocketSession if player is of type WebSocketPlayer.
      *
