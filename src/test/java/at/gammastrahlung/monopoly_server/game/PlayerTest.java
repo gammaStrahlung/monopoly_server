@@ -42,15 +42,6 @@ class PlayerTest {
         assertEquals(-10, player.getBalance());
     }
 
-    @Test
-     void updateTest() {
 
-        Player player1 = new Player(UUID.randomUUID(), "Test Player", 100, null);
-        Player player2 = new Player(UUID.randomUUID(), "Another Player", 200, null);
-
-        player1.update(player2);
-
-        //tests updatePlayer
-    }
 
 }
