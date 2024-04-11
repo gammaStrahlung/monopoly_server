@@ -1,2 +1,5 @@
-package at.gammastrahlung.monopoly_server.game;public class Field {
+package at.gammastrahlung.monopoly_server.game;
+
+public class Field {
+    private int fieldID;
 }

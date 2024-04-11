@@ -1,2 +1,4 @@
-package at.gammastrahlung.monopoly_server.game;public class GameBoard {
+package at.gammastrahlung.monopoly_server.game;
+
+public class GameBoard {
 }

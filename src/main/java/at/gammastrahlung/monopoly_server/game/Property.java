@@ -1,4 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
-public class Proporty {
+public class Property extends Field{
+
+
 }
