@@ -65,6 +65,15 @@ public  class Player {
         // will get implemented in next sprint
     }
 
+    /**
+     * Updates currentField by the diced value
+     *
+     * @param currentField The field that is going to be updated
+     */
+    public void moveAvatar(int currentField){
+        currentField = (currentField) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
+    }
+
 
 
 
