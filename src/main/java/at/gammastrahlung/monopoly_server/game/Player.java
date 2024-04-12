@@ -28,6 +28,11 @@ public  class Player {
     protected int balance;
 
     /**
+     * The field on which avatar is currently placed
+     */
+    protected int currentField;
+
+    /**
      * The game the player is currently playing
      */
     @Expose(serialize = false, deserialize = false) // Should not be sent to the client
@@ -59,6 +64,8 @@ public  class Player {
     public void update(Player player) {
         // will get implemented in next sprint
     }
+
+
 
 
 }
