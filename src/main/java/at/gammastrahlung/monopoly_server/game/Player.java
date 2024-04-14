@@ -60,5 +60,11 @@ public  class Player {
         // will get implemented in next sprint
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Player))
+            return false;
 
+        return id.equals(((Player) obj).id);
+    }
 }
