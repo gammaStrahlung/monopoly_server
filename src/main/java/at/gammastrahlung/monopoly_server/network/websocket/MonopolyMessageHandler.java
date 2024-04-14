@@ -31,6 +31,8 @@ public class MonopolyMessageHandler {
                     clientMessage.setPlayer(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                     yield getPlayers(clientMessage.getPlayer());
                 }
+                case "start" -> startGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
+                case "end" -> endGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -70,6 +72,7 @@ public class MonopolyMessageHandler {
     /**
      * Called by the client to join a new game or to re-join after connection loss.
      *
+     * @param gameId The gameId of the game, the player wants to join
      * @param player The player that wants to join the game.
      * @return ServerMessage with MessageType SUCCESS containing the GameId as the Message if joining was successful,
      * else ServerMessage has MessageType ERROR.
@@ -105,6 +108,52 @@ public class MonopolyMessageHandler {
 
         } catch (Exception e) {
             return new ServerMessage("players",
+                    ServerMessage.MessageType.ERROR,
+                    "",
+                    player);
+        }
+    }
+
+    /**
+     * Called by the client to start the current game
+     *
+     * @param player The player that wants to start the game.
+     * @return ServerMessage with MessageType SUCCESS as the Message if starting the game was successful,
+     * else ServerMessage has MessageType ERROR.
+     */
+    public static ServerMessage startGame(WebSocketPlayer player) {
+        Game g = player.getCurrentGame();
+
+        if (g.startGame(player)) {
+            return new ServerMessage("start",
+                    ServerMessage.MessageType.SUCCESS,
+                    "",
+                    player);
+        } else {
+            return new ServerMessage("start",
+                    ServerMessage.MessageType.ERROR,
+                    "",
+                    player);
+        }
+    }
+
+    /**
+     * Called by the client to end the current game
+     *
+     * @param player The player that wants to end the game.
+     * @return ServerMessage with MessageType SUCCESS as the Message if ending the game was successful,
+     * else ServerMessage has MessageType ERROR.
+     */
+    public static ServerMessage endGame(WebSocketPlayer player) {
+        Game g = player.getCurrentGame();
+
+        if (g.endGame(player)) {
+            return new ServerMessage("end",
+                    ServerMessage.MessageType.SUCCESS,
+                    "",
+                    player);
+        } else {
+            return new ServerMessage("end",
                     ServerMessage.MessageType.ERROR,
                     "",
                     player);
