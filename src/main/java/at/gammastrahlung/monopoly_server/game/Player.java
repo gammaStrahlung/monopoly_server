@@ -30,7 +30,7 @@ public  class Player {
     /**
      * The game the player is currently playing
      */
-    @Expose(serialize = false, deserialize = false) // Should not be sent to the client
+    @Expose
     protected Game currentGame;
 
     public Player(UUID id, String name, Game currentGame, int startingBalance) {

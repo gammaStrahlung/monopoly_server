@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import com.google.gson.annotations.Expose;
 import lombok.Getter;
 
 import java.util.*;
@@ -23,10 +24,12 @@ public class Game {
 
     // Current state of the game
     @Getter
+    @Expose
     private GameState state = GameState.STARTED;
 
     // The owner of the game. This is the only player that can start and end the game
     @Getter
+    @Expose
     private Player gameOwner = null;
 
     // Contains all players connected to the game
