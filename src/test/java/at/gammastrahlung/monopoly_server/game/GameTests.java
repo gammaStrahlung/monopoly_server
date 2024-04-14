@@ -1,6 +1,5 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,35 +33,43 @@ class GameTests {
         }
     }
 
-    @AfterEach
-    public void cleanup() {
-        game.endGame(); // Cleanup game
-    }
-
     @Test
     void newGame() {
         assertNotEquals(0, game.getGameId()); // GameId was set to something other than Java default
         assertEquals(Game.GameState.STARTED, game.getState()); // When created the game is started but not jet playing
+
+        game.join(players.get(0)); // First player joins
+        assertEquals(players.get(0), game.getGameOwner()); // First joined player is the gameOwner
     }
 
     @Test
     void startGame() {
         // Can't start a game without players
-        assertFalse(game.startGame());
+        assertFalse(game.startGame(null));
 
         // Add some players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        assertTrue(game.startGame());
+        // Can't start the game if player is not gameOwner
+        assertFalse(game.startGame(players.get(1)));
+
+        // Can start the game if player is gameOwner
+        assertTrue(game.startGame(players.get(0)));
 
         // Can't start a second time
-        assertFalse(game.startGame());
+        assertFalse(game.startGame(players.get(0)));
     }
 
     @Test
     void endGame() {
-        game.endGame();
+        // Can't end the game if player is not gameOwner
+        game.endGame(players.get(1));
+
+        game.join(players.get(0)); // Add player to act as gameOwner
+
+        // Can end the game if player is gameOwner
+        game.endGame(players.get(0));
 
         assertEquals(0, game.getGameId()); // Game ID is default int value
         assertEquals(Game.GameState.ENDED, game.getState()); // State is ended
@@ -80,7 +87,7 @@ class GameTests {
         assertNotNull(Game.joinByGameId(game.getGameId(), players.get(1)));
 
         // New player can't join a game that has already started
-        game.startGame();
+        game.startGame(players.get(0));
         assertNull(Game.joinByGameId(game.getGameId(), players.get(2)));
     }
 
@@ -97,7 +104,7 @@ class GameTests {
         // Can re-join game when not playing yet
         assertTrue(game.join(players.get(1)));
 
-        game.startGame();
+        game.startGame(players.get(0));
 
         // Can re-join even when game has already started
         assertTrue(game.join(players.get(1)));

@@ -81,6 +81,8 @@ class WebSocketPlayerTest {
     @Test
     void setWebSocketSession() {
         WebSocketPlayer p = new WebSocketPlayer();
+        // Set random UUID
+        p.setId(UUID.randomUUID());
 
         p.setWebSocketSession(webSocketSession);
 
