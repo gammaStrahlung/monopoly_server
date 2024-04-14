@@ -53,6 +53,8 @@ public class Game {
      * @return If the game was successfully started.
      */
     public boolean startGame(Player player) {
+        if (player == null) // Player can not be null
+            return false;
         if (!player.equals(gameOwner)) // Only the gameOwner can start the game
             return false;
         if (state != GameState.STARTED)
@@ -71,6 +73,8 @@ public class Game {
      * @return If ending the game was successful
      */
     public boolean endGame(Player player) {
+        if (player == null) // Player can not be null
+            return false;
         if (!player.equals(gameOwner)) // Only the gameOwner can end the game
             return false;
 
