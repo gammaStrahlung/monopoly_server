@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Random;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -71,10 +73,13 @@ public  class Player {
      * @param currentField The field that is going to be updated
      */
     public void moveAvatar(int currentField){
-        currentField = (currentField) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
+        currentField = (currentField + diceRolling()) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
     }
 
+    public int diceRolling(){
+        int value1 = new Random().nextInt(6) + 1;
+        int value2 = new Random().nextInt(6) + 1;
 
-
-
+        return value1 + value2;
+    }
 }
