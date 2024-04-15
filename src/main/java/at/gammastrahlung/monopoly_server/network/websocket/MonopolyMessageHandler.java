@@ -59,14 +59,14 @@ public class MonopolyMessageHandler {
     public static ServerMessage createGame(WebSocketPlayer player) {
 
         // Create a new game
-        Game g = new Game();
+        Game game = new Game();
 
         // Player that creates the game should also join the game
-        g.join(player);
+        game.join(player);
 
         return new ServerMessage("create",
                 ServerMessage.MessageType.SUCCESS,
-                String.valueOf(g.getGameId()), player);
+                String.valueOf(game.getGameId()), player, game);
     }
 
     /**
@@ -80,15 +80,15 @@ public class MonopolyMessageHandler {
     public static ServerMessage joinGame(int gameId, WebSocketPlayer player) {
 
         // Try to join the game
-        Game g = Game.joinByGameId(gameId, player);
+        Game game = Game.joinByGameId(gameId, player);
 
         // Joining the game was unsuccessful
-        if (g == null)
-            return new ServerMessage("join", ServerMessage.MessageType.ERROR, "", player);
+        if (game == null)
+            return new ServerMessage("join", ServerMessage.MessageType.ERROR, "", player, null);
 
         return new ServerMessage("join",
                 ServerMessage.MessageType.SUCCESS,
-                String.valueOf(g.getGameId()), player);
+                String.valueOf(game.getGameId()), player, game);
     }
 
     /**
@@ -104,13 +104,13 @@ public class MonopolyMessageHandler {
             return new ServerMessage("players",
                     ServerMessage.MessageType.SUCCESS,
                     gson.toJson(players),
-                    player);
+                    player, null);
 
         } catch (Exception e) {
             return new ServerMessage("players",
                     ServerMessage.MessageType.ERROR,
                     "",
-                    player);
+                    player, null);
         }
     }
 
@@ -122,18 +122,20 @@ public class MonopolyMessageHandler {
      * else ServerMessage has MessageType ERROR.
      */
     public static ServerMessage startGame(WebSocketPlayer player) {
-        Game g = player.getCurrentGame();
+        Game game = player.getCurrentGame();
 
-        if (g.startGame(player)) {
+        if (game.startGame(player)) {
             return new ServerMessage("start",
                     ServerMessage.MessageType.SUCCESS,
                     "",
-                    player);
+                    player,
+                    game);
         } else {
             return new ServerMessage("start",
                     ServerMessage.MessageType.ERROR,
                     "",
-                    player);
+                    player,
+                    game);
         }
     }
 
@@ -145,18 +147,20 @@ public class MonopolyMessageHandler {
      * else ServerMessage has MessageType ERROR.
      */
     public static ServerMessage endGame(WebSocketPlayer player) {
-        Game g = player.getCurrentGame();
+        Game game = player.getCurrentGame();
 
-        if (g.endGame(player)) {
+        if (game.endGame(player)) {
             return new ServerMessage("end",
                     ServerMessage.MessageType.SUCCESS,
                     "",
-                    player);
+                    player,
+                    game);
         } else {
             return new ServerMessage("end",
                     ServerMessage.MessageType.ERROR,
                     "",
-                    player);
+                    player,
+                    game);
         }
     }
 }

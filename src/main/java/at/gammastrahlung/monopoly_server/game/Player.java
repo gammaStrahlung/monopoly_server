@@ -30,7 +30,6 @@ public  class Player {
     /**
      * The game the player is currently playing
      */
-    @Expose
     protected Game currentGame;
 
     public Player(UUID id, String name, Game currentGame, int startingBalance) {
