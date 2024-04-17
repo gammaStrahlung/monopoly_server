@@ -137,4 +137,15 @@ public class Game {
          */
         ENDED
     }
+
+    /**
+     * Temporary diceRolling function will be replaced with the actual value
+     * @value1 + @value2 the diced value
+     */
+    public static int diceRolling(){
+        int value1 = new Random().nextInt(6) + 1;
+        int value2 = new Random().nextInt(6) + 1;
+
+        return value1 + value2;
+    }
 }

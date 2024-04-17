@@ -73,13 +73,8 @@ public  class Player {
      * @param currentField The field that is going to be updated
      */
     public void moveAvatar(int currentField){
-        currentField = (currentField + diceRolling()) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
+        currentField = (currentField + Game.diceRolling()) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
     }
 
-    public int diceRolling(){
-        int value1 = new Random().nextInt(6) + 1;
-        int value2 = new Random().nextInt(6) + 1;
 
-        return value1 + value2;
-    }
 }
