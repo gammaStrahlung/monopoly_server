@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
 import at.gammastrahlung.monopoly_server.game.Game;
+import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
@@ -8,12 +9,28 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MonopolyMessageHandler {
 
     private static final Gson gson =  new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 
     public static void handleMessage(ClientMessage clientMessage, WebSocketSession session) {
         ServerMessage response;
+
+        List<Player> recievers = new ArrayList<>();
+
+        // Set player to player from server if it exists
+        WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
+        if (p != null)
+            clientMessage.setPlayer(p);
+
+        Game currentGame = clientMessage.getPlayer().getCurrentGame();
+        if (currentGame != null)
+            recievers.addAll(currentGame.getPlayers());
+        else
+            recievers.add(clientMessage.getPlayer());
 
         // Call the different Message Handlers
         try {
@@ -24,13 +41,14 @@ public class MonopolyMessageHandler {
                 }
                 case "join" -> {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
-                    yield joinGame(Integer.parseInt(clientMessage.getMessage()),
-                            clientMessage.getPlayer());
+                    var message = joinGame(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
+
+                    // Update recievers to all players
+                    recievers.clear();
+                    recievers.addAll(clientMessage.getPlayer().getCurrentGame().getPlayers());
+                    yield message;
                 }
-                case "players" -> {
-                    clientMessage.setPlayer(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
-                    yield getPlayers(clientMessage.getPlayer());
-                }
+                case "players" -> getPlayers(clientMessage.getPlayer());
                 case "start" -> startGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 case "end" -> endGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
@@ -47,7 +65,7 @@ public class MonopolyMessageHandler {
             return;
         }
 
-        WebSocketSender.sendToAllGamePlayers(session, response);
+        WebSocketSender.sendToPlayers(response, recievers);
     }
 
     /**
