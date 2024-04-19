@@ -278,7 +278,6 @@ public class GameBoard {
                 .name("Chance")
                 .build();
 
-
         gameBoard [37] = Property.builder()
                 .fieldId(37)
                 .name("Park Place")
@@ -300,7 +299,15 @@ public class GameBoard {
                 .price(400)
                 .color(PropertyColor.DARK_BLUE)
                 .build();
+    }
+    public void cleanUpBoard() {
+        // Reset all properties and fields to their initial state
+        for (Field field : gameBoard) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                property.setOwner(null);
 
-
+            }
+        }
     }
 }
