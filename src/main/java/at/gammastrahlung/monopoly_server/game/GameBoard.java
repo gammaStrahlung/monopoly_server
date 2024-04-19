@@ -8,7 +8,8 @@ public class GameBoard {
 
     void inializeGameBoard(){
         gameBoard[0] = new Field(0, "LOS!");
-        gameBoard[1] = new Property(1, "Minimundus", Bank, 100, 5, 10, 15, 20, 30);
+        gameBoard[1] = Property.builder().fieldID(1).name("Minimundus").owner(Bank).price(100).baseRent(5).oneHouseRent(10).twoHousesRent(15).threeHousesRent(20).hotelRent(30).build();
+
 
     }
 
