@@ -27,14 +27,14 @@ public class GameBoard {
                 .type(FieldType.GO)
                 .build();
 
-        Map<Object, Integer> RentPricesField1 = new HashMap<>();
-        RentPricesField1.put(0, 2);
-        RentPricesField1.put("full_set", 4);
-        RentPricesField1.put(1, 10);
-        RentPricesField1.put(2, 30);
-        RentPricesField1.put(3, 90);
-        RentPricesField1.put(4, 160);
-        RentPricesField1.put("hotel", 250);
+        Map<Object, Integer> RentPrices1 = new HashMap<>();
+        RentPrices1.put(0, 2);
+        RentPrices1.put("full_set", 4);
+        RentPrices1.put(1, 10);
+        RentPrices1.put(2, 30);
+        RentPrices1.put(3, 90);
+        RentPrices1.put(4, 160);
+        RentPrices1.put("hotel", 250);
 
         gameBoard[1] = Property.builder()
                 .fieldId(1)
@@ -43,7 +43,7 @@ public class GameBoard {
                 .price(60)
                 .owner(bank)
                 .color(PropertyColor.BROWN)
-                .rentPrices(RentPricesField1)
+                .rentPrices(RentPrices1)
                 .mortgageValue(30)
                 .houseCost(50)
                 .hotelCost(50)
@@ -55,6 +55,15 @@ public class GameBoard {
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
+        Map<Object, Integer> rentPrices2 = new HashMap<>();
+        rentPrices2.put(0, 4);  // Rent with 0 houses
+        rentPrices2.put("full_set", 8); // Rent with color set
+        rentPrices2.put(1,20); // Rent with 1 house
+        rentPrices2.put(2, 60); // Rent with 2 houses
+        rentPrices2.put(3, 180); // Rent with 3 houses
+        rentPrices2.put(4, 320); //Rent with 4 houses
+        rentPrices2.put("hotel", 450); //Rent with hotel
+
         gameBoard [3] = Property.builder()
                 .fieldId(3)
                 .name("Baltic Avenue")
@@ -62,15 +71,7 @@ public class GameBoard {
                 .price(60)
                 .owner(bank)
                 .color(PropertyColor.BROWN)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 4);  // Rent with 0 houses
-                    put("full_set", 8); // Rent with color set
-                    put(1,20); // Rent with 1 house
-                    put(2, 60); // Rent with 2 houses
-                    put(3, 180); // Rent with 3 houses
-                    put(4, 320); //Rent with 4 houses
-                    put("hotel", 450); //Rent with hotel
-                }})
+                .rentPrices(rentPrices2)
                 .mortgageValue(30)
                 .houseCost(50)
                 .hotelCost(50)
@@ -90,6 +91,15 @@ public class GameBoard {
                 .owner(bank)
                 .build();
 
+        Map<Object, Integer> rentPrices3 = new HashMap<>();
+        rentPrices3.put(0, 6);  // Rent with 0 houses
+        rentPrices3.put("full_set", 12); // Rent with color set
+        rentPrices3.put(1,30); // Rent with 1 house
+        rentPrices3.put(2, 90); // Rent with 2 houses
+        rentPrices3.put(3, 270); // Rent with 3 houses
+        rentPrices3.put(4, 400); //Rent with 4 houses
+        rentPrices3.put("hotel", 550); //Rent with hotel
+
         gameBoard [6] = Property.builder()
                 .fieldId(6)
                 .name("Oriental Avenue")
@@ -97,15 +107,7 @@ public class GameBoard {
                 .price(100)
                 .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 6);  // Rent with 0 houses
-                    put("full_set", 12); // Rent with color set
-                    put(1,30); // Rent with 1 house
-                    put(2, 90); // Rent with 2 houses
-                    put(3, 270); // Rent with 3 houses
-                    put(4, 400); //Rent with 4 houses
-                    put("hotel", 550); //Rent with hotel
-                }})
+                .rentPrices(rentPrices3)
                 .mortgageValue(50)
                 .houseCost(50)
                 .hotelCost(50)
@@ -124,19 +126,20 @@ public class GameBoard {
                 .price(100)
                 .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 6);  // Rent with 0 houses
-                    put("full_set", 12); // Rent with color set
-                    put(1,30); // Rent with 1 house
-                    put(2, 90); // Rent with 2 houses
-                    put(3, 270); // Rent with 3 houses
-                    put(4, 400); //Rent with 4 houses
-                    put("hotel", 550); //Rent with hotel
-                }})
+                .rentPrices(rentPrices3)
                 .mortgageValue(50)
                 .houseCost(50)
                 .hotelCost(50)
                 .build();
+
+        Map<Object, Integer> rentPrices4 = new HashMap<>();
+        rentPrices4.put(0, 8);  // Rent with 0 houses
+        rentPrices4.put("full_set", 16); // Rent with color set
+        rentPrices4.put(1,40); // Rent with 1 house
+        rentPrices4.put(2, 100); // Rent with 2 houses
+        rentPrices4.put(3, 300); // Rent with 3 houses
+        rentPrices4.put(4, 450); //Rent with 4 houses
+        rentPrices4.put("hotel", 600); //Rent with hotel
 
         gameBoard [9] = Property.builder()
                 .fieldId(9)
@@ -145,15 +148,7 @@ public class GameBoard {
                 .price(120)
                 .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 8);  // Rent with 0 houses
-                    put("full_set", 16); // Rent with color set
-                    put(1,40); // Rent with 1 house
-                    put(2, 100); // Rent with 2 houses
-                    put(3, 300); // Rent with 3 houses
-                    put(4, 450); //Rent with 4 houses
-                    put("hotel", 600); //Rent with hotel
-                }})
+                .rentPrices(rentPrices4)
                 .mortgageValue(60)
                 .houseCost(50)
                 .hotelCost(50)
@@ -165,6 +160,15 @@ public class GameBoard {
                 .type(FieldType.JAIL)
                 .build();
 
+        Map<Object, Integer> rentPrices5 = new HashMap<>();
+        rentPrices5.put(0, 10);  // Rent with 0 houses
+        rentPrices5.put("full_set", 20); // Rent with color set
+        rentPrices5.put(1,50); // Rent with 1 house
+        rentPrices5.put(2, 150); // Rent with 2 houses
+        rentPrices5.put(3, 450); // Rent with 3 houses
+        rentPrices5.put(4, 625); //Rent with 4 houses
+        rentPrices5.put("hotel", 750); //Rent with hotel
+
         gameBoard [11] = Property.builder()
                 .fieldId(11)
                 .name("St Charles Place")
@@ -172,15 +176,7 @@ public class GameBoard {
                 .price(140)
                 .owner(bank)
                 .color(PropertyColor.PINK)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 10);  // Rent with 0 houses
-                    put("full_set", 20); // Rent with color set
-                    put(1,50); // Rent with 1 house
-                    put(2, 150); // Rent with 2 houses
-                    put(3, 450); // Rent with 3 houses
-                    put(4, 625); //Rent with 4 houses
-                    put("hotel", 750); //Rent with hotel
-                }})
+                .rentPrices(rentPrices5)
                 .mortgageValue(70)
                 .houseCost(100)
                 .hotelCost(100)
@@ -202,19 +198,20 @@ public class GameBoard {
                 .price(140)
                 .owner(bank)
                 .color(PropertyColor.PINK)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 10);  // Rent with 0 houses
-                    put("full_set", 20); // Rent with color set
-                    put(1,50); // Rent with 1 house
-                    put(2, 150); // Rent with 2 houses
-                    put(3, 450); // Rent with 3 houses
-                    put(4, 625); //Rent with 4 houses
-                    put("hotel", 750); //Rent with hotel
-                }})
+                .rentPrices(rentPrices5)
                 .mortgageValue(70)
                 .houseCost(100)
                 .hotelCost(100)
                 .build();
+
+        Map<Object, Integer> rentPrices6 = new HashMap<>();
+        rentPrices6.put(0, 12);  // Rent with 0 houses
+        rentPrices6.put("full_set", 24); // Rent with color set
+        rentPrices6.put(1,60); // Rent with 1 house
+        rentPrices6.put(2, 180); // Rent with 2 houses
+        rentPrices6.put(3, 500); // Rent with 3 houses
+        rentPrices6.put(4, 700); //Rent with 4 houses
+        rentPrices6.put("hotel", 900); //Rent with hotel
 
         gameBoard [14] = Property.builder()
                 .fieldId(14)
@@ -223,15 +220,7 @@ public class GameBoard {
                 .price(160)
                 .owner(bank)
                 .color(PropertyColor.PINK)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 12);  // Rent with 0 houses
-                    put("full_set", 24); // Rent with color set
-                    put(1,60); // Rent with 1 house
-                    put(2, 180); // Rent with 2 houses
-                    put(3, 500); // Rent with 3 houses
-                    put(4, 700); //Rent with 4 houses
-                    put("hotel", 900); //Rent with hotel
-                }})
+                .rentPrices(rentPrices6)
                 .mortgageValue(80)
                 .houseCost(100)
                 .hotelCost(100)
@@ -244,6 +233,15 @@ public class GameBoard {
                 .owner(bank)
                 .build();
 
+        Map<Object, Integer> rentPrices7 = new HashMap<>();
+        rentPrices7.put(0, 14);  // Rent with 0 houses
+        rentPrices7.put("full_set", 28); // Rent with color set
+        rentPrices7.put(1,70); // Rent with 1 house
+        rentPrices7.put(2, 200); // Rent with 2 houses
+        rentPrices7.put(3, 550); // Rent with 3 houses
+        rentPrices7.put(4, 750); //Rent with 4 houses
+        rentPrices7.put("hotel", 950); //Rent with hotel
+
         gameBoard [16] = Property.builder()
                 .fieldId(16)
                 .name("St. James Place")
@@ -251,15 +249,7 @@ public class GameBoard {
                 .price(180)
                 .owner(bank)
                 .color(PropertyColor.ORANGE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 14);  // Rent with 0 houses
-                    put("full_set", 28); // Rent with color set
-                    put(1,70); // Rent with 1 house
-                    put(2, 200); // Rent with 2 houses
-                    put(3, 550); // Rent with 3 houses
-                    put(4, 750); //Rent with 4 houses
-                    put("hotel", 950); //Rent with hotel
-                }})
+                .rentPrices(rentPrices7)
                 .mortgageValue(90)
                 .houseCost(100)
                 .hotelCost(100)
@@ -278,19 +268,21 @@ public class GameBoard {
                 .price(180)
                 .owner(bank)
                 .color(PropertyColor.ORANGE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 14);  // Rent with 0 houses
-                    put("full_set", 28); // Rent with color set
-                    put(1,70); // Rent with 1 house
-                    put(2, 200); // Rent with 2 houses
-                    put(3, 550); // Rent with 3 houses
-                    put(4, 750); //Rent with 4 houses
-                    put("hotel", 950); //Rent with hotel
-                }})
+                .rentPrices(rentPrices7)
                 .mortgageValue(90)
                 .houseCost(100)
                 .hotelCost(100)
                 .build();
+
+
+        Map<Object, Integer> rentPrices8 = new HashMap<>();
+        rentPrices8.put(0, 16);  // Rent with 0 houses
+        rentPrices8.put("full_set", 32); // Rent with color set
+        rentPrices8.put(1,80); // Rent with 1 house
+        rentPrices8.put(2, 220); // Rent with 2 houses
+        rentPrices8.put(3, 600); // Rent with 3 houses
+        rentPrices8.put(4, 800); //Rent with 4 houses
+        rentPrices8.put("hotel", 1000); //Rent with hotel
 
         gameBoard [19] = Property.builder()
                 .fieldId(19)
@@ -299,15 +291,7 @@ public class GameBoard {
                 .price(200)
                 .owner(bank)
                 .color(PropertyColor.ORANGE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 16);  // Rent with 0 houses
-                    put("full_set", 32); // Rent with color set
-                    put(1,80); // Rent with 1 house
-                    put(2, 220); // Rent with 2 houses
-                    put(3, 600); // Rent with 3 houses
-                    put(4, 800); //Rent with 4 houses
-                    put("hotel", 1000); //Rent with hotel
-                }})
+                .rentPrices(rentPrices8)
                 .mortgageValue(100)
                 .houseCost(100)
                 .hotelCost(100)
@@ -319,6 +303,15 @@ public class GameBoard {
                 .type(FieldType.FREE_PARKING)
                 .build();
 
+        Map<Object, Integer> rentPrices9 = new HashMap<>();
+        rentPrices9.put(0, 18);  // Rent with 0 houses
+        rentPrices9.put("full_set", 36); // Rent with color set
+        rentPrices9.put(1,90); // Rent with 1 house
+        rentPrices9.put(2, 250); // Rent with 2 houses
+        rentPrices9.put(3, 700); // Rent with 3 houses
+        rentPrices9.put(4, 875); //Rent with 4 houses
+        rentPrices9.put("hotel", 1050); //Rent with hotel
+
         gameBoard [21] = Property.builder()
                 .fieldId(21)
                 .name("Kentucky Avenue")
@@ -326,15 +319,7 @@ public class GameBoard {
                 .price(220)
                 .owner(bank)
                 .color(PropertyColor.RED)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 18);  // Rent with 0 houses
-                    put("full_set", 36); // Rent with color set
-                    put(1,90); // Rent with 1 house
-                    put(2, 250); // Rent with 2 houses
-                    put(3, 700); // Rent with 3 houses
-                    put(4, 875); //Rent with 4 houses
-                    put("hotel", 1050); //Rent with hotel
-                }})
+                .rentPrices(rentPrices9)
                 .mortgageValue(110)
                 .houseCost(150)
                 .hotelCost(150)
@@ -353,19 +338,20 @@ public class GameBoard {
                 .price(220)
                 .owner(bank)
                 .color(PropertyColor.RED)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 18);  // Rent with 0 houses
-                    put("full_set", 36); // Rent with color set
-                    put(1,90); // Rent with 1 house
-                    put(2, 250); // Rent with 2 houses
-                    put(3, 700); // Rent with 3 houses
-                    put(4, 875); //Rent with 4 houses
-                    put("hotel", 1050); //Rent with hotel
-                }})
+                .rentPrices(rentPrices9)
                 .mortgageValue(110)
                 .houseCost(150)
                 .hotelCost(150)
                 .build();
+
+        Map<Object, Integer> rentPrices10 = new HashMap<>();
+        rentPrices10.put(0, 20);  // Rent with 0 houses
+        rentPrices10.put("full_set", 40); // Rent with color set
+        rentPrices10.put(1,100); // Rent with 1 house
+        rentPrices10.put(2, 300); // Rent with 2 houses
+        rentPrices10.put(3, 750); // Rent with 3 houses
+        rentPrices10.put(4, 925); //Rent with 4 houses
+        rentPrices10.put("hotel", 1100); //Rent with hotel
 
         gameBoard [24] = Property.builder()
                 .fieldId(24)
@@ -374,15 +360,7 @@ public class GameBoard {
                 .price(240)
                 .owner(bank)
                 .color(PropertyColor.RED)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 20);  // Rent with 0 houses
-                    put("full_set", 40); // Rent with color set
-                    put(1,100); // Rent with 1 house
-                    put(2, 300); // Rent with 2 houses
-                    put(3, 750); // Rent with 3 houses
-                    put(4, 925); //Rent with 4 houses
-                    put("hotel", 1100); //Rent with hotel
-                }})
+                .rentPrices(rentPrices10)
                 .mortgageValue(120)
                 .houseCost(150)
                 .hotelCost(150)
@@ -395,6 +373,15 @@ public class GameBoard {
                 .owner(bank)
                 .build();
 
+        Map<Object, Integer> rentPrices11 = new HashMap<>();
+        rentPrices11.put(0, 22);  // Rent with 0 houses
+        rentPrices11.put("full_set", 44); // Rent with color set
+        rentPrices11.put(1,110); // Rent with 1 house
+        rentPrices11.put(2, 330); // Rent with 2 houses
+        rentPrices11.put(3, 800); // Rent with 3 houses
+        rentPrices11.put(4, 975); //Rent with 4 houses
+        rentPrices11.put("hotel", 1150); //Rent with hotel
+
         gameBoard [26] = Property.builder()
                 .fieldId(26)
                 .name("Atlantic Avenue")
@@ -402,15 +389,7 @@ public class GameBoard {
                 .price(260)
                 .owner(bank)
                 .color(PropertyColor.YELLOW)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 22);  // Rent with 0 houses
-                    put("full_set", 44); // Rent with color set
-                    put(1,110); // Rent with 1 house
-                    put(2, 330); // Rent with 2 houses
-                    put(3, 800); // Rent with 3 houses
-                    put(4, 975); //Rent with 4 houses
-                    put("hotel", 1150); //Rent with hotel
-                }})
+                .rentPrices(rentPrices11)
                 .mortgageValue(130)
                 .houseCost(150)
                 .hotelCost(150)
@@ -423,15 +402,7 @@ public class GameBoard {
                 .price(260)
                 .owner(bank)
                 .color(PropertyColor.YELLOW)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 22);  // Rent with 0 houses
-                    put("full_set", 44); // Rent with color set
-                    put(1,110); // Rent with 1 house
-                    put(2, 330); // Rent with 2 houses
-                    put(3, 800); // Rent with 3 houses
-                    put(4, 975); //Rent with 4 houses
-                    put("hotel", 1150); //Rent with hotel
-                }})
+                .rentPrices(rentPrices11)
                 .mortgageValue(130)
                 .houseCost(150)
                 .hotelCost(150)
@@ -446,6 +417,15 @@ public class GameBoard {
                 .mortgage(75)
                 .build();
 
+        Map<Object, Integer> rentPrices12 = new HashMap<>();
+        rentPrices12.put(0, 24);  // Rent with 0 houses
+        rentPrices12.put("full_set", 48); // Rent with color set
+        rentPrices12.put(1,120); // Rent with 1 house
+        rentPrices12.put(2, 360); // Rent with 2 houses
+        rentPrices12.put(3, 850); // Rent with 3 houses
+        rentPrices12.put(4, 1025); //Rent with 4 houses
+        rentPrices12.put("hotel", 1200); //Rent with hotel
+
         gameBoard [29] = Property.builder()
                 .fieldId(29)
                 .name("Marvin Gardens")
@@ -453,15 +433,7 @@ public class GameBoard {
                 .price(280)
                 .owner(bank)
                 .color(PropertyColor.YELLOW)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 24);  // Rent with 0 houses
-                    put("full_set", 48); // Rent with color set
-                    put(1,120); // Rent with 1 house
-                    put(2, 360); // Rent with 2 houses
-                    put(3, 850); // Rent with 3 houses
-                    put(4, 1025); //Rent with 4 houses
-                    put("hotel", 1200); //Rent with hotel
-                }})
+                .rentPrices(rentPrices12)
                 .mortgageValue(140)
                 .houseCost(150)
                 .hotelCost(150)
@@ -473,6 +445,15 @@ public class GameBoard {
                 .type(FieldType.JAIL)
                 .build();
 
+        Map<Object, Integer> rentPrices13 = new HashMap<>();
+        rentPrices13.put(0, 26);  // Rent with 0 houses
+        rentPrices13.put("full_set", 52); // Rent with color set
+        rentPrices13.put(1,130); // Rent with 1 house
+        rentPrices13.put(2, 390); // Rent with 2 houses
+        rentPrices13.put(3, 900); // Rent with 3 houses
+        rentPrices13.put(4, 1100); //Rent with 4 houses
+        rentPrices13.put("hotel", 1275); //Rent with hotel
+
         gameBoard [31] = Property.builder()
                 .fieldId(31)
                 .name("Pacific Avenue")
@@ -480,15 +461,7 @@ public class GameBoard {
                 .price(300)
                 .owner(bank)
                 .color(PropertyColor.GREEN)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 26);  // Rent with 0 houses
-                    put("full_set", 52); // Rent with color set
-                    put(1,130); // Rent with 1 house
-                    put(2, 390); // Rent with 2 houses
-                    put(3, 900); // Rent with 3 houses
-                    put(4, 1100); //Rent with 4 houses
-                    put("hotel", 1275); //Rent with hotel
-                }})
+                .rentPrices(rentPrices13)
                 .mortgageValue(150)
                 .houseCost(200)
                 .hotelCost(200)
@@ -501,15 +474,7 @@ public class GameBoard {
                 .price(300)
                 .owner(bank)
                 .color(PropertyColor.GREEN)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 26);  // Rent with 0 houses
-                    put("full_set", 52); // Rent with color set
-                    put(1,130); // Rent with 1 house
-                    put(2, 390); // Rent with 2 houses
-                    put(3, 900); // Rent with 3 houses
-                    put(4, 1100); //Rent with 4 houses
-                    put("hotel", 1275); //Rent with hotel
-                }})
+                .rentPrices(rentPrices13)
                 .mortgageValue(150)
                 .houseCost(200)
                 .hotelCost(200)
@@ -521,6 +486,15 @@ public class GameBoard {
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
+        Map<Object, Integer> rentPrices14 = new HashMap<>();
+        rentPrices14.put(0, 28);  // Rent with 0 houses
+        rentPrices14.put("full_set", 56); // Rent with color set
+        rentPrices14.put(1,150); // Rent with 1 house
+        rentPrices14.put(2, 450); // Rent with 2 houses
+        rentPrices14.put(3, 1000); // Rent with 3 houses
+        rentPrices14.put(4, 1200); //Rent with 4 houses
+        rentPrices14.put("hotel", 1400); //Rent with hotel
+
         gameBoard [34] = Property.builder()
                 .fieldId(34)
                 .name("Pennsylvania Avenue")
@@ -528,15 +502,7 @@ public class GameBoard {
                 .price(320)
                 .owner(bank)
                 .color(PropertyColor.GREEN)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 28);  // Rent with 0 houses
-                    put("full_set", 56); // Rent with color set
-                    put(1,150); // Rent with 1 house
-                    put(2, 450); // Rent with 2 houses
-                    put(3, 1000); // Rent with 3 houses
-                    put(4, 1200); //Rent with 4 houses
-                    put("hotel", 1400); //Rent with hotel
-                }})
+                .rentPrices(rentPrices14)
                 .mortgageValue(160)
                 .houseCost(200)
                 .hotelCost(200)
@@ -554,6 +520,15 @@ public class GameBoard {
                 .name("Chance")
                 .build();
 
+        Map<Object, Integer> rentPrices15 = new HashMap<>();
+        rentPrices15.put(0, 35);  // Rent with 0 houses
+        rentPrices15.put("full_set", 70); // Rent with color set
+        rentPrices15.put(1,175); // Rent with 1 house
+        rentPrices15.put(2, 500); // Rent with 2 houses
+        rentPrices15.put(3, 1100); // Rent with 3 houses
+        rentPrices15.put(4, 1300); //Rent with 4 houses
+        rentPrices15.put("hotel", 1500); //Rent with hotel
+
         gameBoard [37] = Property.builder()
                 .fieldId(37)
                 .name("Park Place")
@@ -561,15 +536,7 @@ public class GameBoard {
                 .price(350)
                 .owner(bank)
                 .color(PropertyColor.DARK_BLUE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 35);  // Rent with 0 houses
-                    put("full_set", 70); // Rent with color set
-                    put(1,175); // Rent with 1 house
-                    put(2, 500); // Rent with 2 houses
-                    put(3, 1100); // Rent with 3 houses
-                    put(4, 1300); //Rent with 4 houses
-                    put("hotel", 1500); //Rent with hotel
-                }})
+                .rentPrices(rentPrices15)
                 .mortgageValue(175)
                 .houseCost(200)
                 .hotelCost(200)
@@ -582,6 +549,15 @@ public class GameBoard {
                 .toPay(100)
                 .build();
 
+        Map<Object, Integer> rentPrices16 = new HashMap<>();
+        rentPrices16.put(0, 50);  // Rent with 0 houses
+        rentPrices16.put("full_set", 100); // Rent with color set
+        rentPrices16.put(1, 200); // Rent with 1 house
+        rentPrices16.put(2, 600); // Rent with 2 houses
+        rentPrices16.put(3, 1400); // Rent with 3 houses
+        rentPrices16.put(4, 1700); // Rent with 4 houses
+        rentPrices16.put("hotel", 2000); // Rent with hotel
+
         gameBoard [39] = Property.builder()
                 .fieldId(39)
                 .name("Boardwalk")
@@ -589,15 +565,7 @@ public class GameBoard {
                 .price(400)
                 .owner(bank)
                 .color(PropertyColor.DARK_BLUE)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 50);  // Rent with 0 houses
-                    put("full_set", 100); // Rent with color set
-                    put(1, 200); // Rent with 1 house
-                    put(2, 600); // Rent with 2 houses
-                    put(3, 1400); // Rent with 3 houses
-                    put(4, 1700); //Rent with 4 houses
-                    put("hotel", 2000); //Rent with hotel
-                }})
+                .rentPrices(rentPrices16)
                 .mortgageValue(200)
                 .houseCost(200)
                 .hotelCost(200)
