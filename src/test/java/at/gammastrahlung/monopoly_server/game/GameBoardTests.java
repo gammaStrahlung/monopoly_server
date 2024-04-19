@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class GameBoardTests {
+class GameBoardTests {
 
     private GameBoard gameBoard;
 
@@ -22,14 +22,14 @@ public class GameBoardTests {
     }
 
     @Test
-    public void testInitialization() {
+    void testInitialization() {
         assertNotNull(gameBoard.getBank());
         assertNotNull(gameBoard.getGameBoard());
         assertEquals(40, gameBoard.getGameBoard().length);
     }
 
     @Test
-    public void testBankOwnership() {
+    void testBankOwnership() {
         // Check that the bank owns all properties and utilities initially
         for (Field field : gameBoard.getGameBoard()) {
             if (field instanceof Property) {
@@ -42,7 +42,7 @@ public class GameBoardTests {
 
 
     @Test
-    public void testCleanUp(){
+    void testCleanUp(){
         // Set owners for some properties
         Player player1 = new Player();
         Player player2 = new Player();
