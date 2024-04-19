@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -26,6 +27,15 @@ public class GameBoard {
                 .type(FieldType.GO)
                 .build();
 
+        Map<Object, Integer> RentPricesField1 = new HashMap<>();
+        RentPricesField1.put(0, 2);
+        RentPricesField1.put("full_set", 4);
+        RentPricesField1.put(1, 10);
+        RentPricesField1.put(2, 30);
+        RentPricesField1.put(3, 90);
+        RentPricesField1.put(4, 160);
+        RentPricesField1.put("hotel", 250);
+
         gameBoard[1] = Property.builder()
                 .fieldId(1)
                 .name("Mediterranean Avenue")
@@ -33,15 +43,7 @@ public class GameBoard {
                 .price(60)
                 .owner(bank)
                 .color(PropertyColor.BROWN)
-                .rentPrices(new HashMap<>() {{
-                    put(0, 2);  // Rent with 0 houses
-                    put("full_set", 4); // Rent with color set
-                    put(1, 10); // Rent with 1 house
-                    put(2, 30); // Rent with 2 houses
-                    put(3, 90); // Rent with 3 houses
-                    put(4, 160);
-                    put("hotel", 250); //Rent with hotel
-                }})
+                .rentPrices(RentPricesField1)
                 .mortgageValue(30)
                 .houseCost(50)
                 .hotelCost(50)
