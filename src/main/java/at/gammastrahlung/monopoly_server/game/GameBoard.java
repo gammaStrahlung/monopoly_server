@@ -42,6 +42,7 @@ public class GameBoard {
                 .name("Baltic Avenue")
                 .type(FieldType.PROPERTY)
                 .price(60)
+                .owner(bank)
                 .color(PropertyColor.BROWN)
                 .build();
 
@@ -51,10 +52,11 @@ public class GameBoard {
                 .type(FieldType.INCOME_TAX)
                 .build();
 
-        gameBoard [5] = Field.builder()
+        gameBoard [5] = Utility.builder()
                 .fieldId(5)
                 .name("Reading Railroad")
                 .type(FieldType.RAILROAD)
+                .owner(bank)
                 .build();
 
         gameBoard [6] = Property.builder()
@@ -62,6 +64,7 @@ public class GameBoard {
                 .name("Oriental Avenue")
                 .type(FieldType.PROPERTY)
                 .price(100)
+                .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
                 .build();
 
@@ -76,6 +79,7 @@ public class GameBoard {
                 .name("Vermont Avenue")
                 .type(FieldType.PROPERTY)
                 .price(100)
+                .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
                 .build();
 
@@ -84,6 +88,7 @@ public class GameBoard {
                 .name("Connecticut Avenue")
                 .type(FieldType.PROPERTY)
                 .price(120)
+                .owner(bank)
                 .color(PropertyColor.LIGHT_BLUE)
                 .build();
 
@@ -98,6 +103,7 @@ public class GameBoard {
                 .name("St Charles Place")
                 .type(FieldType.PROPERTY)
                 .price(140)
+                .owner(bank)
                 .color(PropertyColor.PINK)
                 .build();
 
@@ -105,6 +111,8 @@ public class GameBoard {
                 .fieldId(12)
                 .name("Electricity Company")
                 .type(FieldType.UTILITY)
+                .owner(bank)
+                .toPay(150)
                 .build();
 
         gameBoard [13] = Property.builder()
@@ -112,6 +120,7 @@ public class GameBoard {
                 .name("States Avenue")
                 .type(FieldType.PROPERTY)
                 .price(140)
+                .owner(bank)
                 .color(PropertyColor.PINK)
                 .build();
 
@@ -120,13 +129,15 @@ public class GameBoard {
                 .name("Virginia Avenue")
                 .type(FieldType.PROPERTY)
                 .price(160)
+                .owner(bank)
                 .color(PropertyColor.PINK)
                 .build();
 
-        gameBoard [15] = Field.builder()
+        gameBoard [15] = Utility.builder()
                 .fieldId(15)
                 .name("Pennsylvania Railroad")
                 .type(FieldType.RAILROAD)
+                .owner(bank)
                 .build();
 
         gameBoard [16] = Property.builder()
@@ -134,6 +145,7 @@ public class GameBoard {
                 .name("St. James Place")
                 .type(FieldType.PROPERTY)
                 .price(180)
+                .owner(bank)
                 .color(PropertyColor.ORANGE)
                 .build();
 
@@ -148,6 +160,7 @@ public class GameBoard {
                 .name("Tennessee Avenue")
                 .type(FieldType.PROPERTY)
                 .price(180)
+                .owner(bank)
                 .color(PropertyColor.ORANGE)
                 .build();
 
@@ -156,6 +169,7 @@ public class GameBoard {
                 .name("New York Avenue")
                 .type(FieldType.PROPERTY)
                 .price(200)
+                .owner(bank)
                 .color(PropertyColor.ORANGE)
                 .build();
 
@@ -170,6 +184,7 @@ public class GameBoard {
                 .name("Kentucky Avenue")
                 .type(FieldType.PROPERTY)
                 .price(220)
+                .owner(bank)
                 .color(PropertyColor.RED)
                 .build();
 
@@ -184,6 +199,7 @@ public class GameBoard {
                 .name("Indiana Avenue")
                 .type(FieldType.PROPERTY)
                 .price(220)
+                .owner(bank)
                 .color(PropertyColor.RED)
                 .build();
 
@@ -192,13 +208,15 @@ public class GameBoard {
                 .name("Illinois Avenue")
                 .type(FieldType.PROPERTY)
                 .price(240)
+                .owner(bank)
                 .color(PropertyColor.RED)
                 .build();
 
-        gameBoard [25] = Field.builder()
+        gameBoard [25] = Utility.builder()
                 .fieldId(25)
                 .name("B. & O. Railroad")
                 .type(FieldType.RAILROAD)
+                .owner(bank)
                 .build();
 
         gameBoard [26] = Property.builder()
@@ -206,6 +224,7 @@ public class GameBoard {
                 .name("Atlantic Avenue")
                 .type(FieldType.PROPERTY)
                 .price(260)
+                .owner(bank)
                 .color(PropertyColor.YELLOW)
                 .build();
 
@@ -214,6 +233,7 @@ public class GameBoard {
                 .name("Ventnor Avenue")
                 .type(FieldType.PROPERTY)
                 .price(260)
+                .owner(bank)
                 .color(PropertyColor.YELLOW)
                 .build();
 
@@ -221,6 +241,8 @@ public class GameBoard {
                 .fieldId(28)
                 .name("Water Works")
                 .type(FieldType.UTILITY)
+                .owner(bank)
+                .toPay(150)
                 .build();
 
         gameBoard [29] = Property.builder()
@@ -228,6 +250,7 @@ public class GameBoard {
                 .name("Marvin Gardens")
                 .type(FieldType.PROPERTY)
                 .price(280)
+                .owner(bank)
                 .color(PropertyColor.YELLOW)
                 .build();
 
@@ -242,6 +265,7 @@ public class GameBoard {
                 .name("Pacific Avenue")
                 .type(FieldType.PROPERTY)
                 .price(300)
+                .owner(bank)
                 .color(PropertyColor.GREEN)
                 .build();
 
@@ -250,6 +274,7 @@ public class GameBoard {
                 .name("North Carolina Avenue")
                 .type(FieldType.PROPERTY)
                 .price(300)
+                .owner(bank)
                 .color(PropertyColor.GREEN)
                 .build();
 
@@ -264,13 +289,15 @@ public class GameBoard {
                 .name("Pennsylvania Avenue")
                 .type(FieldType.PROPERTY)
                 .price(320)
+                .owner(bank)
                 .color(PropertyColor.GREEN)
                 .build();
 
-        gameBoard[35] = Field.builder()
+        gameBoard[35] = Utility.builder()
                 .fieldId(35)
                 .name("Short Line")
                 .type(FieldType.RAILROAD)
+                .owner(bank)
                 .build();
 
         gameBoard [36] = Field.builder()
@@ -283,6 +310,7 @@ public class GameBoard {
                 .name("Park Place")
                 .type(FieldType.PROPERTY)
                 .price(350)
+                .owner(bank)
                 .color(PropertyColor.DARK_BLUE)
                 .build();
 
@@ -297,6 +325,7 @@ public class GameBoard {
                 .name("Boardwalk")
                 .type(FieldType.PROPERTY)
                 .price(400)
+                .owner(bank)
                 .color(PropertyColor.DARK_BLUE)
                 .build();
     }
