@@ -39,11 +39,7 @@ public class Property extends Field{
         this.hotelRent = hotelRent;
     }*/
 
-    public void buyAndSellProperty(Player buyer){
-        owner.addBalance(price);
-        buyer.subtractBalance(price);
-        this.owner = buyer;
-    }
+
 
     public void buildHouse(){
         if(houses < 4 && buildable){

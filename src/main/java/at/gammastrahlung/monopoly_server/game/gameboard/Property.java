@@ -19,4 +19,10 @@ public class Property extends Field{
     private int mortgageValue;
     private int houseCost;
     private int hotelCost;
+
+    public void buyAndSellProperty(Player buyer){
+        owner.addBalance(price);
+        buyer.subtractBalance(price);
+        this.owner = buyer;
+    }
 }
