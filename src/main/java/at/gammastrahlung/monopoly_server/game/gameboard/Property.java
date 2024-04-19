@@ -16,4 +16,7 @@ public class Property extends Field{
     private Player owner;
     private PropertyColor color;
     private Map<Object, Integer> rentPrices;
+    private int mortgageValue;
+    private int houseCost;
+    private int hotelCost;
 }

@@ -41,6 +41,9 @@ public class GameBoard {
                     put(4, 160);
                     put("hotel", 250); //Rent with hotel
                 }})
+                .mortgageValue(30)
+                .houseCost(50)
+                .hotelCost(50)
                 .build();
 
         gameBoard[2] = Field.builder()
@@ -65,6 +68,9 @@ public class GameBoard {
                     put(4, 320); //Rent with 4 houses
                     put("hotel", 450); //Rent with hotel
                 }})
+                .mortgageValue(30)
+                .houseCost(50)
+                .hotelCost(50)
                 .build();
 
         gameBoard [4] = Field.builder()
@@ -96,6 +102,9 @@ public class GameBoard {
                     put(4, 400); //Rent with 4 houses
                     put("hotel", 550); //Rent with hotel
                 }})
+                .mortgageValue(50)
+                .houseCost(50)
+                .hotelCost(50)
                 .build();
 
         gameBoard [7] = Field.builder()
@@ -120,6 +129,9 @@ public class GameBoard {
                     put(4, 400); //Rent with 4 houses
                     put("hotel", 550); //Rent with hotel
                 }})
+                .mortgageValue(50)
+                .houseCost(50)
+                .hotelCost(50)
                 .build();
 
         gameBoard [9] = Property.builder()
@@ -138,6 +150,9 @@ public class GameBoard {
                     put(4, 450); //Rent with 4 houses
                     put("hotel", 600); //Rent with hotel
                 }})
+                .mortgageValue(60)
+                .houseCost(50)
+                .hotelCost(50)
                 .build();
 
         gameBoard [10] = Field.builder()
@@ -162,6 +177,9 @@ public class GameBoard {
                     put(4, 625); //Rent with 4 houses
                     put("hotel", 750); //Rent with hotel
                 }})
+                .mortgageValue(70)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [12] = Utility.builder()
@@ -188,6 +206,9 @@ public class GameBoard {
                     put(4, 625); //Rent with 4 houses
                     put("hotel", 750); //Rent with hotel
                 }})
+                .mortgageValue(70)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [14] = Property.builder()
@@ -206,6 +227,9 @@ public class GameBoard {
                     put(4, 700); //Rent with 4 houses
                     put("hotel", 900); //Rent with hotel
                 }})
+                .mortgageValue(80)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [15] = Utility.builder()
@@ -231,6 +255,9 @@ public class GameBoard {
                     put(4, 750); //Rent with 4 houses
                     put("hotel", 950); //Rent with hotel
                 }})
+                .mortgageValue(90)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [17] = Field.builder()
@@ -255,6 +282,9 @@ public class GameBoard {
                     put(4, 750); //Rent with 4 houses
                     put("hotel", 950); //Rent with hotel
                 }})
+                .mortgageValue(90)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [19] = Property.builder()
@@ -273,6 +303,9 @@ public class GameBoard {
                     put(4, 800); //Rent with 4 houses
                     put("hotel", 1000); //Rent with hotel
                 }})
+                .mortgageValue(100)
+                .houseCost(100)
+                .hotelCost(100)
                 .build();
 
         gameBoard [20] = Field.builder()
@@ -297,6 +330,9 @@ public class GameBoard {
                     put(4, 875); //Rent with 4 houses
                     put("hotel", 1050); //Rent with hotel
                 }})
+                .mortgageValue(110)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [22] = Field.builder()
@@ -321,6 +357,9 @@ public class GameBoard {
                     put(4, 875); //Rent with 4 houses
                     put("hotel", 1050); //Rent with hotel
                 }})
+                .mortgageValue(110)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [24] = Property.builder()
@@ -339,6 +378,9 @@ public class GameBoard {
                     put(4, 925); //Rent with 4 houses
                     put("hotel", 1100); //Rent with hotel
                 }})
+                .mortgageValue(120)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [25] = Utility.builder()
@@ -364,6 +406,9 @@ public class GameBoard {
                     put(4, 975); //Rent with 4 houses
                     put("hotel", 1150); //Rent with hotel
                 }})
+                .mortgageValue(130)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [27] = Property.builder()
@@ -382,6 +427,9 @@ public class GameBoard {
                     put(4, 975); //Rent with 4 houses
                     put("hotel", 1150); //Rent with hotel
                 }})
+                .mortgageValue(130)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [28] = Utility.builder()
@@ -408,6 +456,9 @@ public class GameBoard {
                     put(4, 1025); //Rent with 4 houses
                     put("hotel", 1200); //Rent with hotel
                 }})
+                .mortgageValue(140)
+                .houseCost(150)
+                .hotelCost(150)
                 .build();
 
         gameBoard [30] = Field.builder()
@@ -432,6 +483,9 @@ public class GameBoard {
                     put(4, 1100); //Rent with 4 houses
                     put("hotel", 1275); //Rent with hotel
                 }})
+                .mortgageValue(150)
+                .houseCost(200)
+                .hotelCost(200)
                 .build();
 
         gameBoard [32] = Property.builder()
@@ -450,6 +504,9 @@ public class GameBoard {
                     put(4, 1100); //Rent with 4 houses
                     put("hotel", 1275); //Rent with hotel
                 }})
+                .mortgageValue(150)
+                .houseCost(200)
+                .hotelCost(200)
                 .build();
 
         gameBoard [33] = Field.builder()
@@ -474,6 +531,9 @@ public class GameBoard {
                     put(4, 1200); //Rent with 4 houses
                     put("hotel", 1400); //Rent with hotel
                 }})
+                .mortgageValue(160)
+                .houseCost(200)
+                .hotelCost(200)
                 .build();
 
         gameBoard[35] = Utility.builder()
@@ -504,6 +564,9 @@ public class GameBoard {
                     put(4, 1300); //Rent with 4 houses
                     put("hotel", 1500); //Rent with hotel
                 }})
+                .mortgageValue(175)
+                .houseCost(200)
+                .hotelCost(200)
                 .build();
 
         gameBoard [38] = Field.builder()
@@ -528,6 +591,9 @@ public class GameBoard {
                     put(4, 1700); //Rent with 4 houses
                     put("hotel", 2000); //Rent with hotel
                 }})
+                .mortgageValue(200)
+                .houseCost(200)
+                .hotelCost(200)
                 .build();
     }
     public void cleanUpBoard() {
