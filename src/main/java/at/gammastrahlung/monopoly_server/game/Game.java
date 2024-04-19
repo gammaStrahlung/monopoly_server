@@ -1,6 +1,8 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
+
 import lombok.Getter;
 
 import java.util.*;
@@ -66,6 +68,7 @@ public class Game {
             return false; // Not enough players
 
         state = GameState.PLAYING;
+        initializeGameBoard();
         return true;
     }
 
@@ -142,6 +145,12 @@ public class Game {
             players.get(player.getId()).update(player);
             return true;
         }
+    }
+
+    private void initializeGameBoard() {
+        // Initialize the game board
+        GameBoard gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard();
     }
 
     public List<Player> getPlayers() {
