@@ -15,6 +15,13 @@ import lombok.Setter;
 @Builder
 
 public class Property extends Field{
+    private Player owner;
+    private int price;
+    private int baseRent;
+    private int oneHouseRent;
+    private int twoHousesRent;
+    private int threeHousesRent;
+    private int hotelRent;
 
 
 }
