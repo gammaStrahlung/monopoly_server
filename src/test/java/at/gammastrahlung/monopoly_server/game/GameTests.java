@@ -47,12 +47,21 @@ class GameTests {
         // Can't start a game without players
         assertFalse(game.startGame(null));
 
-        // Add some players
-        for (int i = 0; i < 4; i++)
+        // Add single player
+        game.join(players.get(0));
+
+        // Can't start a game with only on player
+        assertFalse(game.startGame(players.get(0)));
+
+        // Add some more players
+        for (int i = 1; i < 4; i++)
             game.join(players.get(i));
 
         // Can't start the game if player is not gameOwner
         assertFalse(game.startGame(players.get(1)));
+
+        // Can't start the game if player is null
+        assertFalse(game.startGame(null));
 
         // Can start the game if player is gameOwner
         assertTrue(game.startGame(players.get(0)));
@@ -64,12 +73,15 @@ class GameTests {
     @Test
     void endGame() {
         // Can't end the game if player is not gameOwner
-        game.endGame(players.get(1));
+        assertFalse(game.endGame(players.get(1)));
+
+        // Can't end the game if player is null
+        assertFalse(game.endGame(null));
 
         game.join(players.get(0)); // Add player to act as gameOwner
 
         // Can end the game if player is gameOwner
-        game.endGame(players.get(0));
+        assertTrue(game.endGame(players.get(0)));
 
         assertEquals(0, game.getGameId()); // Game ID is default int value
         assertEquals(Game.GameState.ENDED, game.getState()); // State is ended
