@@ -9,6 +9,4 @@ public enum PropertyColor {
     YELLOW,
     GREEN,
     DARK_BLUE,
-    RAILROAD,
-
 }

@@ -4,6 +4,8 @@ import at.gammastrahlung.monopoly_server.game.Player;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Map;
+
 
 @NoArgsConstructor
 @Getter
@@ -13,4 +15,5 @@ public class Property extends Field{
     private int price;
     private Player owner;
     private PropertyColor color;
+    private Map<Object, Integer> rentPrices;
 }
