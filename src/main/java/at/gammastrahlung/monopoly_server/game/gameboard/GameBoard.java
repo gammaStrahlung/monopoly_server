@@ -1,5 +1,6 @@
-package at.gammastrahlung.monopoly_server.game;
+package at.gammastrahlung.monopoly_server.game.gameboard;
 
+import at.gammastrahlung.monopoly_server.game.Player;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package at.gammastrahlung.monopoly_server.game;
+package at.gammastrahlung.monopoly_server.game.gameboard;
 
 public enum FieldType {
     PROPERTY,

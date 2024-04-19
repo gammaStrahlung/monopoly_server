@@ -1,5 +1,9 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +21,25 @@ public class GameBoardTests {
         gameBoard.initializeGameBoard();
     }
 
-
-
     @Test
     public void testInitialization() {
         assertNotNull(gameBoard.getBank());
         assertNotNull(gameBoard.getGameBoard());
         assertEquals(40, gameBoard.getGameBoard().length);
     }
+
+    @Test
+    public void testBankOwnership() {
+        // Check that the bank owns all properties and utilities initially
+        for (Field field : gameBoard.getGameBoard()) {
+            if (field instanceof Property) {
+                assertEquals(gameBoard.getBank(), ((Property) field).getOwner());
+            } else if (field instanceof Utility) {
+                assertEquals(gameBoard.getBank(), ((Utility) field).getOwner());
+            }
+        }
+    }
+
 
     @Test
     public void testCleanUp(){
