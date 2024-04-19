@@ -17,7 +17,7 @@ public class GameBoardTests {
 
     @BeforeEach
     public void setUp() {
-        gameBoard = GameBoard.builder().size(40).build();
+        gameBoard = GameBoard.builder().build();
         gameBoard.initializeGameBoard();
     }
 

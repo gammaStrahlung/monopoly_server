@@ -12,10 +12,11 @@ import java.util.HashMap;
 public class GameBoard {
     private Player bank = new Player();
     private Field[] gameBoard;
+    private final int gameBoardSize = 40;
 
     @Builder
-    public GameBoard(int size) {
-        gameBoard = new Field[size];
+    public GameBoard() {
+        gameBoard = new Field[gameBoardSize];
     }
 
     public void initializeGameBoard() {
