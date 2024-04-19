@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import com.google.gson.annotations.Expose;
 import lombok.Getter;
 
 import java.util.*;
@@ -20,9 +21,16 @@ public class Game {
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
     @Getter
     private int gameId;
+
     // Current state of the game
     @Getter
+    @Expose
     private GameState state = GameState.STARTED;
+
+    // The owner of the game. This is the only player that can start and end the game
+    @Getter
+    @Expose
+    private Player gameOwner = null;
 
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
@@ -42,11 +50,16 @@ public class Game {
     }
 
     /**
-     * Starts the game, if all prerequisites are met.
+     * Starts the game, if all prerequisites are met and the player requesting the start is the gameOwner.
      *
+     * @param player The player that wants to start the game.
      * @return If the game was successfully started.
      */
-    public boolean startGame() {
+    public boolean startGame(Player player) {
+        if (player == null) // Player can not be null
+            return false;
+        if (!player.equals(gameOwner)) // Only the gameOwner can start the game
+            return false;
         if (state != GameState.STARTED)
             return false; // Can't start an already playing game or an ended game
         if (players.size() < MIN_PLAYERS)
@@ -57,15 +70,23 @@ public class Game {
     }
 
     /**
-     * Ends the game
+     * Ends the game, if the player requesting the end is the gameOwner
+     *
+     * @param player The player that wants to end the game.
+     * @return If ending the game was successful
      */
-    public void endGame() {
+    public boolean endGame(Player player) {
+        if (player == null) // Player can not be null
+            return false;
+        if (!player.equals(gameOwner)) // Only the gameOwner can end the game
+            return false;
+
         state = GameState.ENDED;
-        games.remove(gameId);
-        gameId = 0;
 
         // Remove this game from the games to free the gameId
         games.remove(gameId);
+
+        gameId = 0;
 
         // Change current game of all players to null
         for (Map.Entry<UUID, Player> entry : players.entrySet()) {
@@ -74,6 +95,8 @@ public class Game {
 
         // Clear players
         players.clear();
+
+        return true;
     }
 
     public static Game joinByGameId(int gameId, Player player) {
@@ -108,6 +131,11 @@ public class Game {
             // Add player to list of players.
             player.currentGame = this;
             players.put(player.getId(), player);
+
+            // First joining player is the gameOwner
+            if (gameOwner == null)
+                gameOwner = player;
+
             return true;
         } else {
             // Player is re-joining -> update old player object

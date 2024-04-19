@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
+import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
@@ -43,13 +44,20 @@ public class MonopolyWebSocketHandler implements WebSocketHandler {
         if (p == null)
             return; // Player was not playing a game
 
-        ServerMessage message = ServerMessage.<String>builder()
+        ServerMessage message = ServerMessage.builder()
                 .messagePath("disconnect")
                 .player(p)
                 .type(ServerMessage.MessageType.INFO)
                 .build();
 
-        WebSocketSender.sendToAllGamePlayers(session, message, true);
+        Game currentGame = p.getCurrentGame();
+        if (currentGame == null)
+            return; // Can't notify other players when not playing a game
+
+        WebSocketSender.sendToPlayers(message, currentGame.getPlayers());
+
+        // Player disconnected -> WebSocketSession is invalid
+        p.setWebSocketSession(null);
     }
 
     @Override
