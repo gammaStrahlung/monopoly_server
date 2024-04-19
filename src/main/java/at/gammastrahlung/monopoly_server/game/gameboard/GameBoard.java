@@ -189,6 +189,7 @@ public class GameBoard {
                 .type(FieldType.UTILITY)
                 .owner(bank)
                 .price(150)
+                .mortgage(75)
                 .build();
 
         gameBoard [13] = Property.builder()
@@ -439,6 +440,7 @@ public class GameBoard {
                 .type(FieldType.UTILITY)
                 .owner(bank)
                 .price(150)
+                .mortgage(75)
                 .build();
 
         gameBoard [29] = Property.builder()

@@ -13,4 +13,5 @@ public class Utility extends Field{
     private Player owner;
     private int toPay;
     private int price;
+    private int mortgage;
 }
