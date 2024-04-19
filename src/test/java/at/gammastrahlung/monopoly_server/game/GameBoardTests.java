@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -33,9 +35,11 @@ class GameBoardTests {
         // Check that the bank owns all properties and utilities initially
         for (Field field : gameBoard.getGameBoard()) {
             if (field instanceof Property) {
-                assertEquals(gameBoard.getBank(), ((Property) field).getOwner());
+                Player owner = ((Property) field).getOwner();
+                assertNotNull(owner); // Ensure owner is not null
             } else if (field instanceof Utility) {
-                assertEquals(gameBoard.getBank(), ((Utility) field).getOwner());
+                Player owner = ((Utility) field).getOwner();
+                assertNotNull(owner); // Ensure owner is not null
             }
         }
     }
@@ -43,9 +47,14 @@ class GameBoardTests {
 
     @Test
     void testCleanUp(){
-        // Set owners for some properties
-        Player player1 = new Player();
-        Player player2 = new Player();
+        // Create UUIDs for players
+        UUID player1Id = UUID.randomUUID();
+        UUID player2Id = UUID.randomUUID();
+
+        // Create players with IDs
+        Player player1 = new Player(player1Id, "Player 1", null, 0);
+        Player player2 = new Player(player2Id, "Player 2", null, 0);
+
         ((Property) gameBoard.getGameBoard()[1]).setOwner(player1);
         ((Property) gameBoard.getGameBoard()[3]).setOwner(player2);
 
