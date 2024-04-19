@@ -73,13 +73,14 @@ public class GameBoard {
                 .hotelCost(50)
                 .build();
 
-        gameBoard [4] = Field.builder()
+        gameBoard [4] = TaxField.builder()
                 .fieldId(4)
                 .name("Income Tax")
                 .type(FieldType.INCOME_TAX)
+                .toPay(200)
                 .build();
 
-        gameBoard [5] = Utility.builder()
+        gameBoard [5] = Railroad.builder()
                 .fieldId(5)
                 .name("Reading Railroad")
                 .type(FieldType.RAILROAD)
@@ -187,7 +188,7 @@ public class GameBoard {
                 .name("Electricity Company")
                 .type(FieldType.UTILITY)
                 .owner(bank)
-                .toPay(150)
+                .price(150)
                 .build();
 
         gameBoard [13] = Property.builder()
@@ -232,7 +233,7 @@ public class GameBoard {
                 .hotelCost(100)
                 .build();
 
-        gameBoard [15] = Utility.builder()
+        gameBoard [15] = Railroad.builder()
                 .fieldId(15)
                 .name("Pennsylvania Railroad")
                 .type(FieldType.RAILROAD)
@@ -383,7 +384,7 @@ public class GameBoard {
                 .hotelCost(150)
                 .build();
 
-        gameBoard [25] = Utility.builder()
+        gameBoard [25] = Railroad.builder()
                 .fieldId(25)
                 .name("B. & O. Railroad")
                 .type(FieldType.RAILROAD)
@@ -437,7 +438,7 @@ public class GameBoard {
                 .name("Water Works")
                 .type(FieldType.UTILITY)
                 .owner(bank)
-                .toPay(150)
+                .price(150)
                 .build();
 
         gameBoard [29] = Property.builder()
@@ -536,7 +537,7 @@ public class GameBoard {
                 .hotelCost(200)
                 .build();
 
-        gameBoard[35] = Utility.builder()
+        gameBoard[35] = Railroad.builder()
                 .fieldId(35)
                 .name("Short Line")
                 .type(FieldType.RAILROAD)
@@ -569,10 +570,11 @@ public class GameBoard {
                 .hotelCost(200)
                 .build();
 
-        gameBoard [38] = Field.builder()
+        gameBoard [38] = TaxField.builder()
                 .fieldId(38)
                 .name("Luxury Tax")
                 .type(FieldType.LUXURY_TAX)
+                .toPay(100)
                 .build();
 
         gameBoard [39] = Property.builder()
