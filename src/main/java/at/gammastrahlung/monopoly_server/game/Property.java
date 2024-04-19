@@ -23,6 +23,10 @@ public class Property extends Field{
     private int twoHousesRent;
     private int threeHousesRent;
     private int hotelRent;
+    private boolean buildable;
+    private int housePrice = 20;
+    private int houses = 0;
+
 
    /* public Property(int fieldID, String name, Player owner, int price, int baseRent, int oneHouseRent, int twoHousesRent, int threeHousesRent, int hotelRent) {
         super(fieldID, name);
@@ -35,11 +39,38 @@ public class Property extends Field{
         this.hotelRent = hotelRent;
     }*/
 
-    private void buyAndSellProperty(Player buyer){
+    public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
         buyer.subtractBalance(price);
         this.owner = buyer;
     }
+
+    public void buildHouse(){
+        if(houses < 4 && buildable){
+            this.houses ++;
+            this.owner.subtractBalance(housePrice);
+        }
+    }
+
+    public void getRent(Player renter){
+        if (houses == 0) {
+            renter.subtractBalance(baseRent);
+            this.owner.addBalance(baseRent);
+        } else if (houses == 1) {
+            renter.subtractBalance(oneHouseRent);
+            this.owner.addBalance(oneHouseRent);
+        } else if (houses == 2) {
+            renter.subtractBalance(twoHousesRent);
+            this.owner.addBalance(twoHousesRent);
+        } else if (houses == 3) {
+            renter.subtractBalance(threeHousesRent);
+            this.owner.addBalance(threeHousesRent);
+        }else {
+            renter.subtractBalance(hotelRent);
+            this.owner.addBalance(hotelRent);
+        }
+    }
+
 
 
 
