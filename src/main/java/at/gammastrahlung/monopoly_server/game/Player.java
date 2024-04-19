@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,7 +32,6 @@ public  class Player {
     /**
      * The game the player is currently playing
      */
-    @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     protected Game currentGame;
 
     public Player(UUID id, String name, Game currentGame, int startingBalance) {
@@ -60,5 +61,16 @@ public  class Player {
         // will get implemented in next sprint
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Player))
+            return false;
 
+        return id.equals(((Player) obj).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }
