@@ -31,6 +31,12 @@ public class GameBoard {
                 .color(PropertyColor.BROWN)
                 .build();
 
+        gameBoard[2] = Field.builder()
+                .fieldId(2)
+                .name("Community Chest")
+                .type(FieldType.COMMUNITY_CHEST)
+                .build();
+
         gameBoard [3] = Property.builder()
                 .fieldId(3)
                 .name("Baltic Avenue")
@@ -39,12 +45,30 @@ public class GameBoard {
                 .color(PropertyColor.BROWN)
                 .build();
 
+        gameBoard [4] = Field.builder()
+                .fieldId(4)
+                .name("Income Tax")
+                .type(FieldType.INCOME_TAX)
+                .build();
+
+        gameBoard [5] = Field.builder()
+                .fieldId(5)
+                .name("Reading Railroad")
+                .type(FieldType.RAILROAD)
+                .build();
+
         gameBoard [6] = Property.builder()
                 .fieldId(6)
                 .name("Oriental Avenue")
                 .type(FieldType.PROPERTY)
                 .price(100)
                 .color(PropertyColor.LIGHT_BLUE)
+                .build();
+
+        gameBoard [7] = Field.builder()
+                .fieldId(7)
+                .name("Chance")
+                .type(FieldType.CHANCE)
                 .build();
 
         gameBoard [8] = Property.builder()
@@ -63,12 +87,24 @@ public class GameBoard {
                 .color(PropertyColor.LIGHT_BLUE)
                 .build();
 
+        gameBoard [10] = Field.builder()
+                .fieldId(10)
+                .name("Jail")
+                .type(FieldType.JAIL)
+                .build();
+
         gameBoard [11] = Property.builder()
                 .fieldId(11)
                 .name("St Charles Place")
                 .type(FieldType.PROPERTY)
                 .price(140)
                 .color(PropertyColor.PINK)
+                .build();
+
+        gameBoard [12] = Utility.builder()
+                .fieldId(12)
+                .name("Electricity Company")
+                .type(FieldType.UTILITY)
                 .build();
 
         gameBoard [13] = Property.builder()
@@ -87,12 +123,24 @@ public class GameBoard {
                 .color(PropertyColor.PINK)
                 .build();
 
+        gameBoard [15] = Field.builder()
+                .fieldId(15)
+                .name("Pennsylvania Railroad")
+                .type(FieldType.RAILROAD)
+                .build();
+
         gameBoard [16] = Property.builder()
                 .fieldId(16)
                 .name("St. James Place")
                 .type(FieldType.PROPERTY)
                 .price(180)
                 .color(PropertyColor.ORANGE)
+                .build();
+
+        gameBoard [17] = Field.builder()
+                .fieldId(17)
+                .name("Community Chest")
+                .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
         gameBoard [18] = Property.builder()
@@ -111,12 +159,24 @@ public class GameBoard {
                 .color(PropertyColor.ORANGE)
                 .build();
 
+        gameBoard [20] = Field.builder()
+                .fieldId(20)
+                .name("Free Parking")
+                .type(FieldType.FREE_PARKING)
+                .build();
+
         gameBoard [21] = Property.builder()
                 .fieldId(21)
                 .name("Kentucky Avenue")
                 .type(FieldType.PROPERTY)
                 .price(220)
                 .color(PropertyColor.RED)
+                .build();
+
+        gameBoard [22] = Field.builder()
+                .fieldId(22)
+                .name("Chance")
+                .type(FieldType.CHANCE)
                 .build();
 
         gameBoard [23] = Property.builder()
@@ -135,6 +195,12 @@ public class GameBoard {
                 .color(PropertyColor.RED)
                 .build();
 
+        gameBoard [25] = Field.builder()
+                .fieldId(25)
+                .name("B. & O. Railroad")
+                .type(FieldType.RAILROAD)
+                .build();
+
         gameBoard [26] = Property.builder()
                 .fieldId(26)
                 .name("Atlantic Avenue")
@@ -151,12 +217,24 @@ public class GameBoard {
                 .color(PropertyColor.YELLOW)
                 .build();
 
+        gameBoard [28] = Utility.builder()
+                .fieldId(28)
+                .name("Water Works")
+                .type(FieldType.UTILITY)
+                .build();
+
         gameBoard [29] = Property.builder()
                 .fieldId(29)
                 .name("Marvin Gardens")
                 .type(FieldType.PROPERTY)
                 .price(280)
                 .color(PropertyColor.YELLOW)
+                .build();
+
+        gameBoard [30] = Field.builder()
+                .fieldId(30)
+                .name("Jail")
+                .type(FieldType.JAIL)
                 .build();
 
         gameBoard [31] = Property.builder()
@@ -175,6 +253,12 @@ public class GameBoard {
                 .color(PropertyColor.GREEN)
                 .build();
 
+        gameBoard [33] = Field.builder()
+                .fieldId(33)
+                .name("Community Chest")
+                .type(FieldType.COMMUNITY_CHEST)
+                .build();
+
         gameBoard [34] = Property.builder()
                 .fieldId(34)
                 .name("Pennsylvania Avenue")
@@ -183,12 +267,30 @@ public class GameBoard {
                 .color(PropertyColor.GREEN)
                 .build();
 
+        gameBoard[35] = Field.builder()
+                .fieldId(35)
+                .name("Short Line")
+                .type(FieldType.RAILROAD)
+                .build();
+
+        gameBoard [36] = Field.builder()
+                .fieldId(36)
+                .name("Chance")
+                .build();
+
+
         gameBoard [37] = Property.builder()
                 .fieldId(37)
                 .name("Park Place")
                 .type(FieldType.PROPERTY)
                 .price(350)
                 .color(PropertyColor.DARK_BLUE)
+                .build();
+
+        gameBoard [38] = Field.builder()
+                .fieldId(38)
+                .name("Luxury Tax")
+                .type(FieldType.LUXURY_TAX)
                 .build();
 
         gameBoard [39] = Property.builder()

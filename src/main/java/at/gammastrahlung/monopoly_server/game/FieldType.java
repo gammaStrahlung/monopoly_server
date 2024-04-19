@@ -8,6 +8,7 @@ public enum FieldType {
     COMMUNITY_CHEST,
     INCOME_TAX,
     JAIL,
+    GO_TO_JAIL,
     FREE_PARKING,
     GO,
     LUXURY_TAX
