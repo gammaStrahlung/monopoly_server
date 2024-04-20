@@ -75,7 +75,6 @@ class GameBoardTests {
 
     @Test
     public void testInitializeCommunityChestDeck() {
-
         assertEquals(8, gameBoard.getCommunityChestDeck().size());
 
         EventCard firstCard = gameBoard.getCommunityChestDeck().get(0);
@@ -83,6 +82,18 @@ class GameBoardTests {
         assertEquals("Go to Jail", firstCard.getDescription());
         assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
         assertEquals(1, firstCard.getCardId());
+        assertEquals(30, firstCard.getMoveToField());
+    }
+
+    @Test
+    public void testInitializeChanceDeck() {
+        assertEquals(6, gameBoard.getChanceDeck().size());
+
+        EventCard firstCard = gameBoard.getChanceDeck().get(0);
+
+        assertEquals("Go to Jail", firstCard.getDescription());
+        assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
+        assertEquals(9, firstCard.getCardId());
         assertEquals(30, firstCard.getMoveToField());
     }
 }
