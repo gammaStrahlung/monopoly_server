@@ -151,6 +151,8 @@ public class Game {
         // Initialize the game board
         GameBoard gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
+        gameBoard.initializeChanceDeck();
+        gameBoard.initializeCommunityChestDeck();
     }
 
     public List<Player> getPlayers() {
