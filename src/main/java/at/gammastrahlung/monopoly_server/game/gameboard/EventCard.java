@@ -17,4 +17,22 @@ public class EventCard {
     private int payOrGetMoney;
     private int moveToField;
 
+    public void drawnCard(Player player) {
+        switch (cardType) {
+            case GO_TO_JAIL:
+                break;
+
+            case PAY_CARD:
+                break;
+
+            case GET_MONEY_CARD:
+                break;
+
+            case MOVE_TO_FIELD:
+                break;
+
+            default:
+                break;
+        }
+    }
 }
