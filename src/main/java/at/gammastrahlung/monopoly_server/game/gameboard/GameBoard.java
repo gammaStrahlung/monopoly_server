@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -16,6 +18,10 @@ public class GameBoard {
     private static final int gameBoardSize = 40;
     private static final String FULL_SET = "full_set";
     private static final String HOTEL = "hotel";
+
+    private ArrayList<EventCard> chanceDeck;
+    private ArrayList<EventCard> communityChestDeck;
+
     @Builder
     public GameBoard() {
         gameBoard = new Field[gameBoardSize];
@@ -580,5 +586,62 @@ public class GameBoard {
 
             }
         }
+    }
+
+    public void initializeCommunityChestDeck(){
+        communityChestDeck.add(EventCard.builder()
+                .description("Go to Jail")
+                .cardType(CardType.GO_TO_JAIL)
+                .cardId(1)
+                .moveToField(30)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Birthday")
+                .cardType(CardType.GET_MONEY_CARD)
+                .cardId(2)
+                .payOrGetMoney(20)
+                .build());
+        communityChestDeck.add(EventCard.builder()
+                .description("Beauty Contest")
+                .cardType(CardType.GET_MONEY_CARD)
+                .cardId(3)
+                .payOrGetMoney(10)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Inheritance")
+                .cardType(CardType.GET_MONEY_CARD)
+                .cardId(4)
+                .payOrGetMoney(100)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Hospital Fee")
+                .cardType(CardType.PAY_MONEY_CARD)
+                .cardId(5)
+                .payOrGetMoney(50)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Doctors Fee")
+                .cardType(CardType.PAY_MONEY_CARD)
+                .cardId(6)
+                .payOrGetMoney(50)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Income Tax Refund")
+                .cardType(CardType.GET_MONEY_CARD)
+                .cardId(7)
+                .payOrGetMoney(20)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("School Fee")
+                .cardType(CardType.PAY_MONEY_CARD)
+                .cardId(8)
+                .payOrGetMoney(50)
+                .build());
     }
 }
