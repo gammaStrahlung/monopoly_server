@@ -48,24 +48,7 @@ public class Property extends Field{
         }
     }
 
-    public void getRent(Player renter){
-        if (houses == 0) {
-            renter.subtractBalance(baseRent);
-            this.owner.addBalance(baseRent);
-        } else if (houses == 1) {
-            renter.subtractBalance(oneHouseRent);
-            this.owner.addBalance(oneHouseRent);
-        } else if (houses == 2) {
-            renter.subtractBalance(twoHousesRent);
-            this.owner.addBalance(twoHousesRent);
-        } else if (houses == 3) {
-            renter.subtractBalance(threeHousesRent);
-            this.owner.addBalance(threeHousesRent);
-        }else {
-            renter.subtractBalance(hotelRent);
-            this.owner.addBalance(hotelRent);
-        }
-    }
+
 
 
 
