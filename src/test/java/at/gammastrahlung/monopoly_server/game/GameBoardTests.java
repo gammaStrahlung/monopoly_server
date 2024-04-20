@@ -1,5 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.CardType;
+import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
@@ -21,6 +23,8 @@ class GameBoardTests {
     public void setUp() {
         gameBoard = GameBoard.builder().build();
         gameBoard.initializeGameBoard();
+        gameBoard.initializeChanceDeck();
+        gameBoard.initializeCommunityChestDeck();
     }
 
     @Test
@@ -67,5 +71,18 @@ class GameBoardTests {
                 assertNull(((Property) field).getOwner());
             }
         }
+    }
+
+    @Test
+    public void testInitializeCommunityChestDeck() {
+
+        assertEquals(8, gameBoard.getCommunityChestDeck().size());
+
+        EventCard firstCard = gameBoard.getCommunityChestDeck().get(0);
+
+        assertEquals("Go to Jail", firstCard.getDescription());
+        assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
+        assertEquals(1, firstCard.getCardId());
+        assertEquals(30, firstCard.getMoveToField());
     }
 }
