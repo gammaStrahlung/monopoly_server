@@ -4,5 +4,7 @@ public enum CardType {
     PAY_MONEY_CARD,
     GET_MONEY_CARD,
     MOVE_TO_FIELD,
-    GO_TO_JAIL
+    GO_TO_JAIL,
+    MOVE_TO_RAILROAD,
+    STREET_REPAIRS
 }

@@ -22,13 +22,19 @@ public class EventCard {
             case GO_TO_JAIL:
                 break;
 
-            case PAY_CARD:
+            case PAY_MONEY_CARD:
                 break;
 
             case GET_MONEY_CARD:
                 break;
 
             case MOVE_TO_FIELD:
+                break;
+
+            case MOVE_TO_RAILROAD:
+                break;
+
+            case STREET_REPAIRS:
                 break;
 
             default:
