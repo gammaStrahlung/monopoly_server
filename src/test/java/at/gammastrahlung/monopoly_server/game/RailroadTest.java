@@ -8,12 +8,12 @@ import java.util.UUID;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
 
-public class RailroadTest {
+class RailroadTest {
 
     Game game;
 
     @Test
-    public void testBuyAndSellRailroad() {
+    void testBuyAndSellRailroad() {
         game = new Game();
         Player initialOwner = new Player(UUID.randomUUID(), "InitialOwner", game, 1000);
         Player buyer = new Player(UUID.randomUUID(), "Buyer", game, 1000);

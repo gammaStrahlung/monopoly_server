@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 
-public class UtilityTest {
+class UtilityTest {
     Game currentGame;
     @Test
-    public void testBuyAndSellUtility() {
+    void testBuyAndSellUtility() {
         currentGame = new Game();
         Player initialOwner = new Player(UUID.randomUUID(), "InitialOwner", currentGame, 1000);
         Player buyer = new Player(UUID.randomUUID(), "Buyer", currentGame, 1000);
