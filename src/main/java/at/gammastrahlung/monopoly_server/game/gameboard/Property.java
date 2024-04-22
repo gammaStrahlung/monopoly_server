@@ -31,7 +31,6 @@ public class Property extends Field{
     }
 
     public boolean buildHouse() {
-
             if (houseCount < 4 && buildable()) {
                 this.houseCount++;
                 this.owner.subtractBalance(houseCost);
@@ -40,7 +39,9 @@ public class Property extends Field{
                 this.houseCount++;
                 this.owner.subtractBalance(hotelCost);
                 return true;
-            } else return false;
+            } else {
+                return false;
+            }
     }
 
 
