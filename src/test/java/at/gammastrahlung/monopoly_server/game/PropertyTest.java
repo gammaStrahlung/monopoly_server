@@ -7,14 +7,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-
-public class PropertyTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
+import java.util.UUID;
+import java.util.stream.Stream;
+class PropertyTest {
     private Property property;
     private Game currentGame;
     private GameBoard mockedGameBoard;
 
     @Test
-    public void testBuyAndSellProperty() {
+    void testBuyAndSellProperty() {
         currentGame = new Game();
         Player owner = new Player(UUID.randomUUID(),"OldOwner",currentGame, 1000);
         Player buyer = new Player(UUID.randomUUID(), "NewOwner", currentGame, 1000);
@@ -30,57 +35,32 @@ public class PropertyTest {
         assertEquals(1200, owner.getBalance());
     }
 
-    @Test
-    public void testBuildHouseZeroHouses() {
-        currentGame = new Game();
-        mockedGameBoard = new GameBoard();
-        Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
-        Property property = Property.builder()
-                .houseCost(100)
-                .hotelCost(500)
-                .houseCount(0)
-                .owner(owner)
-                .build();
-        Property.setGameBoard(mockedGameBoard);
-
-        property.buildHouse();
-        assertEquals(1, property.getHouseCount());
-        assertEquals(900, owner.getBalance());
-    }
-    @Test
-    public void testBuildHouseFourHouses() {
-        currentGame = new Game();
-        mockedGameBoard = new GameBoard();
-        Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
-        Property property = Property.builder()
-                .houseCost(100)
-                .hotelCost(500)
-                .houseCount(4)
-                .owner(owner)
-                .build();
-        Property.setGameBoard(mockedGameBoard);
-
-        property.buildHouse();
-        assertEquals(5, property.getHouseCount());
-        assertEquals(500, owner.getBalance());
+    private static Stream<Arguments> provideTestCases() {
+        return Stream.of(
+                Arguments.of(0, 100, 900, 1), // Initial houses, house cost, expected balance, expected house count
+                Arguments.of(4, 500, 500, 5), // Initial houses, hotel cost, expected balance, expected house count
+                Arguments.of(5, 0, 1000, 5)   // No further construction possible, balance unchanged
+        );
     }
 
-    @Test
-    public void testBuildHouseHotel() {
-        currentGame = new Game();
-        mockedGameBoard = new GameBoard();
-        Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
+    @ParameterizedTest
+    @MethodSource("provideTestCases")
+    void testBuildHouse(int initialHouseCount, int cost, int expectedBalance, int expectedHouseCount) {
+        Game currentGame = new Game();
+        GameBoard mockedGameBoard = new GameBoard();
+        Player owner = new Player(UUID.randomUUID(), "Owner", currentGame, 1000);
         Property property = Property.builder()
-                .houseCost(100)
-                .hotelCost(500)
-                .houseCount(5)
+                .houseCost(100)   // Assuming the cost for houses is always 100
+                .hotelCost(500)   // Assuming the cost for hotel is always 500
+                .houseCount(initialHouseCount)
                 .owner(owner)
                 .build();
         Property.setGameBoard(mockedGameBoard);
 
         property.buildHouse();
-        assertEquals(5, property.getHouseCount());
-        assertEquals(1000, owner.getBalance());
+
+        assertEquals(expectedHouseCount, property.getHouseCount());
+        assertEquals(expectedBalance, owner.getBalance());
     }
 
 
