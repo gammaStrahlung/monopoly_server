@@ -1,9 +1,16 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -53,6 +60,45 @@ class PropertyTest {
 
         assertEquals(expectedHouseCount, property.getHouseCount());
         assertEquals(expectedBalance, owner.getBalance());
+    }
+    private static Stream<Arguments> provideBuildableCases() {
+        Player owner1 = new Player(UUID.randomUUID(), "Owner1", null, 1000);
+        Player owner2 = new Player(UUID.randomUUID(), "Owner2", null, 1000);
+
+        Property property1 = Property.builder().color(PropertyColor.RED).owner(owner1).build();
+        Property property2 = Property.builder().color(PropertyColor.RED).owner(owner1).build();
+        Property property3 = Property.builder().color(PropertyColor.RED).owner(owner2).build();
+
+        List<Field> sameOwner = new ArrayList<>();
+        sameOwner.add(property1);
+        sameOwner.add(property2);
+
+        List<Field> differentOwners = new ArrayList<>();
+        differentOwners.add(property1);
+        differentOwners.add(property3);
+
+        return Stream.of(
+                Arguments.of(sameOwner, owner1, true),
+                Arguments.of(differentOwners, owner1, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBuildableCases")
+    void testBuildable(List<Field> gameBoardFields, Player propertyOwner, boolean expectedOutcome) {
+        GameBoard gameBoard = new GameBoard();
+        Field[] fieldsArray = gameBoardFields.toArray(new Field[0]); // Convert List<Field> to Field[]
+        gameBoard.setGameBoard(fieldsArray); // Assuming this method sets the list of fields in the game board
+
+        Property propertyUnderTest = Property.builder()
+                .color(PropertyColor.RED)
+                .owner(propertyOwner)
+                .build();
+
+        Property.setGameBoard(gameBoard);
+
+        assertEquals(expectedOutcome, propertyUnderTest.buildable(),
+                "Expected buildable() to return " + expectedOutcome);
     }
 
 

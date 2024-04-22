@@ -42,7 +42,7 @@ public class Property extends Field{
     }
 
 
-    private boolean buildable() {
+    public boolean buildable() {
         boolean buildable = true;
         for (Field field : gameBoard.getGameBoard()) {
             if (field instanceof Property property && property.getColor() == this.color && !property.getOwner().equals(this.owner)) {
