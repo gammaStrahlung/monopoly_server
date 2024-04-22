@@ -9,6 +9,7 @@ on:
 jobs:
   # Creates a git version tag
   git-tag:
+    name: Create git version tag
     #Commented for testing | if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
@@ -18,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          #Commented for testing ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
 
       - name: Bump version and push tag
