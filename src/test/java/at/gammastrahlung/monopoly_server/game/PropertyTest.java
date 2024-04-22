@@ -41,7 +41,7 @@ public class PropertyTest {
                 .houseCount(0)
                 .owner(owner)
                 .build();
-        Property.setGameBoard(mockedGameBoard); // Angenommen, das GameBoard ist entsprechend vorbereitet.
+        Property.setGameBoard(mockedGameBoard);
 
         property.buildHouse();
         assertEquals(1, property.getHouseCount());
