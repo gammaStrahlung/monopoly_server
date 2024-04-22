@@ -31,17 +31,14 @@ public class Property extends Field{
     }
 
     public boolean buildHouse() {
-            if (houseCount < 4 && buildable()) {
+            if (houseCount < 5 && buildable()) {
+                if (houseCount == 4 && buildable()){
+                    this.owner.subtractBalance(hotelCost);
+                } else this.owner.subtractBalance(houseCost);
                 this.houseCount++;
-                this.owner.subtractBalance(houseCost);
                 return true;
-            } else if (houseCount == 4 && buildable()) {
-                this.houseCount++;
-                this.owner.subtractBalance(hotelCost);
-                return true;
-            } else {
-                return false;
-            }
+            } else return false;
+
     }
 
 
