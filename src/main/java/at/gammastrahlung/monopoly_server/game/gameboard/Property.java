@@ -43,13 +43,12 @@ public class Property extends Field{
     }
 
 
-    private boolean buildable(){
+    private boolean buildable() {
         boolean buildable = true;
         for (Field field : gameBoard.getGameBoard()) {
-            if (field instanceof Property && ((Property) field).getColor() == this.color) {
-                if (!((Property) field).getOwner().equals(this.owner)) {
-                    buildable = false;
-                }
+            if (field instanceof Property property && property.getColor() == this.color && !property.getOwner().equals(this.owner)) {
+                buildable = false;
+                break;  // If a condition is met that makes it unbuildable, exit the loop early
             }
         }
         return buildable;

@@ -2,26 +2,18 @@ package at.gammastrahlung.monopoly_server.game;
 
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
-import java.util.UUID;
 import java.util.stream.Stream;
 class PropertyTest {
-    private Property property;
-    private Game currentGame;
-    private GameBoard mockedGameBoard;
-
     @Test
     void testBuyAndSellProperty() {
-        currentGame = new Game();
-        Player owner = new Player(UUID.randomUUID(),"OldOwner",currentGame, 1000);
+        Game currentGame = new Game();
+        Player owner = new Player(UUID.randomUUID(),"OldOwner", currentGame, 1000);
         Player buyer = new Player(UUID.randomUUID(), "NewOwner", currentGame, 1000);
         Property property = Property.builder()
                 .price(200)
