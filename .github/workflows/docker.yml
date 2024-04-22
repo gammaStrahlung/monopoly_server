@@ -1,23 +1,47 @@
-name: Create and publish a Docker image
 on:
   push:
-    branches: ['main']
+    branches: [ 'main' ]
   # Used for testing before merging into main
   pull_request:
     types: [ opened, synchronize, reopened ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+    # types: closed
 
 jobs:
-  build-and-push-image:
+  # Creates a git version tag
+  git-tag:
+    #Commented for testing | if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: '0'
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+
+  # Docker build
+  docker:
+    needs: tag
+    #Commented for testing | if: github.event.pull_request.merged == true
+    name: Create and publish a Docker image
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
       packages: write
-      #
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
