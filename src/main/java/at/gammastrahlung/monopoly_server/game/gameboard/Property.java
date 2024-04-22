@@ -3,7 +3,6 @@ package at.gammastrahlung.monopoly_server.game.gameboard;
 import at.gammastrahlung.monopoly_server.game.Player;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import java.util.logging.Logger;
 import java.util.Map;
 
 
@@ -31,15 +30,17 @@ public class Property extends Field{
         Property.gameBoard = gb;
     }
 
-    public void buildHouse() {
+    public boolean buildHouse() {
 
             if (houseCount < 4 && buildable()) {
                 this.houseCount++;
                 this.owner.subtractBalance(houseCost);
+                return true;
             } else if (houseCount == 4 && buildable()) {
                 this.houseCount++;
                 this.owner.subtractBalance(hotelCost);
-            } else Logger.getLogger("Building on this property isn't possible!");
+                return true;
+            } else return false;
     }
 
 

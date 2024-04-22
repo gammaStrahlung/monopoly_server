@@ -29,9 +29,9 @@ class PropertyTest {
 
     private static Stream<Arguments> provideTestCases() {
         return Stream.of(
-                Arguments.of(0, 100, 900, 1), // Initial houses, house cost, expected balance, expected house count
-                Arguments.of(4, 500, 500, 5), // Initial houses, hotel cost, expected balance, expected house count
-                Arguments.of(5, 0, 1000, 5)   // No further construction possible, balance unchanged
+                Arguments.of(0, 100, 900, 1, true), // Initial houses, house cost, expected balance, expected house count
+                Arguments.of(4, 500, 500, 5, true), // Initial houses, hotel cost, expected balance, expected house count
+                Arguments.of(5, 0, 1000, 5, false)   // No further construction possible, balance unchanged
         );
     }
 
