@@ -66,14 +66,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=semver,event=branch,pattern={{version}}
-            type=semver,event=pr,pattern={{version}}
       # Uses docker/build-push-action to build and push the docker image.
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ jobs.git-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
