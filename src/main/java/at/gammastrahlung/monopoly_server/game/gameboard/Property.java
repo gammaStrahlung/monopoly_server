@@ -38,12 +38,12 @@ public class Property extends Field{
                 this.owner.subtractBalance(houseCost);
             } else if (houseCount == 4 && buildable()) {
                 this.houseCount++;
-                this.owner.subtractBalance(houseCount);
+                this.owner.subtractBalance(hotelCost);
             } else {
                 System.out.print("Building on this property isn't possible!");
             }
-        }
     }
+
 
     private boolean buildable(){
         boolean buildable = true;
@@ -56,6 +56,25 @@ public class Property extends Field{
         }
         return buildable;
     }
+
+   /* public void getRent(Player renter){
+        if (houseCount == 0) {
+            renter.subtractBalance(baseRent);
+            this.owner.addBalance(baseRent);
+        } else if (houseCount == 1) {
+            renter.subtractBalance(oneHouseRent);
+            this.owner.addBalance(oneHouseRent);
+        } else if (houseCount == 2) {
+            renter.subtractBalance(twoHousesRent);
+            this.owner.addBalance(twoHousesRent);
+        } else if (houseCount == 3) {
+            renter.subtractBalance(threeHousesRent);
+            this.owner.addBalance(threeHousesRent);
+        }else {
+            renter.subtractBalance(hotelRent);
+            this.owner.addBalance(hotelRent);
+        }
+    }*/
 
 
 }
