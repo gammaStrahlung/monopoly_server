@@ -31,7 +31,7 @@ public class PropertyTest {
     }
 
     @Test
-    public void testBuildHouse() {
+    public void testBuildHouseZeroHouses() {
         currentGame = new Game();
         mockedGameBoard = new GameBoard();
         Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
@@ -47,7 +47,41 @@ public class PropertyTest {
         assertEquals(1, property.getHouseCount());
         assertEquals(900, owner.getBalance());
     }
+    @Test
+    public void testBuildHouseFourHouses() {
+        currentGame = new Game();
+        mockedGameBoard = new GameBoard();
+        Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
+        Property property = Property.builder()
+                .houseCost(100)
+                .hotelCost(500)
+                .houseCount(4)
+                .owner(owner)
+                .build();
+        Property.setGameBoard(mockedGameBoard);
 
+        property.buildHouse();
+        assertEquals(5, property.getHouseCount());
+        assertEquals(500, owner.getBalance());
+    }
+
+    @Test
+    public void testBuildHouseHotel() {
+        currentGame = new Game();
+        mockedGameBoard = new GameBoard();
+        Player owner = new Player(UUID.randomUUID(),"Owner", currentGame, 1000);
+        Property property = Property.builder()
+                .houseCost(100)
+                .hotelCost(500)
+                .houseCount(5)
+                .owner(owner)
+                .build();
+        Property.setGameBoard(mockedGameBoard);
+
+        property.buildHouse();
+        assertEquals(5, property.getHouseCount());
+        assertEquals(1000, owner.getBalance());
+    }
 
 
 }
