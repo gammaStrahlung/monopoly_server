@@ -13,6 +13,9 @@ jobs:
     #Commented for testing | if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
+    outputs:
+      tag: ${{steps.tag-step.outputs.tag}}
+
     permissions:
       contents: write
 
@@ -22,7 +25,8 @@ jobs:
           #Commented for testing ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
 
-      - name: Bump version and push tag
+      - id: tag-step
+        name: Bump version and push tag
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,5 +76,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ jobs.git-tag.outputs.tag }}
+          tags: ${{ needs.git-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
