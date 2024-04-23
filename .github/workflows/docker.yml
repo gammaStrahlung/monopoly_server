@@ -1,3 +1,4 @@
+name: Docker
 on:
   pull_request:
     types:
