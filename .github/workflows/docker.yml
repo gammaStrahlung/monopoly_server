@@ -76,5 +76,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ needs.git-tag.outputs.tag }}
+          tags: |
+              ${{ steps.meta.outputs.tags }}
+              ${{ needs.git-tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
