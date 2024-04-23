@@ -76,7 +76,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-              ${{ steps.meta.outputs.tags }}
-              ${{ needs.git-tag.outputs.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.git-tag.outputs.tag }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
