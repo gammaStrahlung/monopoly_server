@@ -34,6 +34,11 @@ public class Game {
     @Expose
     private Player gameOwner = null;
 
+    // The game board
+    @Getter
+    @Expose
+    GameBoard gameBoard = new GameBoard();
+
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
 
@@ -68,7 +73,7 @@ public class Game {
             return false; // Not enough players
 
         state = GameState.PLAYING;
-        initializeGameBoard();
+        gameBoard.initializeGameBoard();
         return true;
     }
 
@@ -145,12 +150,6 @@ public class Game {
             players.get(player.getId()).update(player);
             return true;
         }
-    }
-
-    private void initializeGameBoard() {
-        // Initialize the game board
-        GameBoard gameBoard = new GameBoard();
-        gameBoard.initializeGameBoard();
     }
 
     public List<Player> getPlayers() {
