@@ -74,7 +74,6 @@ public class Game {
             return false; // Not enough players
 
         state = GameState.PLAYING;
-        gameBoard.initializeGameBoard();
         return true;
     }
 
