@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-
 public class Field {
     @Expose
     private int fieldId;
