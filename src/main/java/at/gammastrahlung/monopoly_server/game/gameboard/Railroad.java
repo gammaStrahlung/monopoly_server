@@ -20,7 +20,7 @@ public class Railroad extends Field {
     @Expose
     private int price;
     @Expose
-    private static final Map<String, Integer> rentPrices = initRentPrices();
+    private final Map<String, Integer> rentPrices = initRentPrices();
 
     private static Map<String, Integer> initRentPrices() {
         Map<String, Integer> prices = new HashMap<>();
