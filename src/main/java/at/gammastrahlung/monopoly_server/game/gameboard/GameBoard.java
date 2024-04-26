@@ -18,11 +18,11 @@ public class GameBoard {
     @Expose
     private Field[] gameBoard;
     @Expose
-    private static final int gameBoardSize = 40;
+    private final int gameBoardSize = 40;
     @Expose
-    private static final String FULL_SET = "full_set";
+    private final String FULL_SET = "full_set";
     @Expose
-    private static final String HOTEL = "hotel";
+    private final String HOTEL = "hotel";
 
     @Builder
     public GameBoard() {
