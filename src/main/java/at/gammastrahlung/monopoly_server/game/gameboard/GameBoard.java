@@ -18,7 +18,7 @@ public class GameBoard {
     @Expose
     private Field[] gameBoard;
     @Expose
-    private final int gameBoardSize = 40;
+    private final int GAME_BOARD_SIZE = 40;
     @Expose
     private final String FULL_SET = "full_set";
     @Expose
@@ -26,7 +26,7 @@ public class GameBoard {
 
     @Builder
     public GameBoard() {
-        gameBoard = new Field[gameBoardSize];
+        gameBoard = new Field[GAME_BOARD_SIZE];
         // Needed for Player.equals to work
         bank.setId(UUID.randomUUID());
     }
@@ -38,14 +38,14 @@ public class GameBoard {
                 .type(FieldType.GO)
                 .build();
 
-        Map<Object, Integer> RentPrices1 = new HashMap<>();
-        RentPrices1.put(0, 2);
-        RentPrices1.put(FULL_SET, 4);
-        RentPrices1.put(1, 10);
-        RentPrices1.put(2, 30);
-        RentPrices1.put(3, 90);
-        RentPrices1.put(4, 160);
-        RentPrices1.put(HOTEL, 250);
+        Map<Object, Integer> rentPrices1 = new HashMap<>();
+        rentPrices1.put(0, 2);
+        rentPrices1.put(FULL_SET, 4);
+        rentPrices1.put(1, 10);
+        rentPrices1.put(2, 30);
+        rentPrices1.put(3, 90);
+        rentPrices1.put(4, 160);
+        rentPrices1.put(HOTEL, 250);
 
         gameBoard[1] = Property.builder()
                 .fieldId(1)
@@ -54,7 +54,7 @@ public class GameBoard {
                 .price(60)
                 .owner(bank)
                 .color(PropertyColor.BROWN)
-                .rentPrices(RentPrices1)
+                .rentPrices(rentPrices1)
                 .mortgageValue(30)
                 .houseCost(50)
                 .hotelCost(50)
@@ -452,8 +452,8 @@ public class GameBoard {
 
         gameBoard [30] = Field.builder()
                 .fieldId(30)
-                .name("Jail")
-                .type(FieldType.JAIL)
+                .name("Go to Jail")
+                .type(FieldType.GO_TO_JAIL)
                 .build();
 
         Map<Object, Integer> rentPrices13 = new HashMap<>();
