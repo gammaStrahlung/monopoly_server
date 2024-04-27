@@ -43,6 +43,7 @@ public  class Player {
         this.name = name;
         this.currentGame = currentGame;
         this.balance = startingBalance; //balance gets initialized with a starting balance
+        this.currentField = 0;
     }
 
     // increases player balance
@@ -67,11 +68,12 @@ public  class Player {
 
     /**
      * Updates currentField by the diced value
+     * @param currentField field on which the player is currently positioned
+     * @param value how far the player may move forward
      *
-     * @param currentField The field that is going to be updated
      */
-    public void moveAvatar(int currentField){
-        currentField = (currentField) % 40;     // (currentField + diceRoll) % 40; diceRoll not yet implemented
+    public void moveAvatar(int currentField, int value){
+        this.currentField = currentField + value % 40;
     }
 
 
