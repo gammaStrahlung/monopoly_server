@@ -39,6 +39,12 @@ public class EventCard {
             case GET_OUT_OF_JAIL:
                 break;
 
+            case MOVE_TO_UTILITY:
+                break;
+
+            case MOVE_SPACES:
+                break;
+
             default:
                 break;
         }

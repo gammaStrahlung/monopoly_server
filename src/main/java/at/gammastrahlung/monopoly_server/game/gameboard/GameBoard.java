@@ -641,7 +641,7 @@ public class GameBoard {
                 .build());
 
         communityChestDeck.add(EventCard.builder()
-                .description("Advance to Go")
+                .description("Advance to GO")
                 .cardType(CardType.MOVE_TO_FIELD)
                 .moveToField(0)
                 .build());
@@ -717,6 +717,51 @@ public class GameBoard {
         chanceDeck.add(EventCard.builder()
                 .description("Street Repairs")
                 .cardType(CardType.STREET_REPAIRS)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Advance to Illinois Ave")
+                .cardType(CardType.MOVE_TO_FIELD)
+                .moveToField(24)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Take a ride on Reading")
+                .cardType(CardType.MOVE_TO_FIELD)
+                .moveToField(5)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Move to next Utility")
+                .cardType(CardType.MOVE_TO_UTILITY)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Go back 3 Spaces")
+                .cardType(CardType.MOVE_SPACES)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Dividend")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(50)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Building Loan Matures")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(150)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Poor Tax")
+                .cardType(CardType.PAY_MONEY_CARD)
+                .payOrGetMoney(15)
+                .build());
+
+        chanceDeck.add(EventCard.builder()
+                .description("Get out of Jail")
+                .cardType(CardType.GET_OUT_OF_JAIL)
                 .build());
     }
 }
