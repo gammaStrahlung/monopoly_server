@@ -16,8 +16,9 @@ public class EventCard {
     private int payOrGetMoney;
     private int moveToField;
 
-    public void drawnCard(Player player) {
-        switch (cardType) {
+
+    public void drawnCard(Player player) {  // implement in another issue
+        /*switch (cardType) {
             case GO_TO_JAIL:
                 break;
 
@@ -47,6 +48,6 @@ public class EventCard {
 
             default:
                 break;
-        }
+        }*/
     }
 }
