@@ -75,8 +75,4 @@ public  class Player {
     public void moveAvatar(int currentField, int value){
         this.currentField = currentField + value % 40;
     }
-
-
-
-
 }

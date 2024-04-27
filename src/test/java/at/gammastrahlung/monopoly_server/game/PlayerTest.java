@@ -42,6 +42,16 @@ class PlayerTest {
         assertEquals(-10, player.getBalance());
     }
 
+    @Test
+    void moveAvatarTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        assertEquals(0, player.getCurrentField());
 
+        player.moveAvatar(player.getCurrentField(), 7);
+        assertEquals(7,player.getCurrentField());
 
+        player.moveAvatar(player.currentField,46);
+        assertEquals(13, player.getCurrentField());
+
+    }
 }
