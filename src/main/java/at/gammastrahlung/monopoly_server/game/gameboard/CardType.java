@@ -6,5 +6,7 @@ public enum CardType {
     MOVE_TO_FIELD,
     GO_TO_JAIL,
     MOVE_TO_RAILROAD,
-    STREET_REPAIRS
+    STREET_REPAIRS,
+
+    GET_OUT_OF_JAIL
 }

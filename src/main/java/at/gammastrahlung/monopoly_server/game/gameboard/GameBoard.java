@@ -595,56 +595,90 @@ public class GameBoard {
         communityChestDeck.add(EventCard.builder()
                 .description("Go to Jail")
                 .cardType(CardType.GO_TO_JAIL)
-                .cardId(1)
                 .moveToField(30)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("Birthday")
                 .cardType(CardType.GET_MONEY_CARD)
-                .cardId(2)
                 .payOrGetMoney(20)
                 .build());
+
         communityChestDeck.add(EventCard.builder()
                 .description("Beauty Contest")
                 .cardType(CardType.GET_MONEY_CARD)
-                .cardId(3)
                 .payOrGetMoney(10)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("Inheritance")
                 .cardType(CardType.GET_MONEY_CARD)
-                .cardId(4)
                 .payOrGetMoney(100)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("Hospital Fee")
                 .cardType(CardType.PAY_MONEY_CARD)
-                .cardId(5)
                 .payOrGetMoney(50)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("Doctors Fee")
                 .cardType(CardType.PAY_MONEY_CARD)
-                .cardId(6)
                 .payOrGetMoney(50)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("Income Tax Refund")
                 .cardType(CardType.GET_MONEY_CARD)
-                .cardId(7)
                 .payOrGetMoney(20)
                 .build());
 
         communityChestDeck.add(EventCard.builder()
                 .description("School Fee")
                 .cardType(CardType.PAY_MONEY_CARD)
-                .cardId(8)
                 .payOrGetMoney(50)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Advance to Go")
+                .cardType(CardType.MOVE_TO_FIELD)
+                .moveToField(0)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Life Insurance Matures")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(100)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Bank Error in your Favor")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(200)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Sale of Stock")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(45)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Receive for Services")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(25)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("XMAS Fund Matures")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(100)
+                .build());
+
+        communityChestDeck.add(EventCard.builder()
+                .description("Get out of Jail")
+                .cardType(CardType.GET_OUT_OF_JAIL)
                 .build());
     }
 
@@ -654,41 +688,35 @@ public class GameBoard {
         chanceDeck.add(EventCard.builder()
                 .description("Go to Jail")
                 .cardType(CardType.GO_TO_JAIL)
-                .cardId(9)
                 .moveToField(30)
                 .build());
 
         chanceDeck.add(EventCard.builder()
                 .description("Advance to GO")
                 .cardType(CardType.MOVE_TO_FIELD)
-                .cardId(10)
                 .moveToField(0)
                 .build());
 
         chanceDeck.add(EventCard.builder()
                 .description("Advance to Boardwalk")
                 .cardType(CardType.MOVE_TO_FIELD)
-                .cardId(11)
                 .moveToField(39)
                 .build());
 
         chanceDeck.add(EventCard.builder()
                 .description("Advance to St Charles Place")
                 .cardType(CardType.MOVE_TO_FIELD)
-                .cardId(12)
                 .moveToField(11)
                 .build());
 
         chanceDeck.add(EventCard.builder()
                 .description("Move to next Railroad")
                 .cardType(CardType.MOVE_TO_RAILROAD)
-                .cardId(13)
                 .build());
 
         chanceDeck.add(EventCard.builder()
                 .description("Street Repairs")
                 .cardType(CardType.STREET_REPAIRS)
-                .cardId(14)
                 .build());
     }
 }

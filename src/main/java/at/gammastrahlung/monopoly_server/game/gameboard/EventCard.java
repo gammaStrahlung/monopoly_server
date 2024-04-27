@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 public class EventCard {
     private String description;
     private CardType cardType;
-    private int cardId;
     private int payOrGetMoney;
     private int moveToField;
 
@@ -35,6 +34,9 @@ public class EventCard {
                 break;
 
             case STREET_REPAIRS:
+                break;
+
+            case GET_OUT_OF_JAIL:
                 break;
 
             default:
