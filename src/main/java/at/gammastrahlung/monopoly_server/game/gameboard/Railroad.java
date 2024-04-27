@@ -26,4 +26,10 @@ public class Railroad extends Field {
         return prices;
     }
 
+    public void buyAndSellRailroad(Player buyer){
+        owner.addBalance(price);
+        buyer.subtractBalance(price);
+        this.owner = buyer;
+    }
+
 }
