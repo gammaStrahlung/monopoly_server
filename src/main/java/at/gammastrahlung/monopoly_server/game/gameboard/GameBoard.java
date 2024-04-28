@@ -637,6 +637,25 @@ public class GameBoard {
 
 
 
+    /**
+     * Determines if any properties in a specific color group are mortgaged.
+     * @param color The color group of the properties.
+     * @return true if any property in the group is mortgaged, false otherwise.
+     */
+    public boolean anyMortgagedInGroup(PropertyColor color) {
+        for (Field field : gameBoard) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                if (property.getColor() == color && property.isMortgaged()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 
 
 
