@@ -12,6 +12,9 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
@@ -100,6 +103,15 @@ class PropertyTest {
         assertEquals(expectedOutcome, propertyUnderTest.buildable(),
                 "Expected buildable() to return " + expectedOutcome);
     }
+
+    @Test
+    void propertyHasBuildings() {
+        Property property = new Property();
+        property.setHouseCount(1);
+        assertTrue(property.hasBuildings());
+    }
+
+
 
 
 }
