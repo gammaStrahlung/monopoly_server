@@ -581,4 +581,17 @@ public class GameBoard {
             }
         }
     }
+    /**
+     * Retrieves a property by its ID.
+     * @param propertyId The unique identifier for the property.
+     * @return The Property object if found, null otherwise.
+     */
+    public Property getPropertyById(int propertyId) {
+        for (Field field : gameBoard) {
+            if (field instanceof Property && field.getFieldId() == propertyId) {
+                return (Property) field;
+            }
+        }
+        return null;
+    }
 }
