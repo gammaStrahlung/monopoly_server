@@ -25,6 +25,15 @@ class GameBoardTests {
         gameBoard = GameBoard.builder().build();
         gameBoard.initializeGameBoard();
     }
+    @BeforeEach
+    public void setup() {
+        gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard(); // Ensure this method exists and works correctly.
+        // Manually adding buildings to a property of the RED color group.
+        Property redProperty = (Property) gameBoard.getGameBoard()[21]; // Example index for a red property.
+        redProperty.setHouseCount(1); // Adds one house.
+    }
+
 
     @Test
     void testInitialization() {
@@ -107,6 +116,17 @@ class GameBoardTests {
         assertFalse(result, "It should be false if no buildings are present in the group.");
     }
 
+
+    @Test
+    public void hasBuildings_ShouldReturnTrue_WhenPropertiesInGroupHaveBuildings() {
+        // Arrange
+        // You need to ensure that the properties in the test have buildings.
+        PropertyColor groupColor = PropertyColor.RED; // Replace this with the actual group color.
+        // Act
+        boolean result = gameBoard.hasBuildings(groupColor);
+        // Assert
+        assertTrue(result, "It should be true if buildings are present in the group.");
+    }
 
 
 
