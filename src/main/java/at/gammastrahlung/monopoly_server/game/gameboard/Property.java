@@ -20,7 +20,12 @@ public class Property extends Field{
     private int hotelCost;
     private int houseCount = 0;
     private boolean hasHotel;
+    private boolean mortgaged;
 
+    /**
+     * Method to buy or sell a property, changing the owner and updating balances.
+     * @param buyer The player buying the property.
+     */
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
         buyer.subtractBalance(price);
@@ -30,7 +35,10 @@ public class Property extends Field{
     public static void setGameBoard(GameBoard gb) {
         Property.gameBoard = gb;
     }
-
+    /**
+     * Builds a house on this property if the property has less than five houses and it is buildable.
+     * @return true if the house was built, false otherwise.
+     */
     public boolean buildHouse() {
             if (houseCount < 5 && buildable()) {
                 if (houseCount == 4 && buildable()){
@@ -41,7 +49,10 @@ public class Property extends Field{
             } else return false;
 
     }
-
+    /**
+     * Checks if building on this property is allowable based on ownership within the same color group.
+     * @return true if buildable, false otherwise.
+     */
 
     public boolean buildable() {
         boolean buildable = true;

@@ -594,4 +594,71 @@ public class GameBoard {
         }
         return null;
     }
+
+    /**
+     * Checks if any properties in a specified group have buildings.
+     * @param color The color group of the properties.
+     * @return true if any property in the group has buildings, false otherwise.
+     */
+    public boolean hasBuildings(PropertyColor color) {
+        for (Field field : gameBoard) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                if (property.getColor() == color && property.hasBuildings()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
