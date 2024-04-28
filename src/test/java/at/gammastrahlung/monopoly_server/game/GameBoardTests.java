@@ -129,6 +129,19 @@ class GameBoardTests {
     }
 
 
+    @Test
+    public void anyMortgagedInGroup_ShouldReturnFalse_WhenNoPropertiesInGroupAreMortgaged() {
+        // Arrange
+        PropertyColor groupColor = PropertyColor.RED; // Replace this with the actual group color that is not mortgaged.
+        // Set mortgage status of properties for this test
+        // Act
+        boolean result = gameBoard.anyMortgagedInGroup(groupColor);
+        // Assert
+        assertFalse(result, "It should be false if no properties in the group are mortgaged.");
+    }
+
+
+
 
 
 
