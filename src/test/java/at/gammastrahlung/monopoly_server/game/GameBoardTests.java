@@ -3,6 +3,7 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,8 +97,15 @@ class GameBoardTests {
 
 
 
-
-
+    @Test
+    public void hasBuildings_ShouldReturnFalse_WhenNoPropertiesInGroupHaveBuildings() {
+        // Arrange
+        PropertyColor groupColor = PropertyColor.RED; // Replace this with the actual group color without buildings.
+        // Act
+        boolean result = gameBoard.hasBuildings(groupColor);
+        // Assert
+        assertFalse(result, "It should be false if no buildings are present in the group.");
+    }
 
 
 
