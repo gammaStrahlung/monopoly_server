@@ -111,7 +111,12 @@ class PropertyTest {
         assertTrue(property.hasBuildings());
     }
 
-
+    @Test
+    void propertyHasNoBuildings() {
+        Property property = new Property();
+        property.setHouseCount(0);
+        assertFalse(property.hasBuildings());
+    }
 
 
 }
