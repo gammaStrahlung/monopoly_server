@@ -613,7 +613,27 @@ public class GameBoard {
     }
 
 
-
+    /**
+     * Sells all buildings on properties within a specified group at a specified rate.
+     * @param color The color group of the properties.
+     * @param player The player receiving the sale proceeds.
+     * @param sellRate The rate at which buildings are sold, typically 0.5 for half price.
+     */
+    public void sellBuildings(PropertyColor color, Player player, double sellRate) {
+        for (Field field : gameBoard) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                if (property.getColor() == color) {
+                    int housePayment = (int) (property.getHouseCost() * sellRate * property.getHouseCount());
+                    int hotelPayment = property.hasHotel() ? (int) (property.getHotelCost() * sellRate) : 0;
+                    int totalPayment = housePayment + hotelPayment;
+                    player.addBalance(totalPayment);
+                    property.setHouseCount(0);
+                    property.setHasHotel(false);
+                }
+            }
+        }
+    }
 
 
 
