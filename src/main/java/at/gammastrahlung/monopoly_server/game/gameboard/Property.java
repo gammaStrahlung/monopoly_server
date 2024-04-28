@@ -19,6 +19,7 @@ public class Property extends Field{
     private int houseCost;
     private int hotelCost;
     private int houseCount = 0;
+    private boolean hasHotel;
 
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
@@ -51,6 +52,14 @@ public class Property extends Field{
             }
         }
         return buildable;
+    }
+
+    /**
+     * Checks if the property has any buildings (houses or hotel).
+     * @return true if there are buildings, false otherwise.
+     */
+    public boolean hasBuildings() {
+        return houseCount > 0 || hasHotel;
     }
 
 }

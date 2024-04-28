@@ -6,17 +6,19 @@ import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 /**
  * Manages mortgage operations within the game.
  */
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Manages mortgage operations within the game.
+ */
+@AllArgsConstructor
+@Getter
+@Setter
 public class MortgageManager {
 
     private GameBoard gameBoard;
-
-    /**
-     * Constructor that initializes the MortgageManager with a game board.
-     * @param gameBoard The game board used to access properties.
-     */
-    public MortgageManager(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-    }
 
 
 }
