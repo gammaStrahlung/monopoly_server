@@ -6,6 +6,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
@@ -69,6 +70,40 @@ class GameBoardTests {
             }
         }
     }
+
+
+
+    @Test
+    public void getPropertyById_ShouldReturnProperty_WhenIdIsValid() {
+        // Arrange
+        int validId = 1; // Assuming this is a valid ID.
+        // Act
+        Property result = gameBoard.getPropertyById(validId);
+        // Assert
+        assertNotNull(result, "Property with ID " + validId + " should exist.");
+    }
+
+    @Test
+    public void getPropertyById_ShouldReturnNull_WhenIdIsInvalid() {
+        // Arrange
+        int invalidId = 999; // An ID that is definitely not present.
+        // Act
+        Property result = gameBoard.getPropertyById(invalidId);
+        // Assert
+        assertNull(result, "No property object should be returned for an invalid ID.");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
