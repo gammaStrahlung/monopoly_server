@@ -34,6 +34,11 @@ public class Game {
     @Expose
     private Player gameOwner = null;
 
+    // The game board
+    @Getter
+    @Expose
+    GameBoard gameBoard = new GameBoard();
+
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
 
@@ -49,6 +54,7 @@ public class Game {
 
         // Add this game to all currently played games
         games.put(gameId, this);
+        gameBoard.initializeGameBoard();
     }
 
     /**
@@ -68,7 +74,6 @@ public class Game {
             return false; // Not enough players
 
         state = GameState.PLAYING;
-        initializeGameBoard();
         return true;
     }
 
@@ -147,14 +152,13 @@ public class Game {
         }
     }
 
-    private void initializeGameBoard() {
+     private void initializeGameBoard() {
         // Initialize the game board
         GameBoard gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
     }
-
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(Collections.list(players.elements()));
     }

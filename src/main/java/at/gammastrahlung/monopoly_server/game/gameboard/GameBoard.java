@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game.gameboard;
 
 import at.gammastrahlung.monopoly_server.game.Player;
+import com.google.gson.annotations.Expose;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,15 +10,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class GameBoard {
+    @Expose
     private Player bank = new Player();
+    @Expose
     private Field[] gameBoard;
-    private static final int GAME_BOARD_SIZE = 40;
-    private static final String FULL_SET = "full_set";
-    private static final String HOTEL = "hotel";
+
+    @Expose
+    private final int GAME_BOARD_SIZE = 40;
+    @Expose
+    private final String FULL_SET = "full_set";
+    @Expose
+    private final String HOTEL = "hotel";
 
     private ArrayList<EventCard> chanceDeck;
     private ArrayList<EventCard> communityChestDeck;
@@ -25,6 +33,8 @@ public class GameBoard {
     @Builder
     public GameBoard() {
         gameBoard = new Field[GAME_BOARD_SIZE];
+        // Needed for Player.equals to work
+        bank.setId(UUID.randomUUID());
     }
 
     public void initializeGameBoard() {
