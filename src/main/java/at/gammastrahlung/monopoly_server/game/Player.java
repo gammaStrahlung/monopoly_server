@@ -13,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public  class Player {
+public class Player {
     /**
-     * The unique ID of the player, this can be used by the player to allow for re-joining the ga
+     * The unique ID of the player, this can be used by the player to allow for re-joining the game
      */
     @Expose
     protected UUID id;
@@ -32,7 +32,6 @@ public  class Player {
     /**
      * The field on which avatar is currently placed
      */
-    @Expose
     protected int currentField;
 
     /**
@@ -67,7 +66,7 @@ public  class Player {
     public void update(Player player) {
         // will get implemented in next sprint
     }
-
+  
     @Override
     public boolean equals(Object obj) {
         if (! (obj instanceof Player))
