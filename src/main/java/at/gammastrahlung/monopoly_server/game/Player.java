@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,12 +32,12 @@ public  class Player {
     /**
      * The field on which avatar is currently placed
      */
+    @Expose
     protected int currentField;
 
     /**
      * The game the player is currently playing
      */
-    @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     protected Game currentGame;
 
     public Player(UUID id, String name, Game currentGame, int startingBalance) {
@@ -66,6 +68,18 @@ public  class Player {
         // will get implemented in next sprint
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Player))
+            return false;
+        return id.equals(((Player) obj).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
     /**
      * Updates currentField by the diced value
      * @param currentField field on which the player is currently positioned
@@ -73,10 +87,6 @@ public  class Player {
      *
      */
     public void moveAvatar(int currentField, int value){
-        this.currentField = currentField + value % 40;
+        this.currentField = (currentField + value) % 40;
     }
-
-
-
-
 }
