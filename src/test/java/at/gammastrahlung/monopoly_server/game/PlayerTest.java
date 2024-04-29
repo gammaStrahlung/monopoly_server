@@ -25,7 +25,7 @@ class PlayerTest {
 
     @Test
      void addBalanceTest() {
-        Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         player.addBalance(50);
         assertEquals(150, player.getBalance());
 
@@ -35,7 +35,7 @@ class PlayerTest {
 
     @Test
      void subtractBalanceTest() {
-        Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         player.subtractBalance(50);
         assertEquals(50, player.getBalance());
         player.subtractBalance(60);
