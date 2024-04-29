@@ -1,5 +1,7 @@
 package at.gammastrahlung.monopoly_server.game.gameboard;
 
+import com.google.gson.annotations.Expose;
+
 import at.gammastrahlung.monopoly_server.game.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,17 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 public class EventCard {
+
+    @Expose
     private String description;
+
+    @Expose
     private CardType cardType;
+
+    @Expose
     private int payOrGetMoney;
+
+    @Expose
     private int moveToField;
 
 

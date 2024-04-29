@@ -27,7 +27,9 @@ public class GameBoard {
     @Expose
     private final String HOTEL = "hotel";
 
+    @Expose
     private ArrayList<EventCard> chanceDeck;
+    @Expose
     private ArrayList<EventCard> communityChestDeck;
 
     @Builder

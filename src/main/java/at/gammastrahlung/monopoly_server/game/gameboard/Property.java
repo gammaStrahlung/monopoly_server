@@ -61,5 +61,4 @@ public class Property extends Field{
         }
         return buildable;
     }
-
 }

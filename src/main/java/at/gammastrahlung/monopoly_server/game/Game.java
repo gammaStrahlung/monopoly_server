@@ -54,7 +54,7 @@ public class Game {
 
         // Add this game to all currently played games
         games.put(gameId, this);
-        gameBoard.initializeGameBoard();
+        initializeGameBoard();
     }
 
     /**
