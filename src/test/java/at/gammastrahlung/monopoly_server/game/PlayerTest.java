@@ -41,7 +41,35 @@ class PlayerTest {
         player.subtractBalance(60);
         assertEquals(-10, player.getBalance());
     }
+  
+    void equalsTest() {
+        UUID playerid = UUID.randomUUID();
 
+        Player p1 = new Player();
+        p1.setId(playerid);
+
+        Player p2 = new Player();
+        p2.setId(playerid);
+
+        // Players with the same UUID are the same player
+        assertEquals(p1, p2);
+
+        // Other object is not equal
+        Object a = 1;
+        assertNotEquals(p1, a);
+    }
+
+    @Test
+    void hashCodeTest() {
+        Player p1 = new Player();
+        p1.setId(UUID.randomUUID());
+
+        Player p2 = new Player();
+        p2.setId(UUID.randomUUID());
+
+        assertNotEquals(p1.hashCode(), p2.hashCode());
+    }
+  
     @Test
     void moveAvatarTest(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
@@ -52,6 +80,5 @@ class PlayerTest {
 
         player.moveAvatar(player.currentField,46);
         assertEquals(13, player.getCurrentField());
-
     }
 }

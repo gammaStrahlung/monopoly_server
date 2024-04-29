@@ -5,15 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public  class Player {
+public class Player {
     /**
-     * The unique ID of the player, this can be used by the player to allow for re-joining the ga
+     * The unique ID of the player, this can be used by the player to allow for re-joining the game
      */
     @Expose
     protected UUID id;
@@ -35,7 +37,6 @@ public  class Player {
     /**
      * The game the player is currently playing
      */
-    @Expose(serialize = false, deserialize = false) // Should not be sent to the client
     protected Game currentGame;
 
     public Player(UUID id, String name, Game currentGame, int startingBalance) {
@@ -65,8 +66,21 @@ public  class Player {
     public void update(Player player) {
         // will get implemented in next sprint
     }
+  
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Player))
+            return false;
 
-    /**
+        return id.equals(((Player) obj).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+  
+  /**
      * Updates currentField by the diced value
      * @param currentField field on which the player is currently positioned
      * @param value how far the player may move forward
