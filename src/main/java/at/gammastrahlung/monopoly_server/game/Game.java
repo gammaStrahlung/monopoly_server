@@ -54,7 +54,7 @@ public class Game {
 
         // Add this game to all currently played games
         games.put(gameId, this);
-        gameBoard.initializeGameBoard();
+        initializeGameBoard();
     }
 
     /**
@@ -152,6 +152,13 @@ public class Game {
         }
     }
 
+     private void initializeGameBoard() {
+        // Initialize the game board
+        GameBoard gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard();
+        gameBoard.initializeChanceDeck();
+        gameBoard.initializeCommunityChestDeck();
+    }
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(Collections.list(players.elements()));
     }
