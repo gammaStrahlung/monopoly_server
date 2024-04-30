@@ -37,7 +37,7 @@ public class Game {
     // The game board
     @Getter
     @Expose
-    GameBoard gameBoard = new GameBoard();
+    GameBoard gameBoard;
 
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
@@ -154,7 +154,7 @@ public class Game {
 
      private void initializeGameBoard() {
         // Initialize the game board
-        GameBoard gameBoard = new GameBoard();
+        gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
