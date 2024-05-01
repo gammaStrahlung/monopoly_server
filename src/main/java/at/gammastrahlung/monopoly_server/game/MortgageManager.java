@@ -33,7 +33,17 @@ public class MortgageManager {
     }
 
 
-
+    public boolean repayMortgage(int propertyId, Player player) {
+        Property property = gameBoard.getPropertyById(propertyId);
+        int repaymentAmount = (int) (property.getMortgageValue() * 1.1); // Including 10% interest
+        if (property == null || !property.getOwner().equals(player) || !property.isMortgaged() || player.getBalance() < repaymentAmount) {
+            return false;
+        }
+        player.subtractBalance(repaymentAmount);
+        property.setMortgaged(false);
+        gameBoard.enableBuilding(property.getColor()); // Enable building ability on property group
+        return true;
+    }
 
 
 
