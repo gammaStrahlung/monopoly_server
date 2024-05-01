@@ -42,7 +42,15 @@ class MortgageManagerTests {
         verify(property, times(1)).setMortgaged(true);
     }
 
+    @Test
+    void mortgagePropertyShouldFailIfAlreadyMortgaged() {
+        when(property.isMortgaged()).thenReturn(true);
 
+        boolean result = mortgageManager.mortgageProperty(1, player);
+
+        assertFalse(result);
+        verify(player, never()).addBalance(anyInt());
+    }
 
 
 
