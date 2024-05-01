@@ -75,4 +75,21 @@ public class MortgageManager {
     }
 
 
+
+
+
+    public void sellBuildingsBeforeMortgage(PropertyColor color, Player player) {
+        if (gameBoard.hasBuildings(color)) {
+            gameBoard.sellBuildings(color, player);
+        }
+    }
+
+
+
+
+
+
+
+
+
 }
