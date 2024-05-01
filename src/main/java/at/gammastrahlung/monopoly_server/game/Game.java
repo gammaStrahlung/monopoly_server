@@ -154,7 +154,6 @@ public class Game {
 
      private void initializeGameBoard() {
         // Initialize the game board
-        GameBoard gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
