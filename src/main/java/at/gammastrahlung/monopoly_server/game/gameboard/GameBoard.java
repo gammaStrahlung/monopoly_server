@@ -613,27 +613,54 @@ public class GameBoard {
     }
 
 
+
+
     /**
-     * Sells all buildings on properties within a specified group at a specified rate.
+     * Sells all buildings in a specified group and credits the player's account.
      * @param color The color group of the properties.
-     * @param player The player receiving the sale proceeds.
-     * @param sellRate The rate at which buildings are sold, typically 0.5 for half price.
+     * @param player The player who is selling the buildings.
      */
-    public void sellBuildings(PropertyColor color, Player player, double sellRate) {
+    public void sellBuildings(PropertyColor color, Player player) {
         for (Field field : gameBoard) {
             if (field instanceof Property) {
                 Property property = (Property) field;
                 if (property.getColor() == color) {
-                    int housePayment = (int) (property.getHouseCost() * sellRate * property.getHouseCount());
-                    int hotelPayment = property.hasHotel() ? (int) (property.getHotelCost() * sellRate) : 0;
-                    int totalPayment = housePayment + hotelPayment;
-                    player.addBalance(totalPayment);
-                    property.setHouseCount(0);
-                    property.setHasHotel(false);
+                    int totalSaleAmount = 0;
+                    // Selling the hotel if present
+                    if (property.isHasHotel()) {
+                        totalSaleAmount += property.getHotelCost() / 2; // Sell the hotel at half price
+                        property.setHasHotel(false); // Set hasHotel to false
+                    }
+                    // Selling the houses
+                    totalSaleAmount += property.getHouseCount() * (property.getHouseCost() / 2); // Sell houses at half price
+                    property.setHouseCount(0); // Reset the number of houses to 0
+                    player.addBalance(totalSaleAmount); // Credit money to the player
                 }
             }
         }
     }
+
+
+    /**
+     * Enables building on a property group if no properties are mortgaged.
+     * @param color The color group of the properties.
+     */
+    public void enableBuilding(PropertyColor color) {
+        // Assuming this sets a flag that allows building on the group
+        // This method could be implemented differently based on your game's rules
+        for (Field field : gameBoard) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                if (property.getColor() == color && property.isMortgaged()) {
+                    // If any property in the group is mortgaged, building should not be enabled.
+                    return;
+                }
+            }
+        }
+        // If no properties in the group are mortgaged, enable building
+        // Set a flag or update state to indicate building is allowed on this group
+    }
+
 
 
 
