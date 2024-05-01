@@ -64,6 +64,20 @@ class MortgageManagerTests {
         verify(property, times(1)).setMortgaged(false);
     }
 
+    @Test
+    void repayMortgageShouldFailIfNotEnoughBalance() {
+        when(property.isMortgaged()).thenReturn(true);
+        when(property.getMortgageValue()).thenReturn(1000);
+        when(player.getBalance()).thenReturn(500);
+
+        boolean result = mortgageManager.repayMortgage(1, player);
+
+        assertFalse(result);
+        verify(player, never()).subtractBalance(anyInt());
+    }
+
+
+}
 
 
 
