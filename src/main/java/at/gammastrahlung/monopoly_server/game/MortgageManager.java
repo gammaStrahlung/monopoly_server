@@ -49,6 +49,19 @@ public class MortgageManager {
 
 
 
+    public boolean transferMortgagedProperty(int propertyId, Player fromPlayer, Player toPlayer) {
+        Property property = gameBoard.getPropertyById(propertyId);
+        if (property == null || !property.getOwner().equals(fromPlayer) || !property.isMortgaged()) {
+            return false;
+        }
+        int interestPayment = (int) (property.getMortgageValue() * 0.1);
+        if (toPlayer.getBalance() < interestPayment) {
+            return false;
+        }
+        toPlayer.subtractBalance(interestPayment);
+        property.setOwner(toPlayer);
+        return true;
+    }
 
 
 
