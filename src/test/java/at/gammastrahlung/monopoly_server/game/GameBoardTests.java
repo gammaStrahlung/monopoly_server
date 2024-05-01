@@ -22,19 +22,19 @@ class GameBoardTests {
 
     @BeforeEach
     public void setUp() {
-        gameBoard = GameBoard.builder().build();
-        gameBoard.initializeGameBoard();
-    }
-    @BeforeEach
-    public void setup() {
         gameBoard = new GameBoard();
         gameBoard.initializeGameBoard(); // Ensure this method exists and works correctly.
-        // Manually adding buildings to a property of the RED color group.
-        Property redProperty = (Property) gameBoard.getGameBoard()[21]; // Example index for a red property.
-        redProperty.setHouseCount(1); // Adds one house.
+
+        // Optionally, reset properties based on specific tests if necessary
+        // This example resets buildings for all properties to ensure a clean state for each test
+        for (Field field : gameBoard.getGameBoard()) {
+            if (field instanceof Property) {
+                Property property = (Property) field;
+                property.setHouseCount(0);
+                property.setHasHotel(false);
+            }
+        }
     }
-
-
     @Test
     void testInitialization() {
         assertNotNull(gameBoard.getBank());
@@ -119,11 +119,15 @@ class GameBoardTests {
 
     @Test
     public void hasBuildings_ShouldReturnTrue_WhenPropertiesInGroupHaveBuildings() {
+        // Manually add buildings to a RED property for this test
+        ((Property) gameBoard.getGameBoard()[21]).setHouseCount(1); // Ensure this index corresponds to a RED property
+
         // Arrange
-        // You need to ensure that the properties in the test have buildings.
-        PropertyColor groupColor = PropertyColor.RED; // Replace this with the actual group color.
+        PropertyColor groupColor = PropertyColor.RED; // Assume this color is handled in the test
+
         // Act
         boolean result = gameBoard.hasBuildings(groupColor);
+
         // Assert
         assertTrue(result, "It should be true if buildings are present in the group.");
     }
