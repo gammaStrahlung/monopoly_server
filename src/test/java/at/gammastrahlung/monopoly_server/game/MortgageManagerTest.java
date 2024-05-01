@@ -51,7 +51,18 @@ class MortgageManagerTests {
         assertFalse(result);
         verify(player, never()).addBalance(anyInt());
     }
+    @Test
+    void repayMortgageShouldSucceed() {
+        when(property.isMortgaged()).thenReturn(true);
+        when(property.getMortgageValue()).thenReturn(100);
+        when(player.getBalance()).thenReturn(200);
 
+        boolean result = mortgageManager.repayMortgage(1, player);
+
+        assertTrue(result);
+        verify(player, times(1)).subtractBalance(110); // 100 + 10% interest
+        verify(property, times(1)).setMortgaged(false);
+    }
 
 
 
