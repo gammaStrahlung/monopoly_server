@@ -64,7 +64,15 @@ public class MortgageManager {
     }
 
 
+    public boolean canCollectRent(PropertyColor color) {
+        return !gameBoard.anyMortgagedInGroup(color);
+    }
 
+    public void enableBuildingOnGroup(PropertyColor color) {
+        if (!gameBoard.anyMortgagedInGroup(color)) {
+            gameBoard.enableBuilding(color);
+        }
+    }
 
 
 }
