@@ -43,7 +43,6 @@ public class AuctionSystemTest {
         verify(eventListener).onBidUpdated(player, 500);
     }
 
-
     @Test
     void testPlaceBidWithInsufficientFunds() {
         when(player.getBalance()).thenReturn(100); // Not enough balance
@@ -51,18 +50,19 @@ public class AuctionSystemTest {
                 "Placing a bid with insufficient funds should throw IllegalArgumentException.");
     }
 
+    @Test
+    void testPlaceLowerBidThanHighest() {
+        auctionSystem.placeBid(player, 300); // Set an initial bid
+        assertFalse(auctionSystem.placeBid(player, 200), "Placing a lower bid than the highest should fail.");
+    }
 
+    @Test
+    void testFinalizeAuction() {
+        auctionSystem.placeBid(player, 500);
+        Player winner = auctionSystem.finalizeAuction();
+        assertEquals(player, winner, "The correct player should win the auction.");
+        verify(eventListener).onAuctionFinalized(player, 500);
+        verify(auctionProperty).setOwner(player);
+        verify(player).subtractBalance(500);
 
-
- 
-
-
-
-
-
-
-
-
-
-
-}
+}}
