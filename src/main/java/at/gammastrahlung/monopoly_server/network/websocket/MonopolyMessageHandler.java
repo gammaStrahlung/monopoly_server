@@ -51,7 +51,7 @@ public class MonopolyMessageHandler {
                 case "players" -> getPlayers(clientMessage.getPlayer());
                 case "start" -> startGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 case "end" -> endGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
-                case "roll_dice" -> handleRollDice(clientMessage, WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
+                case "roll_dice" -> diceRoll(clientMessage, WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -183,7 +183,13 @@ public class MonopolyMessageHandler {
         }
     }
 
-    public static ServerMessage handleRollDice(ClientMessage clientMessage, WebSocketPlayer player) {
+    /**
+     * Called by the client to simulate dice rolling
+     *
+     * @param player The player that wants to roll the dice
+     * @return ServerMessage with MessageType INFO as the dice roll update
+     */
+    public static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
         game.getDice().initializeDice();
