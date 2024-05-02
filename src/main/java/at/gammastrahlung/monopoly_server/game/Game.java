@@ -39,6 +39,11 @@ public class Game {
     @Expose
     GameBoard gameBoard = new GameBoard();
 
+    @Getter
+    @Expose
+    Dice dice = new Dice();
+
+
     // Contains all players connected to the game
     private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
 
