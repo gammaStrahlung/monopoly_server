@@ -38,7 +38,7 @@ public class Game {
     // The game board
     @Getter
     @Expose
-    GameBoard gameBoard;
+    GameBoard gameBoard = new GameBoard();
 
     // Contains all players connected to the game
     @Expose
