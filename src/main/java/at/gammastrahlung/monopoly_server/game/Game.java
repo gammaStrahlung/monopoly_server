@@ -22,6 +22,7 @@ public class Game {
     // Getters and Setters below:
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
     @Getter
+    @Expose
     private int gameId;
 
     // Current state of the game
@@ -40,6 +41,7 @@ public class Game {
     GameBoard gameBoard;
 
     // Contains all players connected to the game
+    @Expose
     private final List<Player> players = new ArrayList<>();
 
     /**
