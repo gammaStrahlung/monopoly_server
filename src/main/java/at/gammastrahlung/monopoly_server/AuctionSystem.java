@@ -63,5 +63,32 @@ public class AuctionSystem {
         return true;
     }
 
+    /**
+     * Finalizes the auction, transferring ownership of the property if there is a highest bid.
+     * @return The player who won the auction, or null if there were no bids.
+     */
+    public Player finalizeAuction() {
+        if (highestBidder != null) {
+            auctionProperty.setOwner(highestBidder);
+            highestBidder.subtractBalance(highestBid);
+            eventListener.onAuctionFinalized(highestBidder, highestBid);
+        }
+        return highestBidder;
+    }
 
+    /**
+     * Gets the current highest bid.
+     * @return The amount of the highest bid.
+     */
+    public int getHighestBid() {
+        return highestBid;
+    }
+
+    /**
+     * Gets the current highest bidder.
+     * @return The player who is the current highest bidder.
+     */
+    public Player getHighestBidder() {
+        return highestBidder;
+    }
 }
