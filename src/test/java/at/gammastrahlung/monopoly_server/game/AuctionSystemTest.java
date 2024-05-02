@@ -44,6 +44,11 @@ public class AuctionSystemTest {
     }
 
 
+    @Test
+    void testPlaceBidWithInsufficientFunds() {
+        when(player.getBalance()).thenReturn(100); // Not enough balance
+        assertThrows(IllegalArgumentException.class, () -> auctionSystem.placeBid(player, 500),
+                "Placing a bid with insufficient funds should throw IllegalArgumentException.");
     }
 
 
