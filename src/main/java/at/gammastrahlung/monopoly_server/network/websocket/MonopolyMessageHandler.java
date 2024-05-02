@@ -186,10 +186,12 @@ public class MonopolyMessageHandler {
     public static ServerMessage handleRollDice(ClientMessage clientMessage, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
+        game.getDice().initializeDice();
+
         return ServerMessage.builder()
                 .messagePath("roll_dice")
                 .type(ServerMessage.MessageType.INFO)
-                .message(clientMessage.getMessage()) // Send the dice values as the message
+                .message("")
                 .player(clientMessage.getPlayer())
                 .game(game)
                 .build();
