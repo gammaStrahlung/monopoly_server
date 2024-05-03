@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.security.SecureRandom;
-
+@Getter
+@Setter
 public class Dice {
-    @Getter
-    @Setter
+
     @Expose
     protected int value1;
-    @Getter
-    @Setter
+
     @Expose
     protected int value2;
+
     public Dice(){
         this.value1 = 1;
         this.value2 = 5;

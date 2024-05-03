@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
+import at.gammastrahlung.monopoly_server.game.Dice;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
@@ -65,7 +66,7 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                //case "roll_dice" -> diceRoll(clientMessage, WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
+                case "roll_dice" -> diceRoll(clientMessage,clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -185,5 +186,18 @@ public class MonopolyMessageHandler {
         }
 
         return message.build();
+    }
+
+    private static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player){
+        Game game = player.getCurrentGame();
+
+        game.getDice().initializeDice();
+
+        return ServerMessage.builder()
+                .messagePath("roll_dice")
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .player(clientMessage.getPlayer())
+                .build();
     }
 }
