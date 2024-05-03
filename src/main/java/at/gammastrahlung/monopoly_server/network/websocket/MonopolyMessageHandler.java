@@ -3,8 +3,11 @@ package at.gammastrahlung.monopoly_server.network.websocket;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
+import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,12 +17,16 @@ import java.util.List;
 
 public class MonopolyMessageHandler {
 
-    private static final Gson gson =  new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+    private static final Gson gson =  new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Field.class, new FieldSerializer())
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
     public static void handleMessage(ClientMessage clientMessage, WebSocketSession session) {
         ServerMessage response;
 
-        List<Player> recievers = new ArrayList<>();
+        List<Player> receivers = new ArrayList<>();
 
         // Set player to player from server if it exists
         WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
@@ -28,9 +35,9 @@ public class MonopolyMessageHandler {
 
         Game currentGame = clientMessage.getPlayer().getCurrentGame();
         if (currentGame != null)
-            recievers.addAll(currentGame.getPlayers());
+            receivers.addAll(currentGame.getPlayers());
         else
-            recievers.add(clientMessage.getPlayer());
+            receivers.add(clientMessage.getPlayer());
 
         // Call the different Message Handlers
         try {
@@ -43,22 +50,28 @@ public class MonopolyMessageHandler {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
                     var message = joinGame(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
 
-                    // Update recievers to all players
-                    recievers.clear();
-                    recievers.addAll(clientMessage.getPlayer().getCurrentGame().getPlayers());
+                    // Send player update if the join was successful
+                    if (message.getType() == ServerMessage.MessageType.SUCCESS) {
+                        WebSocketSender.sendToPlayers(
+                                generateUpdateMessage(
+                                        ServerMessage.MessageType.INFO,
+                                        clientMessage.getPlayer()
+                                ),
+                                clientMessage.getPlayer().getCurrentGame().getPlayers()
+                        );
+                    }
+
                     yield message;
                 }
-                case "players" -> getPlayers(clientMessage.getPlayer());
-                case "start" -> startGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
-                case "end" -> endGame(WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
-                case "roll_dice" -> diceRoll(clientMessage, WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
+                case "start" -> startGame(clientMessage.getPlayer());
+                case "end" -> endGame(clientMessage.getPlayer());
+                //case "roll_dice" -> diceRoll(clientMessage, WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId()));
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
             response = ServerMessage.builder()
                     .messagePath(clientMessage.getMessagePath())
                     .player(clientMessage.getPlayer())
-                    .message(e.getMessage())
                     .type(ServerMessage.MessageType.ERROR)
                     .build();
 
@@ -66,7 +79,7 @@ public class MonopolyMessageHandler {
             return;
         }
 
-        WebSocketSender.sendToPlayers(response, recievers);
+        WebSocketSender.sendToPlayers(response, receivers);
     }
 
     /**
@@ -83,9 +96,12 @@ public class MonopolyMessageHandler {
         // Player that creates the game should also join the game
         game.join(player);
 
-        return new ServerMessage("create",
-                ServerMessage.MessageType.SUCCESS,
-                String.valueOf(game.getGameId()), player, game);
+        return ServerMessage.builder()
+                .type(ServerMessage.MessageType.SUCCESS)
+                .messagePath("create")
+                .jsonData(gson.toJson(game))
+                .player(player)
+                .build();
     }
 
     /**
@@ -103,34 +119,18 @@ public class MonopolyMessageHandler {
 
         // Joining the game was unsuccessful
         if (game == null)
-            return new ServerMessage("join", ServerMessage.MessageType.ERROR, "", player, null);
-
-        return new ServerMessage("join",
-                ServerMessage.MessageType.SUCCESS,
-                String.valueOf(game.getGameId()), player, game);
-    }
-
-    /**
-     * Returns all Players playing the same game as the client.
-     *
-     * @param player The player calling.
-     * @return ServerMessage containing an array of Players.
-     */
-    public static ServerMessage getPlayers(WebSocketPlayer player) {
-        try {
-            var players = player.getCurrentGame().getPlayers().toArray();
-
-            return new ServerMessage("players",
-                    ServerMessage.MessageType.SUCCESS,
-                    gson.toJson(players),
-                    player, null);
-
-        } catch (Exception e) {
-            return new ServerMessage("players",
-                    ServerMessage.MessageType.ERROR,
-                    "",
-                    player, null);
-        }
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .messagePath("join")
+                    .player(player)
+                    .build();
+        else
+            return ServerMessage.builder()
+                .type(ServerMessage.MessageType.SUCCESS)
+                .messagePath("join")
+                .jsonData(gson.toJson(game))
+                .player(player)
+                .build();
     }
 
     /**
@@ -143,63 +143,47 @@ public class MonopolyMessageHandler {
     public static ServerMessage startGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        if (game.startGame(player)) {
-            return new ServerMessage("start",
-                    ServerMessage.MessageType.SUCCESS,
-                    "",
-                    player,
-                    game);
-        } else {
-            return new ServerMessage("start",
-                    ServerMessage.MessageType.ERROR,
-                    "",
-                    player,
-                    game);
-        }
+        if (game.startGame(player))
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
+        else
+            return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
-    /**
-     * Called by the client to end the current game
-     *
-     * @param player The player that wants to end the game.
-     * @return ServerMessage with MessageType SUCCESS as the Message if ending the game was successful,
-     * else ServerMessage has MessageType ERROR.
-     */
     public static ServerMessage endGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        if (game.endGame(player)) {
-            return new ServerMessage("end",
-                    ServerMessage.MessageType.SUCCESS,
-                    "",
-                    player,
-                    game);
-        } else {
-            return new ServerMessage("end",
-                    ServerMessage.MessageType.ERROR,
-                    "",
-                    player,
-                    game);
-        }
+        if (game.endGame(player))
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
+        else
+            return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
     /**
-     * Called by the client to simulate dice rolling
-     *
-     * @param player The player that wants to roll the dice
-     * @return ServerMessage with MessageType INFO as the dice roll update
+     * Generates an update message based on the type of the updateObject
+     * @param messageType the type of the message
+     * @param updateObject The Object that should be updated
+     * @return ServerMessage wih the given type and a updateType matching the type of the updateObject
      */
-    public static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player) {
-        Game game = player.getCurrentGame();
+    private static ServerMessage generateUpdateMessage(ServerMessage.MessageType messageType, Object updateObject) {
+        var message = ServerMessage.builder()
+                .type(messageType)
+                .messagePath("update")
+                .jsonData(gson.toJson(updateObject));
 
-        game.getDice().initializeDice();
+        if (updateObject instanceof Field) { // Field update
+            message.updateType("field");
+        } else if (updateObject instanceof Player) { // Player update
+            message.updateType("player");
+        } else if (updateObject instanceof GameBoard) { // GameBoard update
+            message.updateType("gameboard");
+        } else if (updateObject instanceof Game.GameState) { // Game state update
+            message.updateType("gamestate");
+        } else if (updateObject instanceof Game) { // Full game update, includes all other types. Should be used as little as possible.
+            message.updateType("game");
+        } else {
+            throw new IllegalArgumentException();
+        }
 
-        return ServerMessage.builder()
-                .messagePath("roll_dice")
-                .type(ServerMessage.MessageType.INFO)
-                .message("")
-                .player(clientMessage.getPlayer())
-                .game(game)
-                .build();
+        return message.build();
     }
 }
