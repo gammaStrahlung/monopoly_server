@@ -22,6 +22,7 @@ public class Game {
     // Getters and Setters below:
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
     @Getter
+    @Expose
     private int gameId;
 
     // Current state of the game
@@ -40,7 +41,8 @@ public class Game {
     GameBoard gameBoard = new GameBoard();
 
     // Contains all players connected to the game
-    private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
+    @Expose
+    private final List<Player> players = new ArrayList<>();
 
     /**
      * Creates a new game and sets the gameId
@@ -97,8 +99,8 @@ public class Game {
         gameId = 0;
 
         // Change current game of all players to null
-        for (Map.Entry<UUID, Player> entry : players.entrySet()) {
-            entry.getValue().setCurrentGame(null);
+        for (Player p : players) {
+            p.setCurrentGame(null);
         }
 
         // Clear players
@@ -129,7 +131,7 @@ public class Game {
     public boolean join(Player player) {
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
-        if (!players.containsKey(player.getId())) {
+        if (!players.contains(player)) {
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
@@ -138,7 +140,7 @@ public class Game {
 
             // Add player to list of players.
             player.currentGame = this;
-            players.put(player.getId(), player);
+            players.add(player);
 
             // First joining player is the gameOwner
             if (gameOwner == null)
@@ -147,7 +149,7 @@ public class Game {
             return true;
         } else {
             // Player is re-joining -> update old player object
-            players.get(player.getId()).update(player);
+            players.get(players.indexOf(player)).update(player);
             return true;
         }
     }
@@ -159,7 +161,7 @@ public class Game {
         gameBoard.initializeCommunityChestDeck();
     }
     public List<Player> getPlayers() {
-        return Collections.unmodifiableList(Collections.list(players.elements()));
+        return Collections.unmodifiableList(players);
     }
 
     public enum GameState {
