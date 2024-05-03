@@ -40,6 +40,11 @@ public class Game {
     @Expose
     GameBoard gameBoard = new GameBoard();
 
+    @Getter
+    @Expose
+    Dice dice = new Dice();
+
+
     // Contains all players connected to the game
     @Expose
     private final List<Player> players = new ArrayList<>();

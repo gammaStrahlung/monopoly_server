@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
+import at.gammastrahlung.monopoly_server.game.Dice;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
@@ -65,6 +66,7 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
+                case "roll_dice" -> diceRoll(clientMessage,clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -148,13 +150,6 @@ public class MonopolyMessageHandler {
             return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
-    /**
-     * Called by the client to end the current game
-     *
-     * @param player The player that wants to end the game.
-     * @return ServerMessage with MessageType SUCCESS as the Message if ending the game was successful,
-     * else ServerMessage has MessageType ERROR.
-     */
     public static ServerMessage endGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
@@ -191,5 +186,18 @@ public class MonopolyMessageHandler {
         }
 
         return message.build();
+    }
+
+    private static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player){
+        Game game = player.getCurrentGame();
+
+        game.getDice().initializeDice();
+
+        return ServerMessage.builder()
+                .messagePath("roll_dice")
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .player(clientMessage.getPlayer())
+                .build();
     }
 }
