@@ -154,11 +154,11 @@ public class MonopolyMessageHandler {
     private static ServerMessage initiateRound(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        String messageContent = String.format("It's %s's turn to roll the dice.", player.getName());
+        //String messageContent = String.format("It's %s's turn to roll the dice.", player.getName());
         ServerMessage message = ServerMessage.builder()
                 .messagePath("initiate_round")
                 .type(ServerMessage.MessageType.INFO)
-                .jsonData(messageContent)
+                .jsonData(gson.toJson(player))
                 .player(player)
                 .build();
 
