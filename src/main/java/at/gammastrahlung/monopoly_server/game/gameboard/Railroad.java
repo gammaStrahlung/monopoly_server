@@ -25,9 +25,13 @@ public class Railroad extends Field {
         prices.put("4RR", 200); // Rent with 4 railroads
         return prices;
     }
-    public static Map<String, Integer> getRentPrices() {
+
+
+    // Getter method to access rent prices
+    public Map<String, Integer> getRentPrices() {
         return rentPrices;
     }
+
 
 
 }
