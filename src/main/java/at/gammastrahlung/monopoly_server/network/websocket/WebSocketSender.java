@@ -2,7 +2,9 @@ package at.gammastrahlung.monopoly_server.network.websocket;
 
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
+import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,13 @@ import java.util.List;
 
 @NoArgsConstructor
 public class WebSocketSender {
+
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Field.class, new FieldSerializer())
+            .create();
+
     /**
      * Sends a message only to the given WebSocketSession
      *
@@ -22,7 +31,6 @@ public class WebSocketSender {
      */
     public static void sendToPlayer(WebSocketSession webSocketSession, ServerMessage message) {
         try {
-            Gson gson =  new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
             // Send a message serialized as Json to the WebSocket client
             if (webSocketSession.isOpen()) // Check if WebSocket connection is open
                 webSocketSession.sendMessage(new TextMessage(gson.toJson(message)));
@@ -39,8 +47,6 @@ public class WebSocketSender {
      */
     public static void sendToPlayers(ServerMessage message,
                                    List<Player> players) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-
         for (Player player : players) {
             if (player.getClass() != WebSocketPlayer.class)
                 continue; // Skip non WebSocketPlayers

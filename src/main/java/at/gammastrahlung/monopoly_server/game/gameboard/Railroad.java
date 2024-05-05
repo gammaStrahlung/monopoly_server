@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game.gameboard;
 
 import at.gammastrahlung.monopoly_server.game.Player;
+import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +15,13 @@ import java.util.Map;
 @Setter
 @SuperBuilder
 public class Railroad extends Field {
+    @Expose
     private Player owner;
+    @Expose
     private int price;
-    private static final Map<String, Integer> rentPrices = initRentPrices();
+    @Expose
+    private final Map<String, Integer> rentPrices = initRentPrices();
+
     private static Map<String, Integer> initRentPrices() {
         Map<String, Integer> prices = new HashMap<>();
         prices.put("1RR", 25);  // Rent with 1 railroad
@@ -29,5 +34,11 @@ public class Railroad extends Field {
         return rentPrices;
     }
 
+
+    public void buyAndSellRailroad(Player buyer){
+        owner.addBalance(price);
+        buyer.subtractBalance(price);
+        this.owner = buyer;
+    }
 
 }
