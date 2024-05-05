@@ -179,25 +179,4 @@ class MortgageManagerTest {
         assertTrue(mortgageManager.canCollectRent(PropertyColor.BROWN));
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
