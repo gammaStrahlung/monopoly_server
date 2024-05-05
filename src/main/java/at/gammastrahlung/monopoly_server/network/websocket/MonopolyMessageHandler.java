@@ -1,6 +1,5 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
-import at.gammastrahlung.monopoly_server.game.Dice;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
@@ -66,7 +65,7 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                case "roll_dice" -> diceRoll(clientMessage,clientMessage.getPlayer());
+                case "roll_dice" -> rollDice(clientMessage,clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
@@ -153,12 +152,12 @@ public class MonopolyMessageHandler {
 
     private static ServerMessage initiateRound(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
+        Player currentPlayer = game.getCurrentPlayer();
 
-        //String messageContent = String.format("It's %s's turn to roll the dice.", player.getName());
         ServerMessage message = ServerMessage.builder()
                 .messagePath("initiate_round")
                 .type(ServerMessage.MessageType.INFO)
-                .jsonData(gson.toJson(player))
+                .jsonData(gson.toJson(currentPlayer))
                 .player(player)
                 .build();
 
@@ -205,10 +204,10 @@ public class MonopolyMessageHandler {
         return message.build();
     }
 
-    private static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player){
+    private static ServerMessage rollDice(ClientMessage clientMessage, WebSocketPlayer player){
         Game game = player.getCurrentGame();
 
-        game.getDice().initializeDice();
+        game.getDice().roll();
 
         return ServerMessage.builder()
                 .messagePath("roll_dice")

@@ -71,6 +71,31 @@ class GameTests {
     }
 
     @Test
+    void rollDiceAndMoveCurrentPlayer() {
+        // Add four players
+        for (int i = 1; i < 5; i++)
+            game.join(players.get(i));
+
+        // start the game
+        assertTrue(game.startGame(players.get(0)));
+
+        // assert current player is random
+        int currentPlayerIndex = game.getCurrentPlayerIndex();
+
+        game.rollDiceAndMoveCurrentPlayer();
+
+        // make sure that the current player has moved
+
+        // make sure that the current player has not changed
+        assertEquals(game.getCurrentPlayerIndex(), currentPlayerIndex);
+
+        // end current player's turn
+        game.endCurrentPlayerTurn();
+
+        // make sure that the current player is the next player
+    }
+
+    @Test
     void endGame() {
         // Can't end the game if player is not gameOwner
         assertFalse(game.endGame(players.get(1)));

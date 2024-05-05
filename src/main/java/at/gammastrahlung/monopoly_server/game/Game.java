@@ -44,6 +44,10 @@ public class Game {
     @Expose
     Dice dice = new Dice();
 
+    @Getter
+    @Expose
+    private int currentPlayerIndex = 0;
+
 
     // Contains all players connected to the game
     @Expose
@@ -80,9 +84,50 @@ public class Game {
         if (players.size() < MIN_PLAYERS)
             return false; // Not enough players
 
+        // Generate a random index within the range of 0 to player list length
+        Random random = new Random();
+        currentPlayerIndex = random.nextInt(players.size());
+
+
         state = GameState.PLAYING;
         return true;
     }
+
+    public void rollDiceAndMoveCurrentPlayer(){
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.moveAvatar(currentPlayer.getCurrentField(), dice.roll());
+    }
+
+    public void endCurrentPlayerTurn(){
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
+    }
+
+    public Player getCurrentPlayer() {
+        return getPlayers().get(currentPlayerIndex);
+    }
+
+
+    /**
+     * Starts the next turn in the game.
+     */
+    public void startNextTurn() {
+        // Get the current player
+        Player currentPlayer = getPlayers().get(currentPlayerIndex);
+
+        // Prompt player to roll dice
+
+
+        // End the current player's turn
+        //endTurn();
+
+        // Move to the next player
+        //moveToNextPlayer();
+
+        // Notify the next player that it's their turn
+        //notifyNextPlayerTurn();
+    }
+
+
 
     /**
      * Ends the game, if the player requesting the end is the gameOwner
