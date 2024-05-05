@@ -65,8 +65,9 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                case "roll_dice" -> rollDice(clientMessage,clientMessage.getPlayer());
+                case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage,clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
+                case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -158,7 +159,6 @@ public class MonopolyMessageHandler {
                 .messagePath("initiate_round")
                 .type(ServerMessage.MessageType.INFO)
                 .jsonData(gson.toJson(currentPlayer))
-                .player(player)
                 .build();
 
         WebSocketSender.sendToPlayers(message, game.getPlayers());
@@ -204,16 +204,22 @@ public class MonopolyMessageHandler {
         return message.build();
     }
 
-    private static ServerMessage rollDice(ClientMessage clientMessage, WebSocketPlayer player){
+    private static ServerMessage rollDiceAndMoveCurrentPlayer(ClientMessage clientMessage, WebSocketPlayer player){
         Game game = player.getCurrentGame();
 
-        game.getDice().roll();
+        game.rollDiceAndMoveCurrentPlayer();
 
         return ServerMessage.builder()
                 .messagePath("roll_dice")
                 .type(ServerMessage.MessageType.INFO)
                 .game(game)
-                .player(clientMessage.getPlayer())
                 .build();
+    }
+
+    private static ServerMessage endCurrentPlayerTurn(WebSocketPlayer player) {
+        Game game = player.getCurrentGame();
+        game.endCurrentPlayerTurn();
+
+        return initiateRound(player);
     }
 }

@@ -45,7 +45,6 @@ public class Game {
     Dice dice = new Dice();
 
     @Getter
-    @Expose
     private int currentPlayerIndex = 0;
 
 
@@ -95,7 +94,9 @@ public class Game {
 
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
-        currentPlayer.moveAvatar(currentPlayer.getCurrentField(), dice.roll());
+        // TODO Maja: player might have passed the GO -> give him bonus money
+        int diceValue = dice.roll();
+        currentPlayer.moveAvatar(currentPlayer.getCurrentField(), diceValue);
     }
 
     public void endCurrentPlayerTurn(){
@@ -105,29 +106,6 @@ public class Game {
     public Player getCurrentPlayer() {
         return getPlayers().get(currentPlayerIndex);
     }
-
-
-    /**
-     * Starts the next turn in the game.
-     */
-    public void startNextTurn() {
-        // Get the current player
-        Player currentPlayer = getPlayers().get(currentPlayerIndex);
-
-        // Prompt player to roll dice
-
-
-        // End the current player's turn
-        //endTurn();
-
-        // Move to the next player
-        //moveToNextPlayer();
-
-        // Notify the next player that it's their turn
-        //notifyNextPlayerTurn();
-    }
-
-
 
     /**
      * Ends the game, if the player requesting the end is the gameOwner
