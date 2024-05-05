@@ -4,6 +4,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,9 +43,11 @@ public class Game {
 
     @Getter
     @Expose
+    @Setter
     Dice dice = new Dice();
 
     @Getter
+    @Setter
     private int currentPlayerIndex = 0;
 
 
@@ -94,7 +97,6 @@ public class Game {
 
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
-        // TODO Maja: player might have passed the GO -> give him bonus money
         int diceValue = dice.roll();
         currentPlayer.moveAvatar(currentPlayer.getCurrentField(), diceValue);
     }
@@ -104,7 +106,15 @@ public class Game {
     }
 
     public Player getCurrentPlayer() {
-        return getPlayers().get(currentPlayerIndex);
+        List<Player> players = getPlayers();
+        if (currentPlayerIndex < 0 || currentPlayerIndex >= players.size()) {
+            return null;
+        }
+        return players.get(currentPlayerIndex);
+    }
+
+    public void setCurrentPlayer(int currentPlayerIndex){
+
     }
 
     /**

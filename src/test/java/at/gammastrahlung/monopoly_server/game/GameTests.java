@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GameTests {
@@ -25,9 +27,9 @@ class GameTests {
         // Create Mock players
         players = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
-            Player mockPlayer = Mockito.mock(Player.class);
-            Mockito.when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
-            Mockito.when(mockPlayer.getName()).thenReturn("Player " + i);
+            Player mockPlayer = mock(Player.class);
+            when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
+            when(mockPlayer.getName()).thenReturn("Player " + i);
 
             players.add(mockPlayer);
         }
@@ -71,28 +73,38 @@ class GameTests {
     }
 
     @Test
-    void rollDiceAndMoveCurrentPlayer() {
+    void testGetCurrentPlayerOutOfBounds() {
         // Add four players
-        for (int i = 1; i < 5; i++)
+        for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
         // start the game
         assertTrue(game.startGame(players.get(0)));
 
-        // assert current player is random
-        int currentPlayerIndex = game.getCurrentPlayerIndex();
+        // Set the current player index to an out-of-bounds value
+        game.setCurrentPlayerIndex(5);
+        Player currentPlayer = game.getCurrentPlayer();
 
-        game.rollDiceAndMoveCurrentPlayer();
+        assertNull(currentPlayer);
+    }
 
-        // make sure that the current player has moved
+    @Test
+    void endPlayerTurn(){
+        // Add four players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
 
-        // make sure that the current player has not changed
-        assertEquals(game.getCurrentPlayerIndex(), currentPlayerIndex);
+        // start the game
+        assertTrue(game.startGame(players.get(0)));
 
-        // end current player's turn
+        game.setCurrentPlayerIndex(1);
         game.endCurrentPlayerTurn();
+        assertEquals(2, game.getCurrentPlayerIndex());
 
-        // make sure that the current player is the next player
+        game.setCurrentPlayerIndex(4);
+        game.endCurrentPlayerTurn();
+        assertEquals(1, game.getCurrentPlayerIndex());
+
     }
 
     @Test
