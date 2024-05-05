@@ -113,10 +113,6 @@ public class Game {
         return players.get(currentPlayerIndex);
     }
 
-    public void setCurrentPlayer(int currentPlayerIndex){
-
-    }
-
     /**
      * Ends the game, if the player requesting the end is the gameOwner
      *
