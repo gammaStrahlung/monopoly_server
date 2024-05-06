@@ -32,7 +32,7 @@ public class Player {
     /**
      * The field on which avatar is currently placed
      */
-    protected int currentField;
+    protected int currentFieldIndex;
 
     /**
      * The game the player is currently playing
@@ -44,7 +44,7 @@ public class Player {
         this.name = name;
         this.currentGame = currentGame;
         this.balance = startingBalance; //balance gets initialized with a starting balance
-        this.currentField = 0;
+        this.currentFieldIndex = 0;
     }
 
     // increases player balance
@@ -86,6 +86,6 @@ public class Player {
      *
      */
     public void moveAvatar(int currentField, int value){
-        this.currentField = (currentField + value) % 40;
+        this.currentFieldIndex = (currentField + value) % 40;
     }
 }
