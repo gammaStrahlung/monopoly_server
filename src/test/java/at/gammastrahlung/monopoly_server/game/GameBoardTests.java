@@ -1,5 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.CardType;
+import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
@@ -22,8 +24,16 @@ class GameBoardTests {
 
     @BeforeEach
     public void setUp() {
+  mortgageLogik
         gameBoard = new GameBoard();
         gameBoard.initializeGameBoard(); // Ensure this method exists and works correctly.
+ 
+        gameBoard = GameBoard.builder().build();
+        gameBoard.initializeGameBoard();
+        gameBoard.initializeChanceDeck();
+        gameBoard.initializeCommunityChestDeck();
+    }
+  main
 
         // Optionally, reset properties based on specific tests if necessary
         // This example resets buildings for all properties to ensure a clean state for each test
@@ -40,6 +50,9 @@ class GameBoardTests {
         assertNotNull(gameBoard.getBank());
         assertNotNull(gameBoard.getGameBoard());
         assertEquals(40, gameBoard.getGameBoard().length);
+        assertEquals(40, gameBoard.getGAME_BOARD_SIZE());
+        assertEquals("full_set", gameBoard.getFULL_SET());
+        assertEquals("hotel", gameBoard.getHOTEL());
     }
 
     @Test
@@ -81,6 +94,7 @@ class GameBoardTests {
         }
     }
 
+  mortgageLogik
 
 
     @Test
@@ -150,5 +164,27 @@ class GameBoardTests {
 
 
 
+ 
+    @Test
+    public void testInitializeCommunityChestDeck() {
+        assertEquals(15, gameBoard.getCommunityChestDeck().size());
 
+        EventCard firstCard = gameBoard.getCommunityChestDeck().get(0);
+
+        assertEquals("Go to Jail", firstCard.getDescription());
+        assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
+        assertEquals(30, firstCard.getMoveToField());
+    }
+
+    @Test
+    public void testInitializeChanceDeck() {
+        assertEquals(14, gameBoard.getChanceDeck().size());
+
+        EventCard firstCard = gameBoard.getChanceDeck().get(0);
+
+        assertEquals("Go to Jail", firstCard.getDescription());
+        assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
+        assertEquals(30, firstCard.getMoveToField());
+    }
+  main
 }
