@@ -73,7 +73,7 @@ public class Property extends Field{
         }
         return buildable;
     }
-<<<<<<< HEAD
+
 
     /**
      * Checks if the property has any buildings (houses or hotel).
@@ -83,6 +83,4 @@ public class Property extends Field{
         return houseCount > 0 || hasHotel;
     }
 
-=======
->>>>>>> origin/main
 }

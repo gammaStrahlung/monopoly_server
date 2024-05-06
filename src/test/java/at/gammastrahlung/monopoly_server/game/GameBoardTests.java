@@ -24,20 +24,20 @@ class GameBoardTests {
 
     @BeforeEach
     public void setUp() {
-<<<<<<< HEAD
+
         gameBoard = new GameBoard();
         gameBoard.initializeGameBoard(); // Ensure this method exists and works correctly.
-=======
+
         gameBoard = GameBoard.builder().build();
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
     }
->>>>>>> origin/main
+
 
         // Optionally, reset properties based on specific tests if necessary
         // This example resets buildings for all properties to ensure a clean state for each test
-        for (Field field : gameBoard.getGameBoard()) {
+        for(Field field : gameBoard.getGameBoard()) {
             if (field instanceof Property) {
                 Property property = (Property) field;
                 property.setHouseCount(0);
@@ -94,7 +94,7 @@ class GameBoardTests {
         }
     }
 
-<<<<<<< HEAD
+
 
 
     @Test
@@ -158,14 +158,6 @@ class GameBoardTests {
         assertFalse(result, "It should be false if no properties in the group are mortgaged.");
     }
 
-
-
-
-
-
-
-
-=======
     @Test
     public void testInitializeCommunityChestDeck() {
         assertEquals(15, gameBoard.getCommunityChestDeck().size());
@@ -187,5 +179,5 @@ class GameBoardTests {
         assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
         assertEquals(30, firstCard.getMoveToField());
     }
->>>>>>> origin/main
+
 }

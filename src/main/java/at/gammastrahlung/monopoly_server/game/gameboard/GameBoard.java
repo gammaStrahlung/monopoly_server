@@ -600,7 +600,7 @@ public class GameBoard {
             }
         }
     }
-<<<<<<< HEAD
+
     /**
      * Retrieves a property by its ID.
      * @param propertyId The unique identifier for the property.
@@ -701,54 +701,7 @@ public class GameBoard {
         return false;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-
+    
     public void initializeCommunityChestDeck() {
         communityChestDeck = new ArrayList<>();
 
@@ -924,5 +877,5 @@ public class GameBoard {
                 .cardType(CardType.GET_OUT_OF_JAIL)
                 .build());
     }
->>>>>>> origin/main
+
 }
