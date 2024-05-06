@@ -84,7 +84,6 @@ public class PaymentSystemTest {
 
         assertFalse(paymentSystem.processPropertyPayment(payer, property)); // Expecting payment failure
     }
-
 }
 
 
