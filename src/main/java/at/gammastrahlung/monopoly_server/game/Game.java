@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,7 +91,7 @@ public class Game {
             return false; // Not enough players
 
         // Generate a random index within the range of 0 to player list length
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         currentPlayerIndex = random.nextInt(players.size());
 
 
