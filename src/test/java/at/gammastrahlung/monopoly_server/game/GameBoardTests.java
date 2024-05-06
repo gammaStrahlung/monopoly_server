@@ -32,9 +32,9 @@ class GameBoardTests {
         assertNotNull(gameBoard.getBank());
         assertNotNull(gameBoard.getGameBoard());
         assertEquals(40, gameBoard.getGameBoard().length);
-        assertEquals(40, gameBoard.getGAME_BOARD_SIZE());
-        assertEquals("full_set", gameBoard.getFULL_SET());
-        assertEquals("hotel", gameBoard.getHOTEL());
+        assertEquals(40, GameBoard.GAME_BOARD_SIZE);
+        assertEquals("full_set", GameBoard.FULL_SET);
+        assertEquals("hotel", GameBoard.HOTEL);
     }
 
     @Test

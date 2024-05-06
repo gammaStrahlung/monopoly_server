@@ -3,6 +3,7 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@AllArgsConstructor
 public class Game {
     // Game configuration
     private static final int MIN_GAME_ID = 100000;
@@ -44,6 +46,7 @@ public class Game {
 
     @Getter
     @Expose
+    @Setter
     Dice dice = new Dice();
 
     @Getter
@@ -90,8 +93,7 @@ public class Game {
             return false; // Not enough players
 
         // Generate a random index within the range of 0 to player list length
-        currentPlayerIndex = random.nextInt(players.size());
-
+        setCurrentPlayerIndex(random.nextInt(players.size()));
 
         state = GameState.PLAYING;
         return true;
@@ -100,19 +102,19 @@ public class Game {
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
-        currentPlayer.moveAvatar(currentPlayer.getCurrentField(), diceValue);
+        currentPlayer.moveAvatar(currentPlayer.getCurrentFieldIndex(), diceValue);
     }
 
     public void endCurrentPlayerTurn(){
-        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
+        setCurrentPlayerIndex(getCurrentPlayerIndex()+1);
     }
 
     public Player getCurrentPlayer() {
-        List<Player> playerList = getPlayers();
-        if (currentPlayerIndex < 0 || currentPlayerIndex >= playerList.size()) {
-            return null;
-        }
-        return playerList.get(currentPlayerIndex);
+        return getPlayers().get(getCurrentPlayerIndex());
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex % getPlayers().size();
     }
 
     /**

@@ -79,18 +79,39 @@ class GameTests {
         // start the game
         assertTrue(game.startGame(players.get(0)));
 
-        // Set the current player index to an out-of-bounds value
-        game.setCurrentPlayerIndex(5);
-        Player currentPlayerOutOfBounds = game.getCurrentPlayer();
-
-        assertNull(currentPlayerOutOfBounds);
-
-        // Set the current player index to a valid value
         game.setCurrentPlayerIndex(2);
         Player currentPlayer = game.getCurrentPlayer();
 
-        // Assert that currentPlayer is the third player (index 2 in zero-based indexing)
         assertEquals(players.get(2), currentPlayer);
+    }
+
+    @Test
+    void rollDiceAndMoveCurrentPlayer() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Create a mock for the dice
+        Dice dice = mock(Dice.class);
+        when(dice.roll()).thenReturn(4);
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        // Set the mock dice in the game object
+        game.setDice(dice);
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.rollDiceAndMoveCurrentPlayer();
+
+        assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayerIndex());
     }
 
     @Test
