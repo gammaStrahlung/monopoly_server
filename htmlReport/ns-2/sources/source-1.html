@@ -1,0 +1,307 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Game</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.gammastrahlung.monopoly_server.game</a>
+</div>
+
+<h1>Coverage Summary for Class: Game (at.gammastrahlung.monopoly_server.game)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/56)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Game$GameState</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/60)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package at.gammastrahlung.monopoly_server.game;
+&nbsp;
+&nbsp;import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+&nbsp;import com.google.gson.annotations.Expose;
+&nbsp;
+&nbsp;import lombok.Getter;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;import java.util.concurrent.ConcurrentHashMap;
+&nbsp;
+&nbsp;public class Game {
+&nbsp;    // Game configuration
+&nbsp;    private static final int MIN_GAME_ID = 100000;
+&nbsp;    private static final int MAX_GAME_ID = 999999;
+&nbsp;    private static final int MIN_PLAYERS = 2;
+&nbsp;    private static final int MAX_PLAYERS = 8;
+&nbsp;
+&nbsp;
+&nbsp;    // Contains all games that are currently being played, that allows us to find a specific game
+<b class="nc">&nbsp;    private static final ConcurrentHashMap&lt;Integer, Game&gt; games = new ConcurrentHashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    // Getters and Setters below:
+&nbsp;    // The gameId is used by users to connect to the current game, it can not be changed after the game is started
+<b class="nc">&nbsp;    @Getter</b>
+&nbsp;    private int gameId;
+&nbsp;
+&nbsp;    // Current state of the game
+<b class="nc">&nbsp;    @Getter</b>
+&nbsp;    @Expose
+&nbsp;    private GameState state = GameState.STARTED;
+&nbsp;
+&nbsp;    // The owner of the game. This is the only player that can start and end the game
+<b class="nc">&nbsp;    @Getter</b>
+&nbsp;    @Expose
+&nbsp;    private Player gameOwner = null;
+&nbsp;
+&nbsp;    // Contains all players connected to the game
+<b class="nc">&nbsp;    private final ConcurrentHashMap&lt;UUID, Player&gt; players = new ConcurrentHashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new game and sets the gameId
+&nbsp;     */
+<b class="nc">&nbsp;    public Game() {</b>
+<b class="nc">&nbsp;        Random rand = new Random();</b>
+&nbsp;        // Ensure the gameId is unique.
+&nbsp;        do {
+<b class="nc">&nbsp;            gameId = rand.nextInt(MIN_GAME_ID, MAX_GAME_ID);</b>
+<b class="nc">&nbsp;        } while (games.containsKey(gameId));</b>
+&nbsp;
+&nbsp;        // Add this game to all currently played games
+<b class="nc">&nbsp;        games.put(gameId, this);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Starts the game, if all prerequisites are met and the player requesting the start is the gameOwner.
+&nbsp;     *
+&nbsp;     * @param player The player that wants to start the game.
+&nbsp;     * @return If the game was successfully started.
+&nbsp;     */
+&nbsp;    public boolean startGame(Player player) {
+<b class="nc">&nbsp;        if (player == null) // Player can not be null</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="nc">&nbsp;        if (!player.equals(gameOwner)) // Only the gameOwner can start the game</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="nc">&nbsp;        if (state != GameState.STARTED)</b>
+<b class="nc">&nbsp;            return false; // Can&#39;t start an already playing game or an ended game</b>
+<b class="nc">&nbsp;        if (players.size() &lt; MIN_PLAYERS)</b>
+<b class="nc">&nbsp;            return false; // Not enough players</b>
+&nbsp;
+<b class="nc">&nbsp;        state = GameState.PLAYING;</b>
+<b class="nc">&nbsp;        initializeGameBoard();</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Ends the game, if the player requesting the end is the gameOwner
+&nbsp;     *
+&nbsp;     * @param player The player that wants to end the game.
+&nbsp;     * @return If ending the game was successful
+&nbsp;     */
+&nbsp;    public boolean endGame(Player player) {
+<b class="nc">&nbsp;        if (player == null) // Player can not be null</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="nc">&nbsp;        if (!player.equals(gameOwner)) // Only the gameOwner can end the game</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;
+<b class="nc">&nbsp;        state = GameState.ENDED;</b>
+&nbsp;
+&nbsp;        // Remove this game from the games to free the gameId
+<b class="nc">&nbsp;        games.remove(gameId);</b>
+&nbsp;
+<b class="nc">&nbsp;        gameId = 0;</b>
+&nbsp;
+&nbsp;        // Change current game of all players to null
+<b class="nc">&nbsp;        for (Map.Entry&lt;UUID, Player&gt; entry : players.entrySet()) {</b>
+<b class="nc">&nbsp;            entry.getValue().setCurrentGame(null);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // Clear players
+<b class="nc">&nbsp;        players.clear();</b>
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Game joinByGameId(int gameId, Player player) {
+<b class="nc">&nbsp;        Game g = games.get(gameId);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (g != null) {</b>
+<b class="nc">&nbsp;            boolean ok = g.join(player);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (!ok)</b>
+<b class="nc">&nbsp;                return null; // Join was not successful</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return g;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Allows a player to join a game if the prerequisites are met.
+&nbsp;     *
+&nbsp;     * @param player The player that should join this game.
+&nbsp;     * @return If the join was successful.
+&nbsp;     */
+&nbsp;    public boolean join(Player player) {
+&nbsp;        // Check if player is new and does not re-join the game.
+&nbsp;        // If the player re-joins the game, skip the join checks.
+<b class="nc">&nbsp;        if (!players.containsKey(player.getId())) {</b>
+<b class="nc">&nbsp;            if (state != GameState.STARTED)</b>
+<b class="nc">&nbsp;                return false; // Can&#39;t join when already playing</b>
+&nbsp;
+<b class="nc">&nbsp;            if (players.size() &gt;= MAX_PLAYERS)</b>
+<b class="nc">&nbsp;                return false; // Can&#39;t join when game is full</b>
+&nbsp;
+&nbsp;            // Add player to list of players.
+<b class="nc">&nbsp;            player.currentGame = this;</b>
+<b class="nc">&nbsp;            players.put(player.getId(), player);</b>
+&nbsp;
+&nbsp;            // First joining player is the gameOwner
+<b class="nc">&nbsp;            if (gameOwner == null)</b>
+<b class="nc">&nbsp;                gameOwner = player;</b>
+&nbsp;
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        } else {
+&nbsp;            // Player is re-joining -&gt; update old player object
+<b class="nc">&nbsp;            players.get(player.getId()).update(player);</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void initializeGameBoard() {
+&nbsp;        // Initialize the game board
+<b class="nc">&nbsp;        GameBoard gameBoard = new GameBoard();</b>
+<b class="nc">&nbsp;        gameBoard.initializeGameBoard();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="nc">&nbsp;        return Collections.unmodifiableList(Collections.list(players.elements()));</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public enum GameState {</b>
+&nbsp;        /**
+&nbsp;         * Game was started but playing has not yet begun.
+&nbsp;         * In this state, the game will accept joining players.
+&nbsp;         */
+<b class="nc">&nbsp;        STARTED,</b>
+&nbsp;        /**
+&nbsp;         * The game has started and players are playing the game.
+&nbsp;         * It is not possible for new players to join the game,
+&nbsp;         * players that disconnected are still able to re-join the game.
+&nbsp;         */
+<b class="nc">&nbsp;        PLAYING,</b>
+&nbsp;        /**
+&nbsp;         * The game has ended, playing and joining is not possible anymore.
+&nbsp;         */
+<b class="nc">&nbsp;        ENDED</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-02 01:13</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,860 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameBoard</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">at.gammastrahlung.monopoly_server.game.gameboard</a>
+</div>
+
+<h1>Coverage Summary for Class: GameBoard (at.gammastrahlung.monopoly_server.game.gameboard)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameBoard</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/539)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameBoard$GameBoardBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/540)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package at.gammastrahlung.monopoly_server.game.gameboard;
+&nbsp;
+&nbsp;import at.gammastrahlung.monopoly_server.game.Player;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.Setter;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Getter
+<b class="nc">&nbsp;@Setter</b>
+&nbsp;public class GameBoard {
+<b class="nc">&nbsp;    private Player bank = new Player();</b>
+<b class="nc">&nbsp;    private Field[] gameBoard;</b>
+&nbsp;    private static final int GAME_BOARD_SIZE = 40;
+&nbsp;    private static final String FULL_SET = &quot;full_set&quot;;
+&nbsp;    private static final String HOTEL = &quot;hotel&quot;;
+<b class="nc">&nbsp;    @Builder</b>
+<b class="nc">&nbsp;    public GameBoard() {</b>
+<b class="nc">&nbsp;        gameBoard = new Field[GAME_BOARD_SIZE];</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void initializeGameBoard() {
+<b class="nc">&nbsp;        gameBoard[0] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(0)</b>
+<b class="nc">&nbsp;                .name(&quot;Go&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.GO)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices1 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices1.put(0, 2);</b>
+<b class="nc">&nbsp;        rentPrices1.put(FULL_SET, 4);</b>
+<b class="nc">&nbsp;        rentPrices1.put(1, 10);</b>
+<b class="nc">&nbsp;        rentPrices1.put(2, 30);</b>
+<b class="nc">&nbsp;        rentPrices1.put(3, 90);</b>
+<b class="nc">&nbsp;        rentPrices1.put(4, 160);</b>
+<b class="nc">&nbsp;        rentPrices1.put(HOTEL, 250);</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard[1] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(1)</b>
+<b class="nc">&nbsp;                .name(&quot;Mediterranean Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(60)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.BROWN)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices1)</b>
+<b class="nc">&nbsp;                .mortgageValue(30)</b>
+<b class="nc">&nbsp;                .houseCost(50)</b>
+<b class="nc">&nbsp;                .hotelCost(50)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard[2] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(2)</b>
+<b class="nc">&nbsp;                .name(&quot;Community Chest&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.COMMUNITY_CHEST)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices2 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices2.put(0, 4);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices2.put(FULL_SET, 8); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices2.put(1,20); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices2.put(2, 60); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices2.put(3, 180); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices2.put(4, 320); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices2.put(HOTEL, 450); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [3] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(3)</b>
+<b class="nc">&nbsp;                .name(&quot;Baltic Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(60)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.BROWN)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices2)</b>
+<b class="nc">&nbsp;                .mortgageValue(30)</b>
+<b class="nc">&nbsp;                .houseCost(50)</b>
+<b class="nc">&nbsp;                .hotelCost(50)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [4] = TaxField.builder()</b>
+<b class="nc">&nbsp;                .fieldId(4)</b>
+<b class="nc">&nbsp;                .name(&quot;Income Tax&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.INCOME_TAX)</b>
+<b class="nc">&nbsp;                .toPay(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [5] = Railroad.builder()</b>
+<b class="nc">&nbsp;                .fieldId(5)</b>
+<b class="nc">&nbsp;                .name(&quot;Reading Railroad&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.RAILROAD)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices3 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices3.put(0, 6);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices3.put(FULL_SET, 12); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices3.put(1,30); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices3.put(2, 90); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices3.put(3, 270); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices3.put(4, 400); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices3.put(HOTEL, 550); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [6] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(6)</b>
+<b class="nc">&nbsp;                .name(&quot;Oriental Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(100)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.LIGHT_BLUE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices3)</b>
+<b class="nc">&nbsp;                .mortgageValue(50)</b>
+<b class="nc">&nbsp;                .houseCost(50)</b>
+<b class="nc">&nbsp;                .hotelCost(50)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [7] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(7)</b>
+<b class="nc">&nbsp;                .name(&quot;Chance&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.CHANCE)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [8] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(8)</b>
+<b class="nc">&nbsp;                .name(&quot;Vermont Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(100)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.LIGHT_BLUE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices3)</b>
+<b class="nc">&nbsp;                .mortgageValue(50)</b>
+<b class="nc">&nbsp;                .houseCost(50)</b>
+<b class="nc">&nbsp;                .hotelCost(50)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices4 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices4.put(0, 8);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices4.put(FULL_SET, 16); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices4.put(1,40); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices4.put(2, 100); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices4.put(3, 300); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices4.put(4, 450); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices4.put(HOTEL, 600); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [9] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(9)</b>
+<b class="nc">&nbsp;                .name(&quot;Connecticut Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(120)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.LIGHT_BLUE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices4)</b>
+<b class="nc">&nbsp;                .mortgageValue(60)</b>
+<b class="nc">&nbsp;                .houseCost(50)</b>
+<b class="nc">&nbsp;                .hotelCost(50)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [10] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(10)</b>
+<b class="nc">&nbsp;                .name(&quot;Jail&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.JAIL)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices5 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices5.put(0, 10);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices5.put(FULL_SET, 20); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices5.put(1,50); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices5.put(2, 150); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices5.put(3, 450); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices5.put(4, 625); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices5.put(HOTEL, 750); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [11] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(11)</b>
+<b class="nc">&nbsp;                .name(&quot;St Charles Place&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(140)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.PINK)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices5)</b>
+<b class="nc">&nbsp;                .mortgageValue(70)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [12] = Utility.builder()</b>
+<b class="nc">&nbsp;                .fieldId(12)</b>
+<b class="nc">&nbsp;                .name(&quot;Electricity Company&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.UTILITY)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .price(150)</b>
+<b class="nc">&nbsp;                .mortgage(75)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [13] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(13)</b>
+<b class="nc">&nbsp;                .name(&quot;States Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(140)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.PINK)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices5)</b>
+<b class="nc">&nbsp;                .mortgageValue(70)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices6 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices6.put(0, 12);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices6.put(FULL_SET, 24); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices6.put(1,60); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices6.put(2, 180); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices6.put(3, 500); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices6.put(4, 700); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices6.put(HOTEL, 900); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [14] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(14)</b>
+<b class="nc">&nbsp;                .name(&quot;Virginia Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(160)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.PINK)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices6)</b>
+<b class="nc">&nbsp;                .mortgageValue(80)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [15] = Railroad.builder()</b>
+<b class="nc">&nbsp;                .fieldId(15)</b>
+<b class="nc">&nbsp;                .name(&quot;Pennsylvania Railroad&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.RAILROAD)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices7 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices7.put(0, 14);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices7.put(FULL_SET, 28); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices7.put(1,70); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices7.put(2, 200); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices7.put(3, 550); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices7.put(4, 750); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices7.put(HOTEL, 950); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [16] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(16)</b>
+<b class="nc">&nbsp;                .name(&quot;St. James Place&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(180)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.ORANGE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices7)</b>
+<b class="nc">&nbsp;                .mortgageValue(90)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [17] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(17)</b>
+<b class="nc">&nbsp;                .name(&quot;Community Chest&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.COMMUNITY_CHEST)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [18] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(18)</b>
+<b class="nc">&nbsp;                .name(&quot;Tennessee Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(180)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.ORANGE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices7)</b>
+<b class="nc">&nbsp;                .mortgageValue(90)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices8 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices8.put(0, 16);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices8.put(FULL_SET, 32); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices8.put(1,80); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices8.put(2, 220); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices8.put(3, 600); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices8.put(4, 800); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices8.put(HOTEL, 1000); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [19] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(19)</b>
+<b class="nc">&nbsp;                .name(&quot;New York Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(200)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.ORANGE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices8)</b>
+<b class="nc">&nbsp;                .mortgageValue(100)</b>
+<b class="nc">&nbsp;                .houseCost(100)</b>
+<b class="nc">&nbsp;                .hotelCost(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [20] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(20)</b>
+<b class="nc">&nbsp;                .name(&quot;Free Parking&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.FREE_PARKING)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices9 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices9.put(0, 18);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices9.put(FULL_SET, 36); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices9.put(1,90); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices9.put(2, 250); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices9.put(3, 700); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices9.put(4, 875); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices9.put(HOTEL, 1050); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [21] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(21)</b>
+<b class="nc">&nbsp;                .name(&quot;Kentucky Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(220)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.RED)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices9)</b>
+<b class="nc">&nbsp;                .mortgageValue(110)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [22] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(22)</b>
+<b class="nc">&nbsp;                .name(&quot;Chance&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.CHANCE)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [23] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(23)</b>
+<b class="nc">&nbsp;                .name(&quot;Indiana Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(220)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.RED)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices9)</b>
+<b class="nc">&nbsp;                .mortgageValue(110)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices10 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices10.put(0, 20);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices10.put(FULL_SET, 40); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices10.put(1,100); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices10.put(2, 300); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices10.put(3, 750); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices10.put(4, 925); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices10.put(HOTEL, 1100); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [24] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(24)</b>
+<b class="nc">&nbsp;                .name(&quot;Illinois Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(240)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.RED)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices10)</b>
+<b class="nc">&nbsp;                .mortgageValue(120)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [25] = Railroad.builder()</b>
+<b class="nc">&nbsp;                .fieldId(25)</b>
+<b class="nc">&nbsp;                .name(&quot;B. &amp; O. Railroad&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.RAILROAD)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices11 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices11.put(0, 22);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices11.put(FULL_SET, 44); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices11.put(1,110); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices11.put(2, 330); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices11.put(3, 800); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices11.put(4, 975); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices11.put(HOTEL, 1150); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [26] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(26)</b>
+<b class="nc">&nbsp;                .name(&quot;Atlantic Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(260)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.YELLOW)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices11)</b>
+<b class="nc">&nbsp;                .mortgageValue(130)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [27] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(27)</b>
+<b class="nc">&nbsp;                .name(&quot;Ventnor Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(260)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.YELLOW)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices11)</b>
+<b class="nc">&nbsp;                .mortgageValue(130)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [28] = Utility.builder()</b>
+<b class="nc">&nbsp;                .fieldId(28)</b>
+<b class="nc">&nbsp;                .name(&quot;Water Works&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.UTILITY)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .price(150)</b>
+<b class="nc">&nbsp;                .mortgage(75)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices12 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices12.put(0, 24);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices12.put(FULL_SET, 48); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices12.put(1,120); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices12.put(2, 360); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices12.put(3, 850); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices12.put(4, 1025); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices12.put(HOTEL, 1200); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [29] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(29)</b>
+<b class="nc">&nbsp;                .name(&quot;Marvin Gardens&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(280)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.YELLOW)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices12)</b>
+<b class="nc">&nbsp;                .mortgageValue(140)</b>
+<b class="nc">&nbsp;                .houseCost(150)</b>
+<b class="nc">&nbsp;                .hotelCost(150)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [30] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(30)</b>
+<b class="nc">&nbsp;                .name(&quot;Go to Jail&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.GO_TO_JAIL)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices13 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices13.put(0, 26);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices13.put(FULL_SET, 52); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices13.put(1,130); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices13.put(2, 390); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices13.put(3, 900); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices13.put(4, 1100); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices13.put(HOTEL, 1275); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [31] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(31)</b>
+<b class="nc">&nbsp;                .name(&quot;Pacific Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(300)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.GREEN)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices13)</b>
+<b class="nc">&nbsp;                .mortgageValue(150)</b>
+<b class="nc">&nbsp;                .houseCost(200)</b>
+<b class="nc">&nbsp;                .hotelCost(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [32] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(32)</b>
+<b class="nc">&nbsp;                .name(&quot;North Carolina Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(300)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.GREEN)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices13)</b>
+<b class="nc">&nbsp;                .mortgageValue(150)</b>
+<b class="nc">&nbsp;                .houseCost(200)</b>
+<b class="nc">&nbsp;                .hotelCost(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [33] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(33)</b>
+<b class="nc">&nbsp;                .name(&quot;Community Chest&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.COMMUNITY_CHEST)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices14 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices14.put(0, 28);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices14.put(FULL_SET, 56); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices14.put(1,150); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices14.put(2, 450); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices14.put(3, 1000); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices14.put(4, 1200); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices14.put(HOTEL, 1400); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [34] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(34)</b>
+<b class="nc">&nbsp;                .name(&quot;Pennsylvania Avenue&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(320)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.GREEN)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices14)</b>
+<b class="nc">&nbsp;                .mortgageValue(160)</b>
+<b class="nc">&nbsp;                .houseCost(200)</b>
+<b class="nc">&nbsp;                .hotelCost(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard[35] = Railroad.builder()</b>
+<b class="nc">&nbsp;                .fieldId(35)</b>
+<b class="nc">&nbsp;                .name(&quot;Short Line&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.RAILROAD)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [36] = Field.builder()</b>
+<b class="nc">&nbsp;                .fieldId(36)</b>
+<b class="nc">&nbsp;                .name(&quot;Chance&quot;)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices15 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices15.put(0, 35);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices15.put(FULL_SET, 70); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices15.put(1,175); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices15.put(2, 500); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices15.put(3, 1100); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices15.put(4, 1300); //Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices15.put(HOTEL, 1500); //Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [37] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(37)</b>
+<b class="nc">&nbsp;                .name(&quot;Park Place&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(350)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.DARK_BLUE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices15)</b>
+<b class="nc">&nbsp;                .mortgageValue(175)</b>
+<b class="nc">&nbsp;                .houseCost(200)</b>
+<b class="nc">&nbsp;                .hotelCost(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [38] = TaxField.builder()</b>
+<b class="nc">&nbsp;                .fieldId(38)</b>
+<b class="nc">&nbsp;                .name(&quot;Luxury Tax&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.LUXURY_TAX)</b>
+<b class="nc">&nbsp;                .toPay(100)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+<b class="nc">&nbsp;        Map&lt;Object, Integer&gt; rentPrices16 = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        rentPrices16.put(0, 50);  // Rent with 0 houses</b>
+<b class="nc">&nbsp;        rentPrices16.put(FULL_SET, 100); // Rent with color set</b>
+<b class="nc">&nbsp;        rentPrices16.put(1, 200); // Rent with 1 house</b>
+<b class="nc">&nbsp;        rentPrices16.put(2, 600); // Rent with 2 houses</b>
+<b class="nc">&nbsp;        rentPrices16.put(3, 1400); // Rent with 3 houses</b>
+<b class="nc">&nbsp;        rentPrices16.put(4, 1700); // Rent with 4 houses</b>
+<b class="nc">&nbsp;        rentPrices16.put(HOTEL, 2000); // Rent with hotel</b>
+&nbsp;
+<b class="nc">&nbsp;        gameBoard [39] = Property.builder()</b>
+<b class="nc">&nbsp;                .fieldId(39)</b>
+<b class="nc">&nbsp;                .name(&quot;Boardwalk&quot;)</b>
+<b class="nc">&nbsp;                .type(FieldType.PROPERTY)</b>
+<b class="nc">&nbsp;                .price(400)</b>
+<b class="nc">&nbsp;                .owner(bank)</b>
+<b class="nc">&nbsp;                .color(PropertyColor.DARK_BLUE)</b>
+<b class="nc">&nbsp;                .rentPrices(rentPrices16)</b>
+<b class="nc">&nbsp;                .mortgageValue(200)</b>
+<b class="nc">&nbsp;                .houseCost(200)</b>
+<b class="nc">&nbsp;                .hotelCost(200)</b>
+<b class="nc">&nbsp;                .build();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;    public void cleanUpBoard() {
+&nbsp;        // Reset all properties and fields to their initial state
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property property) {</b>
+<b class="nc">&nbsp;                property.setOwner(null);</b>
+&nbsp;
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;    /**
+&nbsp;     * Retrieves a property by its ID.
+&nbsp;     * @param propertyId The unique identifier for the property.
+&nbsp;     * @return The Property object if found, null otherwise.
+&nbsp;     */
+&nbsp;    public Property getPropertyById(int propertyId) {
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property &amp;&amp; field.getFieldId() == propertyId) {</b>
+<b class="nc">&nbsp;                return (Property) field;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if any properties in a specified group have buildings.
+&nbsp;     * @param color The color group of the properties.
+&nbsp;     * @return true if any property in the group has buildings, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean hasBuildings(PropertyColor color) {
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property) {</b>
+<b class="nc">&nbsp;                Property property = (Property) field;</b>
+<b class="nc">&nbsp;                if (property.getColor() == color &amp;&amp; property.hasBuildings()) {</b>
+<b class="nc">&nbsp;                    return true;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sells all buildings in a specified group and credits the player&#39;s account.
+&nbsp;     * @param color The color group of the properties.
+&nbsp;     * @param player The player who is selling the buildings.
+&nbsp;     */
+&nbsp;    public void sellBuildings(PropertyColor color, Player player) {
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property) {</b>
+<b class="nc">&nbsp;                Property property = (Property) field;</b>
+<b class="nc">&nbsp;                if (property.getColor() == color) {</b>
+<b class="nc">&nbsp;                    int totalSaleAmount = 0;</b>
+&nbsp;                    // Selling the hotel if present
+<b class="nc">&nbsp;                    if (property.isHasHotel()) {</b>
+<b class="nc">&nbsp;                        totalSaleAmount += property.getHotelCost() / 2; // Sell the hotel at half price</b>
+<b class="nc">&nbsp;                        property.setHasHotel(false); // Set hasHotel to false</b>
+&nbsp;                    }
+&nbsp;                    // Selling the houses
+<b class="nc">&nbsp;                    totalSaleAmount += property.getHouseCount() * (property.getHouseCost() / 2); // Sell houses at half price</b>
+<b class="nc">&nbsp;                    property.setHouseCount(0); // Reset the number of houses to 0</b>
+<b class="nc">&nbsp;                    player.addBalance(totalSaleAmount); // Credit money to the player</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Enables building on a property group if no properties are mortgaged.
+&nbsp;     * @param color The color group of the properties.
+&nbsp;     */
+&nbsp;    public void enableBuilding(PropertyColor color) {
+&nbsp;        // Assuming this sets a flag that allows building on the group
+&nbsp;        // This method could be implemented differently based on your game&#39;s rules
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property) {</b>
+<b class="nc">&nbsp;                Property property = (Property) field;</b>
+<b class="nc">&nbsp;                if (property.getColor() == color &amp;&amp; property.isMortgaged()) {</b>
+&nbsp;                    // If any property in the group is mortgaged, building should not be enabled.
+<b class="nc">&nbsp;                    return;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;        // If no properties in the group are mortgaged, enable building
+&nbsp;        // Set a flag or update state to indicate building is allowed on this group
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Determines if any properties in a specific color group are mortgaged.
+&nbsp;     * @param color The color group of the properties.
+&nbsp;     * @return true if any property in the group is mortgaged, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean anyMortgagedInGroup(PropertyColor color) {
+<b class="nc">&nbsp;        for (Field field : gameBoard) {</b>
+<b class="nc">&nbsp;            if (field instanceof Property) {</b>
+<b class="nc">&nbsp;                Property property = (Property) field;</b>
+<b class="nc">&nbsp;                if (property.getColor() == color &amp;&amp; property.isMortgaged()) {</b>
+<b class="nc">&nbsp;                    return true;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-05-02 01:13</div>
+</div>
+</body>
+</html>
