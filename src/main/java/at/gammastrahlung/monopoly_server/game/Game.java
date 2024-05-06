@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,6 +56,9 @@ public class Game {
     @Expose
     private final List<Player> players = new ArrayList<>();
 
+    SecureRandom random = new SecureRandom();
+
+
     /**
      * Creates a new game and sets the gameId
      */
@@ -87,7 +91,6 @@ public class Game {
             return false; // Not enough players
 
         // Generate a random index within the range of 0 to player list length
-        Random random = new Random();
         currentPlayerIndex = random.nextInt(players.size());
 
 
@@ -106,11 +109,11 @@ public class Game {
     }
 
     public Player getCurrentPlayer() {
-        List<Player> players = getPlayers();
-        if (currentPlayerIndex < 0 || currentPlayerIndex >= players.size()) {
+        List<Player> playerList = getPlayers();
+        if (currentPlayerIndex < 0 || currentPlayerIndex >= playerList.size()) {
             return null;
         }
-        return players.get(currentPlayerIndex);
+        return playerList.get(currentPlayerIndex);
     }
 
     /**
