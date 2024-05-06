@@ -53,7 +53,9 @@ public class WebSocketPlayer extends Player {
     public void update(Player player) {
         if (player.getClass() == this.getClass()) {
             // Only update if player is a WebSocketPlayer
-            players.remove(webSocketSession.getId());
+            if (webSocketSession != null)
+                players.remove(webSocketSession.getId());
+
             setWebSocketSession(((WebSocketPlayer) player).getWebSocketSession());
             players.put(webSocketSession.getId(), this);
         }
