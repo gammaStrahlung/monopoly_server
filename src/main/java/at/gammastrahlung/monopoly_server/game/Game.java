@@ -91,7 +91,8 @@ public class Game {
 
         // Generate a random index within the range of 0 to player list length
         Random random = new Random();
-        setCurrentPlayerIndex(random.nextInt(players.size()));
+        currentPlayerIndex = random.nextInt(players.size());
+
 
         state = GameState.PLAYING;
         return true;
@@ -104,11 +105,11 @@ public class Game {
     }
 
     public void endCurrentPlayerTurn(){
-        setCurrentPlayerIndex(getCurrentPlayerIndex()+1);
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
     }
 
     public Player getCurrentPlayer() {
-        return getPlayers().get(getCurrentPlayerIndex());
+        return players.get(currentPlayerIndex);
     }
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {

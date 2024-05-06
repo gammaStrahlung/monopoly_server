@@ -21,11 +21,11 @@ public class GameBoard {
     private Field[] gameBoard;
 
     @Expose
-    public static final int GAME_BOARD_SIZE = 40;
+    private final int GAME_BOARD_SIZE = 40;
     @Expose
-    public static final String FULL_SET = "full_set";
+    private final String FULL_SET = "full_set";
     @Expose
-    public static final String HOTEL = "hotel";
+    private final String HOTEL = "hotel";
 
     @Expose
     private ArrayList<EventCard> chanceDeck;

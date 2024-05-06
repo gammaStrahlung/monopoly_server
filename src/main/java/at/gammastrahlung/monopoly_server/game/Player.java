@@ -1,6 +1,5 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -87,6 +86,6 @@ public class Player {
      *
      */
     public void moveAvatar(int currentField, int value){
-        this.currentFieldIndex = (currentField + value) % GameBoard.GAME_BOARD_SIZE;
+        this.currentFieldIndex = (currentField + value) % 40;
     }
 }
