@@ -2,10 +2,8 @@ package at.gammastrahlung.monopoly_server.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +71,7 @@ class GameTests {
     }
 
     @Test
-    void testGetCurrentPlayerOutOfBounds() {
+    void getCurrentPlayer() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
@@ -83,9 +81,16 @@ class GameTests {
 
         // Set the current player index to an out-of-bounds value
         game.setCurrentPlayerIndex(5);
+        Player currentPlayerOutOfBounds = game.getCurrentPlayer();
+
+        assertNull(currentPlayerOutOfBounds);
+
+        // Set the current player index to a valid value
+        game.setCurrentPlayerIndex(2);
         Player currentPlayer = game.getCurrentPlayer();
 
-        assertNull(currentPlayer);
+        // Assert that currentPlayer is the third player (index 2 in zero-based indexing)
+        assertEquals(players.get(2), currentPlayer);
     }
 
     @Test
@@ -104,7 +109,6 @@ class GameTests {
         game.setCurrentPlayerIndex(4);
         game.endCurrentPlayerTurn();
         assertEquals(1, game.getCurrentPlayerIndex());
-
     }
 
     @Test

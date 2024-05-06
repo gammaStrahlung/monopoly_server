@@ -44,7 +44,6 @@ public class Game {
 
     @Getter
     @Expose
-    @Setter
     Dice dice = new Dice();
 
     @Getter
