@@ -34,6 +34,8 @@ public class Player {
      */
     protected int currentFieldIndex;
 
+    protected boolean isInJail = false;
+
     /**
      * The game the player is currently playing
      */
@@ -87,5 +89,9 @@ public class Player {
      */
     public void moveAvatar(int currentFieldIndex, int value){
         this.currentFieldIndex = (currentFieldIndex + value) % 40;
+    }
+
+    public void goToJail(){
+        this.isInJail = true;
     }
 }
