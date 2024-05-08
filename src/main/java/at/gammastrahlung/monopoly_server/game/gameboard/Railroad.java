@@ -30,9 +30,7 @@ public class Railroad extends Field {
         prices.put("4RR", 200); // Rent with 4 railroads
         return prices;
     }
-    public static Map<String, Integer> getRentPrices() {
-        return rentPrices;
-    }
+
 
 
     public void buyAndSellRailroad(Player buyer){
@@ -40,13 +38,4 @@ public class Railroad extends Field {
         buyer.subtractBalance(price);
         this.owner = buyer;
     }
-
-
-    // Getter method to access rent prices
-    public Map<String, Integer> getRentPrices() {
-        return rentPrices;
-    }
-
-
-
 }
