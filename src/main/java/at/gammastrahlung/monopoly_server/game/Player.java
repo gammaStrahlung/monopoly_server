@@ -91,6 +91,9 @@ public class Player {
         this.currentFieldIndex = (currentFieldIndex + value) % 40;
     }
 
+    /**
+     * Updates isInJail to true
+     */
     public void goToJail(){
         this.isInJail = true;
     }

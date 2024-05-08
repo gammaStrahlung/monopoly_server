@@ -9,6 +9,12 @@ public class FieldActionHandler {
             case GO_TO_JAIL:
                 goToJail(currentPlayer, game);
                 break;
+            case INCOME_TAX:
+                // pay income tax
+                break;
+            case LUXURY_TAX:
+                // pay luxury tax
+                break;
 
             // Add cases for other field types
         }

@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
 
@@ -101,6 +102,13 @@ public class Game {
         return true;
     }
 
+    public void handleFieldAction(int fieldId) {
+        Field field = gameBoard.getGameBoard()[fieldId];
+        if (field != null) {
+            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
+        }
+    }
+
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
@@ -109,7 +117,11 @@ public class Game {
 
         currentPlayer.moveAvatar(currentFieldIndex, diceValue);
 
+        // Check if player is entitled to bonus salary
         awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+        // Handle available actions according to the field the player lands on
+        handleFieldAction(currentPlayer.currentFieldIndex);
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
