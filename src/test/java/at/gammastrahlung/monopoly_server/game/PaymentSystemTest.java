@@ -84,6 +84,24 @@ public class PaymentSystemTest {
 
         assertFalse(paymentSystem.processPropertyPayment(payer, property)); // Expecting payment failure
     }
+
+    @Test
+    void testMakePaymentEdgeCaseExactFunds() {
+        when(payer.getBalance()).thenReturn(100);
+        assertTrue(paymentSystem.makePayment(payer, owner, 100));
+        verify(payer).subtractBalance(100);
+        verify(owner).addBalance(100);
+    }
+
+    @Test
+    void testMakePaymentEdgeCaseInsufficientFunds() {
+        when(payer.getBalance()).thenReturn(99);
+        assertFalse(paymentSystem.makePayment(payer, owner, 100));
+        verify(payer, never()).subtractBalance(anyInt());
+        verify(owner, never()).addBalance(anyInt());
+    }
+
+
 }
 
 
