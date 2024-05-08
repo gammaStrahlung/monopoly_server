@@ -34,7 +34,7 @@ public class Player {
      */
     protected int currentFieldIndex;
 
-    protected boolean isInJail = false;
+    protected boolean isInJail;
 
     /**
      * The game the player is currently playing

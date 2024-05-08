@@ -83,4 +83,13 @@ class PlayerTest {
         assertEquals(13, player.getCurrentFieldIndex());
 
     }
+
+    @Test
+    void goToJailTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.goToJail();
+
+        assertTrue(player.isInJail);
+    }
 }
