@@ -92,4 +92,11 @@ class PlayerTest {
 
         assertTrue(player.isInJail);
     }
+
+    @Test
+    void testIsInJailInitializedToFalse() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        assertFalse(player.isInJail()); // Check if isInJail is initialized to false
+    }
 }
