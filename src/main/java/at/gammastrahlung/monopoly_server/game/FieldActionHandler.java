@@ -12,6 +12,9 @@ public class FieldActionHandler {
             case INCOME_TAX:
                 // pay income tax
                 break;
+            case FREE_PARKING:
+                // Nothing should be done on the free parking field
+                break;
             // Add cases for other field types
             default:
                 throw new IllegalArgumentException("Invalid FieldType");

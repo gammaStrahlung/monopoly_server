@@ -27,4 +27,12 @@ class FieldActionHandlerTests {
         verify(mockPlayer).goToJail();
     }
 
+    @Test
+    void freeParking() {
+        FieldActionHandler.handleFieldAction(FieldType.FREE_PARKING, mockPlayer);
+
+        // Verify that nothing has changed
+        verifyNoInteractions(mockPlayer);
+    }
+
 }
