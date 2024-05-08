@@ -101,6 +101,89 @@ public class PaymentSystemTest {
         verify(owner, never()).addBalance(anyInt());
     }
 
+    @Test
+    void testProcessRailroadPaymentOwnerNotPayer() {
+        Railroad railroad = mock(Railroad.class);
+        when(railroad.getOwner()).thenReturn(owner);
+        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 25));
+        when(payer.getBalance()).thenReturn(50);
+        when(owner.getBalance()).thenReturn(50);
+        when(gameBoard.getGameBoard()).thenReturn(new Field[]{railroad}); // Only one owned railroad
+
+        assertTrue(paymentSystem.processRailroadPayment(payer, railroad));
+        verify(payer).subtractBalance(25);
+        verify(owner).addBalance(25);
+    }
+
+    @Test
+    void testProcessUtilityPaymentOwnerNotPayer() {
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(owner);
+        when(utility.getToPay()).thenReturn(75);
+        when(payer.getBalance()).thenReturn(100);
+        when(owner.getBalance()).thenReturn(50);
+
+        assertTrue(paymentSystem.processUtilityPayment(payer, utility));
+        verify(payer).subtractBalance(75);
+        verify(owner).addBalance(75);
+    }
+
+    @Test
+    void testProcessPaymentZeroFunds() {
+        when(payer.getBalance()).thenReturn(0);
+        assertFalse(paymentSystem.makePayment(payer, owner, 100));
+        verify(payer, never()).subtractBalance(anyInt());
+        verify(owner, never()).addBalance(anyInt());
+    }
+
+
+
+    @Test
+    void testProcessRailroadPaymentWithNoRailroadsOwned() {
+        Railroad railroad = mock(Railroad.class);
+        when(railroad.getOwner()).thenReturn(owner);
+        when(gameBoard.getGameBoard()).thenReturn(new Field[]{});
+        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 25)); // Rent with 1 railroad, but none owned
+
+        assertFalse(paymentSystem.processRailroadPayment(payer, railroad));
+    }
+    @Test
+    void testProcessUtilityPaymentWithHighPayment() {
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(owner);
+        when(utility.getToPay()).thenReturn(150); // Höherer Zahlungsbetrag
+        when(payer.getBalance()).thenReturn(200);
+        when(owner.getBalance()).thenReturn(50);
+
+        assertTrue(paymentSystem.processUtilityPayment(payer, utility));
+        verify(payer).subtractBalance(150);
+        verify(owner).addBalance(150);
+    }
+
+    @Test
+    void testProcessUtilityPaymentWhenOwnerIsPayer() {
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(payer); // Zahler ist der Eigentümer
+        when(utility.getToPay()).thenReturn(75);
+
+        assertFalse(paymentSystem.processUtilityPayment(payer, utility));
+    }
+//    @Test
+//    void testCountOwnedRailroadsVariousOwners() {
+//        Railroad railroad1 = mock(Railroad.class);
+//        Railroad railroad2 = mock(Railroad.class);
+//        Railroad railroad3 = mock(Railroad.class);
+//        when(railroad1.getOwner()).thenReturn(owner);
+//        when(railroad2.getOwner()).thenReturn(payer);
+//        when(railroad3.getOwner()).thenReturn(null); // Kein Eigentümer
+//
+//        when(gameBoard.getGameBoard()).thenReturn(new Field[]{railroad1, railroad2, railroad3, railroad1});
+//
+//        assertEquals(2, paymentSystem.countOwnedRailroads(owner));
+//        assertEquals(1, paymentSystem.countOwnedRailroads(payer));
+//        assertEquals(0, paymentSystem.countOwnedRailroads(null)); // Kein Besitz für null Eigentümer
+//    }
+
 
 }
 
