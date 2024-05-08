@@ -80,12 +80,12 @@ public class Player {
     }
 
     /**
-     * Updates currentField by the diced value
-     * @param currentField field on which the player is currently positioned
+     * Updates currentFieldIndex by the diced value
+     * @param currentFieldIndex field on which the player is currently positioned
      * @param value how far the player may move forward
      *
      */
-    public void moveAvatar(int currentField, int value){
-        this.currentFieldIndex = (currentField + value) % 40;
+    public void moveAvatar(int currentFieldIndex, int value){
+        this.currentFieldIndex = (currentFieldIndex + value) % 40;
     }
 }
