@@ -105,7 +105,7 @@ public class Game {
     public void handleFieldAction(int fieldId) {
         Field field = gameBoard.getGameBoard()[fieldId];
         if (field != null) {
-            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
+            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer());
         }
     }
 
@@ -121,7 +121,7 @@ public class Game {
         awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
 
         // Handle available actions according to the field the player lands on
-        handleFieldAction(currentPlayer.currentFieldIndex);
+        handleFieldAction(currentPlayer.getCurrentFieldIndex());
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
