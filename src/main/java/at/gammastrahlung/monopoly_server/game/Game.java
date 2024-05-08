@@ -20,7 +20,7 @@ public class Game {
     private static final int MAX_PLAYERS = 8;
 
     // bonus money the player gets for passing the start
-    private final static int BONUS_MONEY = 200;
+    private static final int BONUS_MONEY = 200;
 
 
     // Contains all games that are currently being played, that allows us to find a specific game
