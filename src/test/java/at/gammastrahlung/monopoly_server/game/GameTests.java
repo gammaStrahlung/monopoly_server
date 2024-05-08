@@ -115,6 +115,31 @@ class GameTests {
     }
 
     @Test
+    void awardBonusMoney(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Set current player
+        game.setCurrentPlayerIndex(0);
+
+        // Player does not pass start
+        game.awardBonusMoney(5, 10, player);
+        assertEquals(0, player.getBalance());
+
+        // Player lands on start (does not get money)
+        game.awardBonusMoney(35, 0, player);
+        assertEquals(0, player.getBalance());
+
+        // Player passes start
+        game.awardBonusMoney(30, 2, player);
+        assertEquals(200, player.getBalance());
+    }
+
+    @Test
     void endPlayerTurn(){
         // Add four players
         for (int i = 0; i < 4; i++)

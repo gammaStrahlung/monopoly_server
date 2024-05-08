@@ -19,6 +19,9 @@ public class Game {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 8;
 
+    // bonus money the player gets for passing the start
+    private static final int BONUS_MONEY = 200;
+
 
     // Contains all games that are currently being played, that allows us to find a specific game
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
@@ -50,7 +53,6 @@ public class Game {
     Dice dice = new Dice();
 
     @Getter
-    @Setter
     private int currentPlayerIndex = 0;
 
 
@@ -102,7 +104,18 @@ public class Game {
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
-        currentPlayer.moveAvatar(currentPlayer.getCurrentFieldIndex(), diceValue);
+        int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
+        int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
+
+        currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+        awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+    }
+
+    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
+        if(nextFieldIndex < currentFieldIndex && nextFieldIndex > 0){
+            currentPlayer.addBalance(BONUS_MONEY);
+        }
     }
 
     public void endCurrentPlayerTurn(){
