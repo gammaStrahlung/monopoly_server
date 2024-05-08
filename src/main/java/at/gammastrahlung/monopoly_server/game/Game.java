@@ -104,8 +104,9 @@ public class Game {
 
     public void handleFieldAction(int fieldId) {
         Field field = gameBoard.getGameBoard()[fieldId];
-
-        FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer());
+        if (field != null) {
+            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer());
+        }
     }
 
     public void rollDiceAndMoveCurrentPlayer(){
