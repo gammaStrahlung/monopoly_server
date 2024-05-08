@@ -4,7 +4,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
 public class FieldActionHandler {
 
-    public static void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {
+    public static void handleFieldAction(FieldType fieldType, Player currentPlayer) {// add other param if needed
         switch (fieldType) {
             case GO_TO_JAIL:
                 goToJail(currentPlayer);
@@ -17,6 +17,8 @@ public class FieldActionHandler {
                 break;
 
             // Add cases for other field types
+            default:
+                throw new IllegalArgumentException("Invalid FieldType");
         }
     }
 

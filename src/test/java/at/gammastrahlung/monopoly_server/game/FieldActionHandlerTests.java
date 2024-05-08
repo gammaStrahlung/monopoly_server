@@ -9,7 +9,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class FieldActionHandlerTests {
+class FieldActionHandlerTests {
 
     @Test
     void goToJail(){
