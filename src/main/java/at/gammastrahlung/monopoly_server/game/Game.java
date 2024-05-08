@@ -53,7 +53,6 @@ public class Game {
     Dice dice = new Dice();
 
     @Getter
-    @Setter
     private int currentPlayerIndex = 0;
 
 
