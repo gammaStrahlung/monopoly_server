@@ -7,7 +7,7 @@ public class FieldActionHandler {
     public static void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {
         switch (fieldType) {
             case GO_TO_JAIL:
-                goToJail(currentPlayer, game);
+                goToJail(currentPlayer);
                 break;
             case INCOME_TAX:
                 // pay income tax
@@ -20,7 +20,7 @@ public class FieldActionHandler {
         }
     }
 
-    private static void goToJail(Player currentPlayer, Game game) {
+    private static void goToJail(Player currentPlayer) {
         // Logic for handling the "Go to Jail" action
         currentPlayer.goToJail();
     }
