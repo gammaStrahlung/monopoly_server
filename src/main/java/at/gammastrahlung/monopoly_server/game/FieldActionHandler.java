@@ -44,7 +44,7 @@ public class FieldActionHandler {
         currentPlayer.goToJail();
     }
 
-    private static EventCard drawCard(List<EventCard> deck) {
+    static EventCard drawCard(List<EventCard> deck) {
         SecureRandom random = new SecureRandom();
         if (deck.isEmpty()) {
             // Handle the case when the deck is empty
