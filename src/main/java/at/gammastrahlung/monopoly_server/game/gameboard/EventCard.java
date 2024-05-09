@@ -47,12 +47,14 @@ public class EventCard {
             case STREET_REPAIRS:
                 break;
             case GET_OUT_OF_JAIL:
+                player.getOutOfJail();
                 break;
             case MOVE_TO_UTILITY:
                 int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextUtilityIndex);
                 break;
             case MOVE_SPACES:
+                player.moveAvatar(player.getCurrentFieldIndex(), -3);
                 break;
             default:
                 break;

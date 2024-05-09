@@ -80,6 +80,97 @@ public class EventCardTests {
     }
 
     @Test
+    void getMoneyCardCase(){
+        // Create an event card representing a GET_MONEY_CARD
+        EventCard getMoneyCard = EventCard.builder()
+                .description("Pay money card")
+                .cardType(CardType.GET_MONEY_CARD)
+                .payOrGetMoney(100) // Example amount to pay
+                .build();
+
+        // Call the applyAction method with the PAY_MONEY_CARD
+        eventCard.applyAction(mockPlayer, getMoneyCard, game);
+
+        // Verify that the player's pay method was called with the correct amount
+        verify(mockPlayer).addBalance(100);
+    }
+
+    @Test
+    void moveToFieldCase(){
+        EventCard moveToField = EventCard.builder()
+                .description("Advance to GO")
+                .cardType(CardType.MOVE_TO_FIELD)
+                .moveToField(0)
+                .build();
+
+        eventCard.applyAction(mockPlayer, moveToField, game);
+
+        verify(mockPlayer).setCurrentFieldIndex(0);
+    }
+
+    @Test
+    void getOutOfJailCase(){
+        EventCard getOutOfJail = EventCard.builder()
+                .description("Get out of Jail")
+                .cardType(CardType.GET_OUT_OF_JAIL)
+                .build();
+
+        eventCard.applyAction(mockPlayer, getOutOfJail, game);
+
+        verify(mockPlayer).getOutOfJail();
+
+    }
+
+    @Test
+    void moveToUtilityCase() {
+        // Create a spy of the Player object
+        Player player = spy(new Player());
+
+        // Create an instance of EventCard with the cardType MOVE_TO_UTILITY
+        EventCard moveToUtility = EventCard.builder()
+                .description("Move to next Utility")
+                .cardType(CardType.MOVE_TO_UTILITY)
+                .build();
+
+        // Set the current field index of the player
+        int currentPosition = 0;
+        player.setCurrentFieldIndex(currentPosition);
+
+        // Set up the expected next utility index
+        int expectedNextUtilityIndex = 12; // Assuming the next utility index is 12
+
+        // Call the applyAction method
+        eventCard.applyAction(player, moveToUtility, game);
+
+        // Verify that setCurrentFieldIndex is called with the expected next utility index
+        verify(player).setCurrentFieldIndex(expectedNextUtilityIndex);
+    }
+
+    @Test
+    void moveSpacesCase() {
+        // Create a spy of the Player object
+        Player player = spy(new Player());
+
+        // Create an instance of EventCard with the cardType MOVE_SPACES
+        EventCard moveSpacesCard = EventCard.builder()
+                .description("Move back 3 spaces")
+                .cardType(CardType.MOVE_SPACES)
+                .build();
+
+        // Set the current field index of the player
+        int currentPosition = 5; // Assuming the player is currently on field 5
+        player.setCurrentFieldIndex(currentPosition);
+
+        // Call the applyAction method
+        eventCard.applyAction(player, moveSpacesCard, game);
+
+        // Verify that moveAvatar is called with the expected parameters
+        verify(player).moveAvatar(currentPosition, -3);
+    }
+
+
+
+    @Test
     void findNextRailroadIndex(){
         // Test when the current position is before the first railroad
         assertEquals(5, eventCard.findNextRailroadIndex(0));
