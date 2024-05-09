@@ -20,8 +20,10 @@ public class Dice {
     }
 
     // Simulates two dices where each value is between 1 and 6
-    public void initializeDice(){
+    public int roll(){
         this.value1 = new SecureRandom().nextInt(6) + 1;
         this.value2 = new SecureRandom().nextInt(6) + 1;
+
+        return this.value1 + this.value2;
     }
 }
