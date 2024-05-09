@@ -45,6 +45,7 @@ public class Game {
 
     // The game board
     @Getter
+    @Setter
     @Expose
     GameBoard gameBoard = new GameBoard();
 
@@ -105,7 +106,7 @@ public class Game {
     public void handleFieldAction(int fieldId) {
         Field field = gameBoard.getGameBoard()[fieldId];
         if (field != null) {
-            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer());
+            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
         }
     }
 

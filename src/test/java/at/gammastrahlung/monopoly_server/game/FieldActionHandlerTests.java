@@ -12,24 +12,27 @@ import static org.mockito.Mockito.*;
 class FieldActionHandlerTests {
 
     Player mockPlayer;
+    Game game;
 
     @BeforeEach
     void initialize(){
         mockPlayer = mock(Player.class);
         when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
         when(mockPlayer.getName()).thenReturn("Player");
+
+        game = mock(Game.class);
     }
 
     @Test
     void goToJail(){
-        FieldActionHandler.handleFieldAction(FieldType.GO_TO_JAIL, mockPlayer);
+        FieldActionHandler.handleFieldAction(FieldType.GO_TO_JAIL, mockPlayer, game);
 
         verify(mockPlayer).goToJail();
     }
 
     @Test
     void freeParking() {
-        FieldActionHandler.handleFieldAction(FieldType.FREE_PARKING, mockPlayer);
+        FieldActionHandler.handleFieldAction(FieldType.FREE_PARKING, mockPlayer, game);
 
         // Verify that nothing has changed
         verifyNoInteractions(mockPlayer);
