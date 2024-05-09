@@ -1,6 +1,5 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
-import at.gammastrahlung.monopoly_server.game.Dice;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
@@ -66,7 +65,9 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                case "roll_dice" -> diceRoll(clientMessage,clientMessage.getPlayer());
+                case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage,clientMessage.getPlayer());
+                case "initiate_round" -> initiateRound(clientMessage.getPlayer());
+                case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -150,6 +151,21 @@ public class MonopolyMessageHandler {
             return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
+    private static ServerMessage initiateRound(WebSocketPlayer player) {
+        Game game = player.getCurrentGame();
+        Player currentPlayer = game.getCurrentPlayer();
+
+        ServerMessage message = ServerMessage.builder()
+                .messagePath("initiate_round")
+                .type(ServerMessage.MessageType.INFO)
+                .jsonData(gson.toJson(currentPlayer))
+                .build();
+
+        WebSocketSender.sendToPlayers(message, game.getPlayers());
+
+        return message;
+    }
+
     public static ServerMessage endGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
@@ -188,16 +204,22 @@ public class MonopolyMessageHandler {
         return message.build();
     }
 
-    private static ServerMessage diceRoll(ClientMessage clientMessage, WebSocketPlayer player){
+    private static ServerMessage rollDiceAndMoveCurrentPlayer(ClientMessage clientMessage, WebSocketPlayer player){
         Game game = player.getCurrentGame();
 
-        game.getDice().initializeDice();
+        game.rollDiceAndMoveCurrentPlayer();
 
         return ServerMessage.builder()
                 .messagePath("roll_dice")
                 .type(ServerMessage.MessageType.INFO)
                 .game(game)
-                .player(clientMessage.getPlayer())
                 .build();
+    }
+
+    private static ServerMessage endCurrentPlayerTurn(WebSocketPlayer player) {
+        Game game = player.getCurrentGame();
+        game.endCurrentPlayerTurn();
+
+        return initiateRound(player);
     }
 }

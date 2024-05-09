@@ -2,7 +2,6 @@ package at.gammastrahlung.monopoly_server.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GameTests {
@@ -25,9 +25,9 @@ class GameTests {
         // Create Mock players
         players = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
-            Player mockPlayer = Mockito.mock(Player.class);
-            Mockito.when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
-            Mockito.when(mockPlayer.getName()).thenReturn("Player " + i);
+            Player mockPlayer = mock(Player.class);
+            when(mockPlayer.getId()).thenReturn(UUID.randomUUID());
+            when(mockPlayer.getName()).thenReturn("Player " + i);
 
             players.add(mockPlayer);
         }
@@ -68,6 +68,93 @@ class GameTests {
 
         // Can't start a second time
         assertFalse(game.startGame(players.get(0)));
+    }
+
+    @Test
+    void getCurrentPlayer() {
+        // Add four players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // start the game
+        assertTrue(game.startGame(players.get(0)));
+
+        game.setCurrentPlayerIndex(2);
+        Player currentPlayer = game.getCurrentPlayer();
+
+        assertEquals(players.get(2), currentPlayer);
+    }
+
+    @Test
+    void rollDiceAndMoveCurrentPlayer() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Create a mock for the dice
+        Dice dice = mock(Dice.class);
+        when(dice.roll()).thenReturn(4);
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        // Set the mock dice in the game object
+        game.setDice(dice);
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.rollDiceAndMoveCurrentPlayer();
+
+        assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayerIndex());
+    }
+
+    @Test
+    void awardBonusMoney(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Set current player
+        game.setCurrentPlayerIndex(0);
+
+        // Player does not pass start
+        game.awardBonusMoney(5, 10, player);
+        assertEquals(0, player.getBalance());
+
+        // Player lands on start (does not get money)
+        game.awardBonusMoney(35, 0, player);
+        assertEquals(0, player.getBalance());
+
+        // Player passes start
+        game.awardBonusMoney(30, 2, player);
+        assertEquals(200, player.getBalance());
+    }
+
+    @Test
+    void endPlayerTurn(){
+        // Add four players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // start the game
+        assertTrue(game.startGame(players.get(0)));
+
+        game.setCurrentPlayerIndex(1);
+        game.endCurrentPlayerTurn();
+        assertEquals(2, game.getCurrentPlayerIndex());
+
+        game.setCurrentPlayerIndex(4);
+        game.endCurrentPlayerTurn();
+        assertEquals(1, game.getCurrentPlayerIndex());
     }
 
     @Test

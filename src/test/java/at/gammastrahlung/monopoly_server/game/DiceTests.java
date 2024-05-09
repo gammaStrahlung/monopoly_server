@@ -23,7 +23,7 @@ public class DiceTests {
 
     @Test
     public void initializeDiceTest(){
-        dice.initializeDice();
+        dice.roll();
 
         assertTrue(dice.getValue1() >= 1 && dice.getValue1() <= 6);
         assertTrue(dice.getValue2() >= 1 && dice.getValue2() <= 6);
