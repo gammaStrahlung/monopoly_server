@@ -45,7 +45,6 @@ public class Game {
 
     // The game board
     @Getter
-    @Setter
     @Expose
     GameBoard gameBoard = new GameBoard();
 
