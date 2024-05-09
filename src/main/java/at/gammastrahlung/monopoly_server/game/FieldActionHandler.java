@@ -2,7 +2,11 @@ package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
+import java.util.logging.Logger;
+
 public class FieldActionHandler {
+
+    static Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
 
     public static void handleFieldAction(FieldType fieldType, Player currentPlayer) {// add other param if needed
         switch (fieldType) {
@@ -17,7 +21,9 @@ public class FieldActionHandler {
                 break;
             // Add cases for other field types
             default:
-                throw new IllegalArgumentException("Invalid FieldType");
+                // Temporary Log a message for unimplemented field types but do nothing
+                logger.info("Unhandled field type: " + fieldType);
+                break;
         }
     }
 
