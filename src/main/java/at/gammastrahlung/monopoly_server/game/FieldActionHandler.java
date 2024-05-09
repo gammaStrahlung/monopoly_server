@@ -33,10 +33,11 @@ public class FieldActionHandler {
                 break;
             case LUXURY_TAX:
                 payTax(currentPlayer, fieldType);
+                break;
             case FREE_PARKING:
                 // Nothing should be done on the free parking field
                 break;
-            // Add cases for other field types
+            // TODO Add cases for other field types
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
                 logger.info("Unhandled field type: " + fieldType);

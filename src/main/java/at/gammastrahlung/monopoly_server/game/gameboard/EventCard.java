@@ -39,10 +39,13 @@ public class EventCard {
                 break;
             case MOVE_TO_FIELD:
                 player.setCurrentFieldIndex(card.getMoveToField());
+                // TODO evaluate what happens on the next field
+                game.handleFieldAction(player.getCurrentFieldIndex());
                 break;
             case MOVE_TO_RAILROAD:
                 int nextRailroadIndex = findNextRailroadIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextRailroadIndex);
+                // TODO evaluate what happens on the next field
                 break;
             case STREET_REPAIRS:
                 break;
@@ -52,9 +55,11 @@ public class EventCard {
             case MOVE_TO_UTILITY:
                 int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextUtilityIndex);
+                // TODO evaluate what happens on the next field
                 break;
             case MOVE_SPACES:
                 player.moveAvatar(player.getCurrentFieldIndex(), -3);
+                // evaluate what happens on the next field
                 break;
             default:
                 break;
