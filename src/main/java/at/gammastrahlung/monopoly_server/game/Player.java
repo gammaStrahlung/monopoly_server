@@ -99,4 +99,13 @@ public class Player {
     public void goToJail(){
         this.isInJail = true;
     }
+
+    public void pay(int amountToPay) {
+        if (amountToPay <= balance) {
+            this.balance -= amountToPay;
+        } else {
+            //TODO
+            // handle insufficient funds, trade, sell, mortgage, declare bankruptcy
+        }
+    }
 }

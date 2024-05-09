@@ -94,9 +94,21 @@ class PlayerTest {
     }
 
     @Test
-    void testIsInJailInitializedToFalse() {
+    void isInJailInitializedToFalseTest() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
         assertFalse(player.isInJail()); // Check if isInJail is initialized to false
+    }
+
+    @Test
+    void payTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.pay(30);
+        assertEquals(70, player.getBalance());
+
+        player.pay(100);
+        // assert that nothing happens since else branch is not yet impl
+        assertEquals(70, player.getBalance());
     }
 }
