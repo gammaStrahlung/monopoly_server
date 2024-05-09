@@ -178,5 +178,4 @@ class MortgageManagerTest {
         when(gameBoard.anyMortgagedInGroup(PropertyColor.LIGHT_BLUE)).thenReturn(true);
         assertTrue(mortgageManager.canCollectRent(PropertyColor.BROWN));
     }
-
 }
