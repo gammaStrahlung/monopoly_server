@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 
 public class FieldActionHandler {
 
-    static Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
+    private Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
 
-    public static void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
+    public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
         switch (fieldType) {
             case GO_TO_JAIL:
@@ -39,12 +39,12 @@ public class FieldActionHandler {
         }
     }
 
-    private static void goToJail(Player currentPlayer) {
+    public void goToJail(Player currentPlayer) {
         // Logic for handling the "Go to Jail" action
         currentPlayer.goToJail();
     }
 
-    static EventCard drawCard(List<EventCard> deck) {
+    public EventCard drawCard(List<EventCard> deck) {
         SecureRandom random = new SecureRandom();
         if (deck.isEmpty()) {
             // Handle the case when the deck is empty

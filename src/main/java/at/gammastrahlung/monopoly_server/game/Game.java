@@ -104,8 +104,9 @@ public class Game {
 
     public void handleFieldAction(int fieldId) {
         Field field = gameBoard.getGameBoard()[fieldId];
+        FieldActionHandler handler = new FieldActionHandler();
         if (field != null) {
-            FieldActionHandler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
+            handler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
         }
     }
 
