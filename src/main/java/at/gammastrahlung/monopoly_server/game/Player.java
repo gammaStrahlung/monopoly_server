@@ -33,7 +33,9 @@ public class Player {
     /**
      * The field on which avatar is currently placed
      */
-    protected int currentField;
+    protected int currentFieldIndex;
+
+    protected boolean isInJail;
 
     /**
      * The game the player is currently playing
@@ -45,7 +47,8 @@ public class Player {
         this.name = name;
         this.currentGame = currentGame;
         this.balance = startingBalance; //balance gets initialized with a starting balance
-        this.currentField = 0;
+        this.currentFieldIndex = 0;
+        this.isInJail = false;
     }
 
     // increases player balance
@@ -81,12 +84,19 @@ public class Player {
     }
 
     /**
-     * Updates currentField by the diced value
-     * @param currentField field on which the player is currently positioned
+     * Updates currentFieldIndex by the diced value
+     * @param currentFieldIndex field on which the player is currently positioned
      * @param value how far the player may move forward
      *
      */
-    public void moveAvatar(int currentField, int value){
-        this.currentField = (currentField + value) % 40;
+    public void moveAvatar(int currentFieldIndex, int value){
+        this.currentFieldIndex = (currentFieldIndex + value) % 40;
+    }
+
+    /**
+     * Updates isInJail to true
+     */
+    public void goToJail(){
+        this.isInJail = true;
     }
 }
