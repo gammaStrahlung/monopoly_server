@@ -3,9 +3,7 @@ package at.gammastrahlung.monopoly_server.game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
@@ -37,7 +35,25 @@ class PropertyTest {
         Property.setGameBoard(gameBoard);
         gameBoard.setGameBoard(new Field[]{property});
     }
+    @Test
+    void testSellProperty() {
+        Player buyer = new Player(UUID.randomUUID(), "Buyer", null, 1000);
+        property.setPrice(300);
+        property.buyAndSellProperty(buyer);
 
+        assertEquals(buyer, property.getOwner(), "Property owner should change to buyer after transaction.");
+        assertEquals(700, buyer.getBalance(), "Buyer's balance should decrease by the property price.");
+        assertEquals(1300, owner.getBalance(), "Seller's balance should increase by the property price.");
+    }
+
+    @Test
+    void testSetRentPrices() {
+        Map<Object, Integer> rentPrices = new HashMap<>();
+        rentPrices.put(1, 50); // Rent with 1 house
+        property.setRentPrices(rentPrices);
+
+        assertEquals(rentPrices, property.getRentPrices(), "Rent prices should be set correctly in the property.");
+    }
     @Test
     void testBuildHouseWhenNotBuildable() {
         // Setup another property of the same color but different owner to simulate non-buildable scenario

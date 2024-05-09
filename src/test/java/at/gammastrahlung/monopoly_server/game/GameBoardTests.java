@@ -30,6 +30,52 @@ class GameBoardTests {
             }
         }
     }
+    @Test
+    void testInvalidFieldInitialization() {
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            Field invalidField = gameBoard.getGameBoard()[40]; // Access beyond the size of the array
+        }, "Accessing an index out of bounds should throw an exception.");
+    }
+
+    @Test
+    void testNegativeFieldInitialization() {
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            Field invalidField = gameBoard.getGameBoard()[-1]; // Access negative index
+        }, "Accessing a negative index should throw an exception.");
+    }
+
+
+    @Test
+    void testInvalidPropertyRetrieval() {
+        Property result = gameBoard.getPropertyById(40); // Beyond the valid index
+        assertNull(result, "Retrieving an invalid property ID should return null.");
+    }
+
+    @Test
+    void testAllFieldsAreNotNullPostInitialization() {
+        for (int i = 0; i < gameBoard.getGAME_BOARD_SIZE(); i++) {
+            assertNotNull(gameBoard.getGameBoard()[i], "No field should be null after initialization.");
+        }
+    }
+
+    @Test
+    void testRandomCardFromChanceDeck() {
+        EventCard card = gameBoard.getChanceDeck().get((int)(Math.random() * gameBoard.getChanceDeck().size()));
+        assertNotNull(card, "Randomly retrieved card from Chance deck should not be null.");
+    }
+
+    @Test
+    void testRandomCardFromCommunityChestDeck() {
+        EventCard card = gameBoard.getCommunityChestDeck().get((int)(Math.random() * gameBoard.getCommunityChestDeck().size()));
+        assertNotNull(card, "Randomly retrieved card from Community Chest deck should not be null.");
+    }
+
+    @Test
+    void testDuplicateFieldInitialization() {
+        Field firstField = gameBoard.getGameBoard()[0];
+        Field secondField = gameBoard.getGameBoard()[0];
+        assertSame(firstField, secondField, "Duplicate checks on fields should point to the same object.");
+    }
 
     @Test
     void testRailroadInitialization() {
