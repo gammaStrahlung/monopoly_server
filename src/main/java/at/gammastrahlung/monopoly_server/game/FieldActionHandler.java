@@ -17,7 +17,9 @@ public class FieldActionHandler {
                 break;
             // Add cases for other field types
             default:
-                throw new IllegalArgumentException("Invalid FieldType");
+                // Temporary Log a message for unimplemented field types but do nothing
+                System.out.println("Unhandled field type: " + fieldType);
+                break;
         }
     }
 
