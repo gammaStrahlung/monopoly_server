@@ -1,7 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
 import java.security.SecureRandom;
@@ -23,11 +22,11 @@ public class FieldActionHandler {
                 break;
             case COMMUNITY_CHEST:
                 card = drawCard(game.getGameBoard().getCommunityChestDeck());
-                card.applyAction(currentPlayer, card);
+                card.applyAction(currentPlayer, card, game);
                 break;
             case CHANCE:
                 card = drawCard(game.getGameBoard().getChanceDeck());
-                card.applyAction(currentPlayer, card);
+                card.applyAction(currentPlayer, card, game);
                 break;
             case INCOME_TAX:
                 payTax(currentPlayer, fieldType);
@@ -47,14 +46,8 @@ public class FieldActionHandler {
 
     void payTax(Player currentPlayer, FieldType fieldType) {
         int taxAmount = (fieldType == FieldType.INCOME_TAX) ? INCOME_TAX_AMOUNT : LUXURY_TAX_AMOUNT;
+        currentPlayer.pay(taxAmount);
 
-        if (currentPlayer.getBalance() >= taxAmount) {
-            currentPlayer.setBalance(currentPlayer.getBalance() - taxAmount);
-        } else {
-            /**
-             * Player has the options: sell, trade, mortgage, declare bankruptcy (they leave the game)
-             */
-        }
     }
 
     public void goToJail(Player currentPlayer) {
