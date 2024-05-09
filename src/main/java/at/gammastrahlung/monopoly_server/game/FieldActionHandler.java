@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
 import java.security.SecureRandom;
@@ -9,7 +10,10 @@ import java.util.logging.Logger;
 
 public class FieldActionHandler {
 
+    private static final int INCOME_TAX_AMOUNT = 200;
+    private static final int LUXURY_TAX_AMOUNT = 100;
     private Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
+
 
     public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
@@ -26,8 +30,10 @@ public class FieldActionHandler {
                 card.applyAction(currentPlayer, card);
                 break;
             case INCOME_TAX:
-                // pay income tax
+                payTax(currentPlayer, fieldType);
                 break;
+            case LUXURY_TAX:
+                payTax(currentPlayer, fieldType);
             case FREE_PARKING:
                 // Nothing should be done on the free parking field
                 break;
@@ -36,6 +42,18 @@ public class FieldActionHandler {
                 // Temporary Log a message for unimplemented field types but do nothing
                 logger.info("Unhandled field type: " + fieldType);
                 break;
+        }
+    }
+
+    void payTax(Player currentPlayer, FieldType fieldType) {
+        int taxAmount = (fieldType == FieldType.INCOME_TAX) ? INCOME_TAX_AMOUNT : LUXURY_TAX_AMOUNT;
+
+        if (currentPlayer.getBalance() >= taxAmount) {
+            currentPlayer.setBalance(currentPlayer.getBalance() - taxAmount);
+        } else {
+            /**
+             * Player has the options: sell, trade, mortgage, declare bankruptcy (they leave the game)
+             */
         }
     }
 
