@@ -32,31 +32,26 @@ public class EventCard {
                 player.goToJail();
                 break;
             case PAY_MONEY_CARD:
-                int amountToPay = card.getPayOrGetMoney();
-                player.pay(amountToPay);
+                player.pay(card.getPayOrGetMoney());
                 break;
             case GET_MONEY_CARD:
-                int amount = card.getPayOrGetMoney();
-                player.addBalance(amount);
+                player.addBalance(card.getPayOrGetMoney());
                 break;
             case MOVE_TO_FIELD:
-                int fieldIndex = card.getMoveToField();
-                player.setCurrentFieldIndex(fieldIndex);
+                player.setCurrentFieldIndex(card.getMoveToField());
                 break;
             case MOVE_TO_RAILROAD:
-                int currentPosition = player.getCurrentFieldIndex();
-                int nextRailroadIndex = findNextRailroadIndex(currentPosition);
+                int nextRailroadIndex = findNextRailroadIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextRailroadIndex);
                 break;
             case STREET_REPAIRS:
                 break;
-
             case GET_OUT_OF_JAIL:
                 break;
-
             case MOVE_TO_UTILITY:
+                int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
+                player.setCurrentFieldIndex(nextUtilityIndex);
                 break;
-
             case MOVE_SPACES:
                 break;
             default:
@@ -67,7 +62,6 @@ public class EventCard {
     public int findNextRailroadIndex(int currentPosition) {
         int[] railroadIndexes = {5, 15, 25, 35};
 
-        // Iterate through the game board array
         for (int index : railroadIndexes) {
             // If the current position is less than the current railroad index
             if (currentPosition < index) {
@@ -79,6 +73,15 @@ public class EventCard {
         return railroadIndexes[0];
     }
 
+    public int findNextUtilityIndex(int currentPosition) {
+        int[] utilityIndexes = {12, 28};
+        for (int index : utilityIndexes) {
+            if (index > currentPosition) {
+                return index;
+            }
+        }
+        return utilityIndexes[0]; // If no next utility index is found, return the current position
+    }
 
 
 

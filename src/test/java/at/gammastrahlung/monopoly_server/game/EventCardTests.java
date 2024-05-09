@@ -96,4 +96,19 @@ public class EventCardTests {
         // Test when the current position is after the last railroad
         assertEquals(5, eventCard.findNextRailroadIndex(40));
     }
+
+    @Test
+    void findNextUtilityIndex() {
+        // Test when current position is before the first utility
+        assertEquals(12, eventCard.findNextUtilityIndex(0));
+
+        // Test when current position is between the utilities
+        assertEquals(12, eventCard.findNextUtilityIndex(10));
+
+        // Test when current position is between the utilities
+        assertEquals(28, eventCard.findNextUtilityIndex(20));
+
+        // Test when current position is after the last utility
+        assertEquals(12, eventCard.findNextUtilityIndex(30));
+    }
 }
