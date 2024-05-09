@@ -68,6 +68,7 @@ public class MonopolyMessageHandler {
                 case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage,clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
+                case "move_avatar" -> generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
