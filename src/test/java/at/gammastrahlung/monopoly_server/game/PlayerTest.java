@@ -82,15 +82,27 @@ class PlayerTest {
         player.moveAvatar(player.currentFieldIndex,46);
         assertEquals(13, player.getCurrentFieldIndex());
 
+        //test if avatar can move backwards
+        player.moveAvatar(player.getCurrentFieldIndex(), -3);
+        assertEquals(10, player.currentFieldIndex);
     }
 
     @Test
     void goToJailTest(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
-
+        player.setInJail(false);
         player.goToJail();
 
         assertTrue(player.isInJail);
+    }
+
+    @Test
+    void getOutOfJailTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        player.setInJail(true);
+        player.getOutOfJail();
+
+        assertFalse(player.isInJail);
     }
 
     @Test

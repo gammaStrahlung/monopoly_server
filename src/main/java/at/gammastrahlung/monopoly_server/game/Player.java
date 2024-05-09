@@ -109,4 +109,8 @@ public class Player {
             // handle insufficient funds, trade, sell, mortgage, declare bankruptcy
         }
     }
+
+    public void getOutOfJail() {
+        this.isInJail = false;
+    }
 }
