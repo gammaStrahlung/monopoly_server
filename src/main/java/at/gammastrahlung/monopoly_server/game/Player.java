@@ -13,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public  class Player {
+public class Player {
     /**
-     * The unique ID of the player, this can be used by the player to allow for re-joining the ga
+     * The unique ID of the player, this can be used by the player to allow for re-joining the game
      */
     @Expose
     protected UUID id;
@@ -30,6 +30,14 @@ public  class Player {
     protected int balance;
 
     /**
+     * The field on which avatar is currently placed
+     */
+    @Expose
+    protected int currentFieldIndex;
+
+    protected boolean isInJail;
+
+    /**
      * The game the player is currently playing
      */
     protected Game currentGame;
@@ -39,6 +47,8 @@ public  class Player {
         this.name = name;
         this.currentGame = currentGame;
         this.balance = startingBalance; //balance gets initialized with a starting balance
+        this.currentFieldIndex = 0;
+        this.isInJail = false;
     }
 
     // increases player balance
@@ -60,17 +70,33 @@ public  class Player {
     public void update(Player player) {
         // will get implemented in next sprint
     }
-
+  
     @Override
     public boolean equals(Object obj) {
         if (! (obj instanceof Player))
             return false;
-
         return id.equals(((Player) obj).id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    /**
+     * Updates currentFieldIndex by the diced value
+     * @param currentFieldIndex field on which the player is currently positioned
+     * @param value how far the player may move forward
+     *
+     */
+    public void moveAvatar(int currentFieldIndex, int value){
+        this.currentFieldIndex = (currentFieldIndex + value) % 40;
+    }
+
+    /**
+     * Updates isInJail to true
+     */
+    public void goToJail(){
+        this.isInJail = true;
     }
 }

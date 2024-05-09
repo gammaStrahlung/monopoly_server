@@ -25,7 +25,7 @@ class PlayerTest {
 
     @Test
      void addBalanceTest() {
-        Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         player.addBalance(50);
         assertEquals(150, player.getBalance());
 
@@ -35,7 +35,7 @@ class PlayerTest {
 
     @Test
      void subtractBalanceTest() {
-        Player player = new Player(UUID.randomUUID(), "Test Player", 100, null);
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         player.subtractBalance(50);
         assertEquals(50, player.getBalance());
         player.subtractBalance(60);
@@ -69,5 +69,34 @@ class PlayerTest {
         p2.setId(UUID.randomUUID());
 
         assertNotEquals(p1.hashCode(), p2.hashCode());
+    }
+
+    @Test
+    void moveAvatarTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        assertEquals(0, player.getCurrentFieldIndex());
+
+        player.moveAvatar(player.getCurrentFieldIndex(), 7);
+        assertEquals(7,player.getCurrentFieldIndex());
+
+        player.moveAvatar(player.currentFieldIndex,46);
+        assertEquals(13, player.getCurrentFieldIndex());
+
+    }
+
+    @Test
+    void goToJailTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.goToJail();
+
+        assertTrue(player.isInJail);
+    }
+
+    @Test
+    void testIsInJailInitializedToFalse() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        assertFalse(player.isInJail()); // Check if isInJail is initialized to false
     }
 }

@@ -25,6 +25,14 @@ class MortgageManagerTest {
         mortgageManager = new MortgageManager(gameBoard);
         player1 = new Player(UUID.randomUUID(), "Player 1", null, 1000);
         player2 = new Player(UUID.randomUUID(), "Player 2", null, 1000);
+        mortgageManager = MortgageManager.builder()
+                .gameBoard(gameBoard)
+                .build();
+    }
+
+    @Test
+    void constructorTest_gameBoardSet() {
+        assertEquals(gameBoard, mortgageManager.getGameBoard(), "GameBoard should be set correctly by the constructor.");
     }
 
     @Test

@@ -1,19 +1,27 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import com.google.gson.annotations.Expose;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@AllArgsConstructor
 public class Game {
     // Game configuration
     private static final int MIN_GAME_ID = 100000;
     private static final int MAX_GAME_ID = 999999;
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 8;
+
+    // bonus money the player gets for passing the start
+    private static final int BONUS_MONEY = 200;
 
 
     // Contains all games that are currently being played, that allows us to find a specific game
@@ -22,6 +30,7 @@ public class Game {
     // Getters and Setters below:
     // The gameId is used by users to connect to the current game, it can not be changed after the game is started
     @Getter
+    @Expose
     private int gameId;
 
     // Current state of the game
@@ -34,8 +43,24 @@ public class Game {
     @Expose
     private Player gameOwner = null;
 
+    // The game board
+    @Getter
+    @Expose
+    GameBoard gameBoard = new GameBoard();
+
+    @Getter
+    @Expose
+    @Setter
+    Dice dice = new Dice();
+
+    @Getter
+    private int currentPlayerIndex = 0;
+
+
     // Contains all players connected to the game
-    private final ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
+    @Expose
+    private final List<Player> players = new ArrayList<>();
+
 
     /**
      * Creates a new game and sets the gameId
@@ -49,6 +74,7 @@ public class Game {
 
         // Add this game to all currently played games
         games.put(gameId, this);
+        initializeGameBoard();
     }
 
     /**
@@ -67,9 +93,54 @@ public class Game {
         if (players.size() < MIN_PLAYERS)
             return false; // Not enough players
 
+        // Generate a random index within the range of 0 to player list length
+        SecureRandom random = new SecureRandom();
+        currentPlayerIndex = random.nextInt(players.size());
+
+
         state = GameState.PLAYING;
-        initializeGameBoard();
         return true;
+    }
+
+    public void handleFieldAction(int fieldId) {
+        Field field = gameBoard.getGameBoard()[fieldId];
+        FieldActionHandler handler = new FieldActionHandler();
+        if (field != null) {
+            handler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
+        }
+    }
+
+    public void rollDiceAndMoveCurrentPlayer(){
+        Player currentPlayer = getCurrentPlayer();
+        int diceValue = dice.roll();
+        int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
+        int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
+
+        currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+        // Check if player is entitled to bonus salary
+        awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+        // Handle available actions according to the field the player lands on
+        handleFieldAction(currentPlayer.getCurrentFieldIndex());
+    }
+
+    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
+        if(nextFieldIndex < currentFieldIndex && nextFieldIndex > 0){
+            currentPlayer.addBalance(BONUS_MONEY);
+        }
+    }
+
+    public void endCurrentPlayerTurn(){
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
+    }
+
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerIndex);
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex % getPlayers().size();
     }
 
     /**
@@ -92,8 +163,8 @@ public class Game {
         gameId = 0;
 
         // Change current game of all players to null
-        for (Map.Entry<UUID, Player> entry : players.entrySet()) {
-            entry.getValue().setCurrentGame(null);
+        for (Player p : players) {
+            p.setCurrentGame(null);
         }
 
         // Clear players
@@ -124,7 +195,7 @@ public class Game {
     public boolean join(Player player) {
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
-        if (!players.containsKey(player.getId())) {
+        if (!players.contains(player)) {
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
@@ -133,7 +204,7 @@ public class Game {
 
             // Add player to list of players.
             player.currentGame = this;
-            players.put(player.getId(), player);
+            players.add(player);
 
             // First joining player is the gameOwner
             if (gameOwner == null)
@@ -142,19 +213,19 @@ public class Game {
             return true;
         } else {
             // Player is re-joining -> update old player object
-            players.get(player.getId()).update(player);
+            players.get(players.indexOf(player)).update(player);
             return true;
         }
     }
 
-    private void initializeGameBoard() {
+     private void initializeGameBoard() {
         // Initialize the game board
-        GameBoard gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
+        gameBoard.initializeChanceDeck();
+        gameBoard.initializeCommunityChestDeck();
     }
-
     public List<Player> getPlayers() {
-        return Collections.unmodifiableList(Collections.list(players.elements()));
+        return Collections.unmodifiableList(players);
     }
 
     public enum GameState {

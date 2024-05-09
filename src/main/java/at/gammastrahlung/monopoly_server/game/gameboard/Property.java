@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game.gameboard;
 
 import at.gammastrahlung.monopoly_server.game.Player;
+import com.google.gson.annotations.Expose;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.Map;
@@ -11,13 +12,21 @@ import java.util.Map;
 @Setter
 @SuperBuilder
 public class Property extends Field{
+    @Expose
     private int price;
+    @Expose
     private Player owner;
+    @Expose
     private PropertyColor color;
+    @Expose
     private Map<Object, Integer> rentPrices;
+    @Expose
     private int mortgageValue;
+    @Expose
     private int houseCost;
+    @Expose
     private int hotelCost;
+    @Expose
     private int houseCount = 0;
     private boolean hasHotel;
     private boolean mortgaged;
@@ -64,6 +73,7 @@ public class Property extends Field{
         }
         return buildable;
     }
+
 
     /**
      * Checks if the property has any buildings (houses or hotel).

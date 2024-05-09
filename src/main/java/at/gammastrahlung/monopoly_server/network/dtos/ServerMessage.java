@@ -19,10 +19,13 @@ public class ServerMessage {
     private String messagePath;
 
     @Expose
-    private MessageType type;
+    private String updateType;
 
     @Expose
-    private String message;
+    private String jsonData;
+
+    @Expose
+    private MessageType type;
 
     @Expose
     private WebSocketPlayer player;
