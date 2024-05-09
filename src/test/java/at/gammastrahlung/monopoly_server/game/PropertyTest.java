@@ -34,6 +34,74 @@ class PropertyTest {
         property.setColor(PropertyColor.RED);
         Property.setGameBoard(gameBoard);
         gameBoard.setGameBoard(new Field[]{property});
+        property = Property.builder()
+                .houseCost(100)
+                .hotelCost(500)
+                .price(200)
+                .owner(owner)
+                .color(PropertyColor.RED)
+                .build();
+        Property.setGameBoard(gameBoard);
+        gameBoard.setGameBoard(new Field[]{property});
+    }
+    @Test
+    void testBuyAndSellProperties() {
+        Player buyer = new Player(UUID.randomUUID(), "Buyer", null, 1000);
+        property.buyAndSellProperty(buyer);
+
+        assertEquals(buyer, property.getOwner(), "Owner should change to buyer.");
+        assertEquals(800, buyer.getBalance(), "Buyer's balance should decrease by the price of the property.");
+        assertEquals(1200, owner.getBalance(), "Owner's balance should increase by the price of the property.");
+    }
+
+    @Test
+    void testBuildHouse() {
+        assertTrue(property.buildHouse(), "Should return true when house is built.");
+        assertEquals(1, property.getHouseCount(), "House count should be incremented.");
+
+        property.setHouseCount(4); // Set to just before hotel
+        assertTrue(property.buildHouse(), "Should return true when hotel is built.");
+        assertEquals(5, property.getHouseCount(), "House count should increment to 5 for hotel.");
+
+        assertFalse(property.buildHouse(), "Should return false when no more houses can be built.");
+    }
+
+    @Test
+    void testBuildable() {
+        Property anotherProperty = Property.builder()
+                .color(PropertyColor.RED)
+                .owner(new Player(UUID.randomUUID(), "Different Owner", null, 1000))
+                .build();
+        gameBoard.setGameBoard(new Field[]{property, anotherProperty});
+
+        assertFalse(property.buildable(), "Should return false, another RED property is owned by a different owner.");
+    }
+
+    @Test
+    void testHasBuildings() {
+        assertFalse(property.hasBuildings(), "Should return false when there are no buildings.");
+        property.setHouseCount(1);
+        assertTrue(property.hasBuildings(), "Should return true when there is at least one building.");
+    }
+
+    @Test
+    void testPriceSetAndGet() {
+        property.setPrice(300);
+        assertEquals(300, property.getPrice(), "Price should be retrievable and match the set value.");
+    }
+
+    @Test
+    void testHouseAndHotelCostSetAndGet() {
+        property.setHouseCost(150);
+        assertEquals(150, property.getHouseCost(), "House cost should be set and get correctly.");
+        property.setHotelCost(550);
+        assertEquals(550, property.getHotelCost(), "Hotel cost should be set and get correctly.");
+    }
+
+    @Test
+    void testHasHotel() {
+        property.setHasHotel(true);
+        assertTrue(property.hasBuildings(), "Should return true when hotel is set.");
     }
     @Test
     void testSellProperty() {

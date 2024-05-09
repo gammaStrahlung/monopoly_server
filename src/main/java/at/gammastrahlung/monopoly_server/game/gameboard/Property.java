@@ -28,7 +28,9 @@ public class Property extends Field{
     private int hotelCost;
     @Expose
     private int houseCount = 0;
+    @Expose
     private boolean hasHotel;
+    @Expose
     private boolean mortgaged;
 
     /**

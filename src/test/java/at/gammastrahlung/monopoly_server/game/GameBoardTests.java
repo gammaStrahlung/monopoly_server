@@ -31,6 +31,48 @@ class GameBoardTests {
         }
     }
     @Test
+    void testGetPropertyById() {
+        Property expectedProperty = (Property) gameBoard.getGameBoard()[1]; // index 1 as an example
+        Property actualProperty = gameBoard.getPropertyById(1);
+        assertEquals(expectedProperty, actualProperty, "Should retrieve the correct property by ID.");
+        assertNull(gameBoard.getPropertyById(999), "Should return null for non-existent ID.");
+    }
+
+    @Test
+    void testSellBuildings() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 1000);
+        Property property = (Property) gameBoard.getGameBoard()[1];
+        property.setOwner(player);
+        property.setHouseCount(3);
+        property.setHasHotel(true);
+        gameBoard.sellBuildings(PropertyColor.BROWN, player); // Assuming this property is brown
+
+        assertEquals(0, property.getHouseCount(), "All houses should be sold.");
+        assertFalse(property.isHasHotel(), "Hotel should be sold.");
+        assertTrue(player.getBalance() > 1000, "Player should have more money after selling.");
+    }
+
+    @Test
+    void testAnyMortgagedInGroup() {
+        assertFalse(gameBoard.anyMortgagedInGroup(PropertyColor.BROWN), "Should return false if no properties are mortgaged.");
+        Property property = (Property) gameBoard.getGameBoard()[1]; // Assuming this is a BROWN property
+        property.setMortgaged(true);
+        assertTrue(gameBoard.anyMortgagedInGroup(PropertyColor.BROWN), "Should return true if any property is mortgaged.");
+    }
+
+    @Test
+    void testBuilderAndFieldInitialization() {
+        for (Field field : gameBoard.getGameBoard()) {
+            assertNotNull(field, "All fields should be initialized.");
+        }
+    }
+
+    @Test
+    void testInitializationOfDecks() {
+        assertFalse(gameBoard.getChanceDeck().isEmpty(), "Chance deck should be initialized and not empty.");
+        assertFalse(gameBoard.getCommunityChestDeck().isEmpty(), "Community Chest deck should be initialized and not empty.");
+    }
+    @Test
     void testInvalidFieldInitialization() {
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             Field invalidField = gameBoard.getGameBoard()[40]; // Access beyond the size of the array
