@@ -1,12 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.CardType;
-import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
-import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +29,73 @@ class GameBoardTests {
                 property.setHasHotel(false);
             }
         }
+    }
+
+    @Test
+    void testRailroadInitialization() {
+        Field railroad = gameBoard.getGameBoard()[5]; // Assuming index 5 is a railroad
+        assertTrue(railroad instanceof Railroad, "Field at index 5 should be a Railroad.");
+    }
+
+    @Test
+    void testUtilityInitialization() {
+        Field utility = gameBoard.getGameBoard()[12]; // Assuming index 12 is a utility
+        assertTrue(utility instanceof Utility, "Field at index 12 should be a Utility.");
+    }
+
+    @Test
+    void testPropertyRentPricesInitialization() {
+        Property property = (Property) gameBoard.getGameBoard()[1];
+        assertNotNull(property.getRentPrices(), "Rent prices should be initialized.");
+        assertFalse(property.getRentPrices().isEmpty(), "Rent prices map should not be empty.");
+    }
+
+    @Test
+    void testCommunityChestCardInitialization() {
+        EventCard card = gameBoard.getCommunityChestDeck().get(0);
+        assertNotNull(card.getDescription(), "First community chest card should have a description.");
+        assertNotNull(card.getCardType(), "First community chest card should have a card type.");
+    }
+
+    @Test
+    void testChanceCardInitialization() {
+        EventCard card = gameBoard.getChanceDeck().get(0);
+        assertNotNull(card.getDescription(), "First chance card should have a description.");
+        assertNotNull(card.getCardType(), "First chance card should have a card type.");
+    }
+
+    @Test
+    void testResettingCommunityChestDeck() {
+        gameBoard.initializeCommunityChestDeck(); // Reinitialize to reset any changes
+        assertEquals(15, gameBoard.getCommunityChestDeck().size(), "Resetting should result in 15 cards again.");
+    }
+
+    @Test
+    void testResettingChanceDeck() {
+        gameBoard.initializeChanceDeck(); // Reinitialize to reset any changes
+        assertEquals(14, gameBoard.getChanceDeck().size(), "Resetting should result in 14 cards again.");
+    }
+
+    @Test
+    void testGetInvalidPropertyById() {
+        assertNull(gameBoard.getPropertyById(-1), "Should return null for invalid property ID.");
+        assertNull(gameBoard.getPropertyById(100), "Should return null for non-existent property ID.");
+    }
+
+    @Test
+    void testCorrectNumberOfCommunityChestCards() {
+        assertEquals(15, gameBoard.getCommunityChestDeck().size(), "There should be exactly 15 Community Chest cards.");
+    }
+
+    @Test
+    void testCorrectNumberOfChanceCards() {
+        assertEquals(14, gameBoard.getChanceDeck().size(), "There should be exactly 14 Chance cards.");
+    }
+
+    @Test
+    void testCorrectFieldInitialization() {
+        Field goField = gameBoard.getGameBoard()[0];
+        assertEquals(FieldType.GO, goField.getType(), "The first field should be GO.");
     }
 
     @Test
