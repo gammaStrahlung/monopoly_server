@@ -5,6 +5,7 @@ import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
@@ -222,4 +223,32 @@ public class MonopolyMessageHandler {
 
         return initiateRound(player);
     }
+    //------------------------------------------------------------------------------------------------------------------
+    public static ServerMessage handleMortgage(ClientMessage clientMessage, WebSocketSession session) {
+        WebSocketPlayer player = clientMessage.getPlayer();
+        Game game = player.getCurrentGame();
+        Property property = game.getGameBoard().getPropertyById(clientMessage.getPropertyId());
+
+        if ("mortgage".equals(clientMessage.getMessagePath())) {
+            if (!property.isMortgaged() && property.getOwner().equals(player)) {
+                property.setMortgaged(true);
+                player.subtractBalance(-property.getMortgageValue()); // The player receives the mortgage money
+            }
+        } else if ("unmortgage".equals(clientMessage.getMessagePath())) {
+            int repaymentAmount = (int) (property.getMortgageValue() * 1.1); // 10% interest
+            if (property.isMortgaged() && property.getOwner().equals(player) && player.getBalance() >= repaymentAmount) {
+                property.setMortgaged(false);
+                player.subtractBalance(repaymentAmount);
+            }
+        }
+
+        return ServerMessage.builder()
+                .messagePath(clientMessage.getMessagePath())
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .player(player)
+                .build();
+    }
+
+
 }
