@@ -2,6 +2,7 @@ package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
@@ -245,4 +246,107 @@ public class Game {
          */
         ENDED
     }
+    /**
+     * Handles a request to mortgage a property by a player.
+     * Verifies if the property can be mortgaged and processes the mortgage if valid.
+     *
+     * @param propertyId The unique identifier of the property to be mortgaged.
+     * @param playerId The unique identifier of the player requesting the mortgage.
+     * @return true if the mortgage was successfully processed, false otherwise.
+     */
+    public boolean processMortgage(int propertyId, UUID playerId) {
+        Player player = getPlayerById(playerId);
+        Property property = gameBoard.getPropertyById(propertyId);
+
+        if (property == null || !property.getOwner().equals(player) || property.isMortgaged()) {
+            return false; // Property does not exist, is not owned by the player, or is already mortgaged
+        }
+
+        if (property.hasBuildings()) {
+            return false; // Cannot mortgage properties with buildings
+        }
+
+        // Mortgage the property
+        property.setMortgaged(true);
+        int mortgageValue = property.getMortgageValue();
+        player.addBalance(mortgageValue);
+        return true;
+    }
+
+    /**
+     * Handles a request to repay a mortgage on a property by a player.
+     * Verifies if the property mortgage can be repaid and processes the repayment if valid.
+     *
+     * @param propertyId The unique identifier of the property for which the mortgage is to be repaid.
+     * @param playerId The unique identifier of the player requesting to repay the mortgage.
+     * @return true if the mortgage repayment was successful, false otherwise.
+     */
+    public boolean repayMortgage(int propertyId, UUID playerId) {
+        Player player = getPlayerById(playerId);
+        Property property = gameBoard.getPropertyById(propertyId);
+
+        if (property == null || !property.getOwner().equals(player) || !property.isMortgaged()) {
+            return false; // Property does not exist, is not owned by the player, or is not mortgaged
+        }
+
+        int repaymentAmount = (int) (property.getMortgageValue() * 1.1); // 10% interest on the mortgage value
+        if (player.getBalance() < repaymentAmount) {
+            return false; // Player does not have enough balance to repay the mortgage
+        }
+
+        // Repay the mortgage
+        player.subtractBalance(repaymentAmount);
+        property.setMortgaged(false);
+        return true;
+    }
+
+    /**
+     * Retrieves a player based on their UUID.
+     *
+     * @param playerId The UUID of the player to retrieve.
+     * @return The Player object if found, null otherwise.
+     */
+    private Player getPlayerById(UUID playerId) {
+        return players.stream()
+                .filter(p -> p.getId().equals(playerId))
+                .findFirst()
+                .orElse(null);
+    }
+    /**
+     * Attempts to mortgage a property owned by the current player.
+     * @param propertyId The ID of the property the current player wants to mortgage.
+     * @return True if the mortgage operation was successful, false otherwise.
+     */
+    public boolean mortgageProperty(int propertyId) {
+        Player currentPlayer = getCurrentPlayer();
+        MortgageManager mortgageManager = new MortgageManager(gameBoard);
+        boolean success = mortgageManager.mortgageProperty(propertyId, currentPlayer);
+        if (success) {
+            // Log or notify the successful mortgage operation
+            System.out.println("Property mortgaged successfully.");
+        } else {
+            // Log or notify the failure
+            System.out.println("Failed to mortgage property.");
+        }
+        return success;
+    }
+    /**
+     * Repays the mortgage on a property owned by the current player.
+     * @param propertyId The ID of the property the current player wants to unmortgage.
+     * @return True if the mortgage repayment was successful, false otherwise.
+     */
+    public boolean repayMortgage(int propertyId) {
+        Player currentPlayer = getCurrentPlayer();
+        MortgageManager mortgageManager = new MortgageManager(gameBoard);
+        boolean success = mortgageManager.repayMortgage(propertyId, currentPlayer);
+        if (success) {
+            // Log or notify about the successful mortgage repayment
+            System.out.println("Mortgage repaid successfully.");
+        } else {
+            // Log or notify about the failure to repay the mortgage
+            System.out.println("Failed to repay mortgage.");
+        }
+        return success;
+    }
+
 }
