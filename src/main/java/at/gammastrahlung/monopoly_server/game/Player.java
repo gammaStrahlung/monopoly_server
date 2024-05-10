@@ -32,6 +32,7 @@ public class Player {
     /**
      * The field on which avatar is currently placed
      */
+    @Expose
     protected int currentFieldIndex;
 
     protected boolean isInJail;
