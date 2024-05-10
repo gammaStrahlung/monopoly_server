@@ -1,7 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
@@ -245,4 +244,82 @@ public class Game {
          */
         ENDED
     }
+    /**
+     * Processes payment for landing on a railroad, calculating the rent based on the number of railroads owned.
+     * @param payer The player who needs to pay the rent.
+     * @param railroad The railroad property landed on.
+     * @return true if the payment was successful, otherwise false.
+     */
+    public boolean processRailroadPayment(Player payer, Railroad railroad) {
+        if (railroad.getOwner() != null && !railroad.getOwner().equals(payer)) {
+            int ownedRailroads = countOwnedRailroads(railroad.getOwner());
+            String key = ownedRailroads + "RR";
+            Integer rentAmount = railroad.getRentPrices().get(key);
+            if (rentAmount != null) {
+                return makePayment(payer, railroad.getOwner(), rentAmount);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handles payments when a player lands on another player's property.
+     * @param payer The player who landed on the property and must pay rent.
+     * @param property The property that has been landed on.
+     * @return true if payment was successful, otherwise false.
+     */
+    public boolean processPropertyPayment(Player payer, Property property) {
+        if (property.getOwner() != null && !property.getOwner().equals(payer)) {
+            Integer rentAmount = property.getRentPrices().getOrDefault(0, 0); // Default rent if no houses or hotels
+            return makePayment(payer, property.getOwner(), rentAmount);
+        }
+        return false;
+    }
+
+    /**
+     * Processes utility payment based on a fixed amount defined in the utility property.
+     * @param payer The player who landed on the utility.
+     * @param utility The utility property that was landed on.
+     * @return true if the payment was successful, otherwise false.
+     */
+    public boolean processUtilityPayment(Player payer, Utility utility) {
+        if (utility.getOwner() != null && !utility.getOwner().equals(payer)) {
+            int rentAmount = utility.getToPay();  // Fixed amount due for landing on the utility.
+            return makePayment(payer, utility.getOwner(), rentAmount);
+        }
+        return false;
+    }
+
+    /**
+     * Makes a payment from one player to another.
+     * @param from The player making the payment.
+     * @param to The recipient of the payment.
+     * @param amount The amount to be paid.
+     * @return true if the transaction was successful, false if the payer had insufficient funds.
+     */
+    public boolean makePayment(Player from, Player to, int amount) {
+        if (from.getBalance() >= amount) {
+            from.subtractBalance(amount);
+            to.addBalance(amount);
+            return true;
+        } else {
+            // Optional: Handle insufficient funds here if necessary
+            return false;
+        }
+    }
+
+    /**
+     * Counts the number of railroads owned by a specific player.
+     * @param owner The player whose railroads are to be counted.
+     * @return the count of railroads owned by the player.
+     */
+    private int countOwnedRailroads(Player owner) {
+        return (int) Arrays.stream(gameBoard.getGameBoard())
+                .filter(field -> field instanceof Railroad && ((Railroad) field).getOwner().equals(owner))
+                .count();
+    }
+
+
+
+
 }
