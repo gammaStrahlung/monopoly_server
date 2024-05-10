@@ -1,7 +1,9 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.AuctionSystem;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +13,8 @@ import lombok.Setter;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Getter
+@Setter
 @AllArgsConstructor
 public class Game {
     // Game configuration
@@ -60,6 +63,8 @@ public class Game {
     // Contains all players connected to the game
     @Expose
     private final List<Player> players = new ArrayList<>();
+    @Expose
+    private AuctionSystem currentAuction;
 
 
     /**
@@ -244,5 +249,64 @@ public class Game {
          * The game has ended, playing and joining is not possible anymore.
          */
         ENDED
+    }
+    // Starts a new auction for a specific property
+    public void startAuction(Property auctionProperty) {
+        currentAuction = new AuctionSystem(auctionProperty, new AuctionSystem.AuctionEventListener() {
+            @Override
+            public void onBidUpdated(Player player, int newBid) {
+                // Implement what should happen when a bid is updated
+                System.out.println("Bid updated: " + player.getName() + " bids " + newBid);
+            }
+
+            @Override
+            public void onAuctionFinalized(Player winner, int winningBid) {
+                // Implement what should happen when the auction is finalized
+                System.out.println("Auction finalized: " + winner.getName() + " wins with " + winningBid);
+            }
+        });
+    }
+
+    // Allows a player to place a bid
+    public boolean placeBid(Player player, int bid) {
+        if (currentAuction != null) {
+            return currentAuction.placeBid(player, bid);
+        }
+        System.out.println("No active auction to place bid.");
+        return false;
+    }
+
+    // Ends the current auction and transfers ownership
+    public void finalizeAuction() {
+        if (currentAuction != null) {
+            Player winner = currentAuction.finalizeAuction();
+            if (winner != null) {
+                System.out.println("Auction won by: " + winner.getName() + " with a bid of: " + currentAuction.getHighestBid());
+            } else {
+                System.out.println("Auction closed with no valid bids.");
+            }
+            currentAuction = null;  // Resets the auction
+        } else {
+            System.out.println("No auction to finalize.");
+        }
+    }
+
+    /**
+     * Notifies a single player with a message.
+     * @param player The player to notify.
+     * @param message The message to send.
+     */
+    private void notifyPlayer(Player player, String message) {
+        // Implementation for notifying a specific player
+        System.out.println("To " + player.getName() + ": " + message);
+    }
+
+    /**
+     * Notifies all players with a given message.
+     * @param message The message to broadcast to all players.
+     */
+    private void notifyPlayers(String message) {
+        // Implementation for notifying all players
+        players.forEach(player -> notifyPlayer(player, message));
     }
 }
