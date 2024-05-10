@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 
-public class EventCardTests {
+class EventCardTests {
 
     EventCard eventCard;
     Player mockPlayer;

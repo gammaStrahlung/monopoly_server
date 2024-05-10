@@ -1,6 +1,5 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
