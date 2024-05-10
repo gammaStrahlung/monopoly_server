@@ -776,4 +776,13 @@ public class GameBoard {
                 .cardType(CardType.GET_OUT_OF_JAIL)
                 .build());
     }
+
+    public Property getPropertyById(int id) {
+        for (Field field : gameBoard) {
+            if (field instanceof Property && field.getFieldId() == id) {
+                return (Property) field;
+            }
+        }
+        return null;
+    }
 }

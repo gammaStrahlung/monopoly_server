@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import at.gammastrahlung.monopoly_server.AuctionSystem;
-import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 
 @SpringBootTest

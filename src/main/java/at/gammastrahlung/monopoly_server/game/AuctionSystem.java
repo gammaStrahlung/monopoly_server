@@ -1,9 +1,8 @@
-package at.gammastrahlung.monopoly_server;
+package at.gammastrahlung.monopoly_server.game;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 
 /**

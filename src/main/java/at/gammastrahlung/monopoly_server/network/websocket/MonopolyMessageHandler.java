@@ -5,6 +5,7 @@ import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
@@ -223,4 +224,55 @@ public class MonopolyMessageHandler {
 
         return initiateRound(player);
     }
+
+    private static ServerMessage handleStartAuction(ClientMessage clientMessage, Game game) {
+        Property property = game.getGameBoard().getPropertyById(Integer.parseInt(clientMessage.getMessage()));
+        if (property == null) {
+            return ServerMessage.builder()
+                    .messagePath("error")
+                    .jsonData("Property not found.")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
+        game.startAuction(property);
+        return ServerMessage.builder()
+                .messagePath("auction_start")
+                .jsonData("Auction started for " + property.getName())
+                .type(ServerMessage.MessageType.SUCCESS)
+                .build();
+    }
+
+    private static ServerMessage handlePlaceBid(ClientMessage clientMessage, Game game) {
+        if (game.getCurrentAuction() == null) {
+            return ServerMessage.builder()
+                    .messagePath("error")
+                    .jsonData("No active auction.")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
+        int bid = Integer.parseInt(clientMessage.getMessage());
+        boolean result = game.getCurrentAuction().placeBid(game.getCurrentPlayer(), bid);
+        return ServerMessage.builder()
+                .messagePath("place_bid")
+                .jsonData(result ? "Bid placed successfully." : "Bid failed or too low.")
+                .type(result ? ServerMessage.MessageType.SUCCESS : ServerMessage.MessageType.ERROR)
+                .build();
+    }
+
+    private static ServerMessage handleFinalizeAuction(ClientMessage clientMessage, Game game) {
+        if (game.getCurrentAuction() == null) {
+            return ServerMessage.builder()
+                    .messagePath("error")
+                    .jsonData("No active auction to finalize.")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
+        Player winner = game.getCurrentAuction().finalizeAuction();
+        return ServerMessage.builder()
+                .messagePath("finalize_auction")
+                .jsonData(winner != null ? "Auction won by " + winner.getName() : "No bids were placed.")
+                .type(winner != null ? ServerMessage.MessageType.SUCCESS : ServerMessage.MessageType.ERROR)
+                .build();
+    }
+
 }
