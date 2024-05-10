@@ -27,7 +27,7 @@ public class EventCard {
     private int moveToField;
 
 
-    public void drawnCard(Player player) {  // implement in another issue
+    public void applyAction(Player player, EventCard card) {  // implement in another issue
         /*switch (cardType) {
             case GO_TO_JAIL:
                 break;
