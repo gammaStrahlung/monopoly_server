@@ -9,34 +9,46 @@ import java.util.logging.Logger;
 
 public class FieldActionHandler {
 
+    private static final int INCOME_TAX_AMOUNT = 200;
+    private static final int LUXURY_TAX_AMOUNT = 100;
     private Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
+
 
     public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
         switch (fieldType) {
+            case GO, FREE_PARKING, JAIL:
+                // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
+                break;
             case GO_TO_JAIL:
                 goToJail(currentPlayer);
                 break;
             case COMMUNITY_CHEST:
                 card = drawCard(game.getGameBoard().getCommunityChestDeck());
-                card.applyAction(currentPlayer, card);
+                card.applyAction(currentPlayer, card, game);
                 break;
             case CHANCE:
                 card = drawCard(game.getGameBoard().getChanceDeck());
-                card.applyAction(currentPlayer, card);
+                card.applyAction(currentPlayer, card, game);
                 break;
             case INCOME_TAX:
-                // pay income tax
+                payTax(currentPlayer, fieldType);
                 break;
-            case FREE_PARKING:
-                // Nothing should be done on the free parking field
+            case LUXURY_TAX:
+                payTax(currentPlayer, fieldType);
                 break;
-            // Add cases for other field types
+            // TODO Add cases for other field types RAILROAD, UTILITY, PROPERTY
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
                 logger.info("Unhandled field type: " + fieldType);
                 break;
         }
+    }
+
+    void payTax(Player currentPlayer, FieldType fieldType) {
+        int taxAmount = (fieldType == FieldType.INCOME_TAX) ? INCOME_TAX_AMOUNT : LUXURY_TAX_AMOUNT;
+        currentPlayer.pay(taxAmount);
+
     }
 
     public void goToJail(Player currentPlayer) {
