@@ -39,15 +39,19 @@ public class EventCard {
                 break;
             case MOVE_TO_FIELD:
                 player.setCurrentFieldIndex(card.getMoveToField());
-                // TODO evaluate what happens on the next field
-                game.handleFieldAction(player.getCurrentFieldIndex());
+
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
                 break;
             case MOVE_TO_RAILROAD:
                 int nextRailroadIndex = findNextRailroadIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextRailroadIndex);
-                // TODO evaluate what happens on the next field
+
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
                 break;
             case STREET_REPAIRS:
+                //TODO Implement
                 break;
             case GET_OUT_OF_JAIL:
                 player.getOutOfJail();
@@ -55,15 +59,23 @@ public class EventCard {
             case MOVE_TO_UTILITY:
                 int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextUtilityIndex);
-                // TODO evaluate what happens on the next field
+
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
                 break;
             case MOVE_SPACES:
                 player.moveAvatar(player.getCurrentFieldIndex(), -3);
-                // evaluate what happens on the next field
+
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
                 break;
             default:
                 break;
         }
+    }
+
+    private static void handleFieldAction(Player player, Game game) {
+        game.handleFieldAction(player.getCurrentFieldIndex());
     }
 
     public int findNextRailroadIndex(int currentPosition) {

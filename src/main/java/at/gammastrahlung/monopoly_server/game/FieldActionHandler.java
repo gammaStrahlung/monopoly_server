@@ -17,6 +17,9 @@ public class FieldActionHandler {
     public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
         switch (fieldType) {
+            case GO, FREE_PARKING, JAIL:
+                // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
+                break;
             case GO_TO_JAIL:
                 goToJail(currentPlayer);
                 break;
@@ -34,10 +37,7 @@ public class FieldActionHandler {
             case LUXURY_TAX:
                 payTax(currentPlayer, fieldType);
                 break;
-            case FREE_PARKING:
-                // Nothing should be done on the free parking field
-                break;
-            // TODO Add cases for other field types
+            // TODO Add cases for other field types RAILROAD, UTILITY, PROPERTY
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
                 logger.info("Unhandled field type: " + fieldType);
