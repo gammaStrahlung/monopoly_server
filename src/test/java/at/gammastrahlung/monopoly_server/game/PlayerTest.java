@@ -97,10 +97,10 @@ class PlayerTest {
     }
 
     @Test
-    void getOutOfJailTest(){
+    void releaseFromJailTest(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         player.setInJail(true);
-        player.getOutOfJail();
+        player.releaseFromJail();
 
         assertFalse(player.isInJail);
     }
@@ -122,5 +122,13 @@ class PlayerTest {
         player.pay(100);
         // assert that nothing happens since else branch is not yet impl
         assertEquals(70, player.getBalance());
+    }
+
+    @Test
+    void incrementRoundsInJailTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.incrementRoundsInJail();
+        assertEquals(1, player.getRoundsInJail());
     }
 }
