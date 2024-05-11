@@ -54,7 +54,7 @@ public class EventCard {
                 //TODO Implement
                 break;
             case GET_OUT_OF_JAIL:
-                player.getOutOfJail();
+                player.setHasGetOutOfJailFreeCard(true);
                 break;
             case MOVE_TO_UTILITY:
                 int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
