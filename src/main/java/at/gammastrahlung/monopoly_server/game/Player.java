@@ -38,12 +38,20 @@ public class Player {
     /**
      * Field is true if player is in jail, false if free
      */
+    @Expose
     protected boolean isInJail;
 
     /**
      * The field keeps track for how many rounds the player has consecutively spent in jail (max. 3)
      */
+    @Expose
     protected int roundsInJail;
+
+    /**
+     * Field is true if the player has a get out of jail free card
+     */
+    @Expose
+    protected boolean hasGetOutOfJailFreeCard;
 
     /**
      * The game the player is currently playing

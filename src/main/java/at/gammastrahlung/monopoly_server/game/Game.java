@@ -118,7 +118,7 @@ public class Game {
 
 
         // Check if player is in jail
-        if (currentPlayer.isInJail()) {
+        if (currentPlayer.isInJail() && !currentPlayer.hasGetOutOfJailFreeCard) {
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
                 playerInJailNoDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);

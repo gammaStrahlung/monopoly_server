@@ -131,4 +131,12 @@ class PlayerTest {
         player.incrementRoundsInJail();
         assertEquals(1, player.getRoundsInJail());
     }
+
+    @Test
+    void hasGetOutOfJailFreeCard(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.setHasGetOutOfJailFreeCard(true);
+        assertTrue(player.hasGetOutOfJailFreeCard);
+    }
 }
