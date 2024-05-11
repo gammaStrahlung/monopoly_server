@@ -33,14 +33,14 @@ class FieldActionHandlerTests {
     }
 
     @Test
-    void goToJail(){
+    void goToJailCase(){
         fieldActionHandler.handleFieldAction(FieldType.GO_TO_JAIL, mockPlayer, game);
 
         verify(mockPlayer).goToJail();
     }
 
     @Test
-    void freeParking() {
+    void freeParkingCase() {
         fieldActionHandler.handleFieldAction(FieldType.FREE_PARKING, mockPlayer, game);
 
         // Verify that nothing has changed
@@ -48,7 +48,7 @@ class FieldActionHandlerTests {
     }
 
     @Test
-    void drawCommunityChestCard() {
+    void communityChestCardCase() {
         FieldActionHandler spyHandler = spy(new FieldActionHandler());
 
         ArrayList<EventCard> deck = new ArrayList<>();
@@ -71,7 +71,7 @@ class FieldActionHandlerTests {
     }
 
     @Test
-    void drawChanceCard() {
+    void chanceCardCase() {
         // Create a spy of the object under test
         FieldActionHandler spyHandler = spy(new FieldActionHandler());
 
@@ -128,5 +128,60 @@ class FieldActionHandlerTests {
         // Verify that null is returned when the deck is empty
         assertNull(drawnCard);
     }
+
+    @Test
+    void incomeTaxCase() {
+        // Create a spy of the object under test
+        FieldActionHandler spyHandler = spy(new FieldActionHandler());
+
+        // Mock the player
+        Player currentPlayer = mock(Player.class);
+
+        // Mock the game
+        Game game = mock(Game.class);
+
+        // Call the method to handle the income tax action
+        spyHandler.handleFieldAction(FieldType.INCOME_TAX, currentPlayer, game);
+
+        // Verify that payTax was called with the correct parameters
+        verify(spyHandler).payTax(currentPlayer, FieldType.INCOME_TAX);
+    }
+
+    @Test
+    void luxuryTaxCase() {
+        // Create a spy of the object under test
+        FieldActionHandler spyHandler = spy(new FieldActionHandler());
+
+        // Mock the player
+        Player currentPlayer = mock(Player.class);
+
+        // Mock the game
+        Game game = mock(Game.class);
+
+        // Call the method to handle the luxury tax action
+        spyHandler.handleFieldAction(FieldType.LUXURY_TAX, currentPlayer, game);
+
+        // Verify that payTax was called with the correct parameters
+        verify(spyHandler).payTax(currentPlayer, FieldType.LUXURY_TAX);
+    }
+
+
+    @Test
+    void payTax() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 500);
+
+        fieldActionHandler.payTax(player, FieldType.INCOME_TAX);
+        assertEquals(300, player.getBalance());
+
+        fieldActionHandler.payTax(player, FieldType.LUXURY_TAX);
+        assertEquals(200, player.getBalance());
+
+        player.setBalance(10);
+        fieldActionHandler.payTax(player, FieldType.INCOME_TAX);
+
+        // assert no change since the logic for else branch is not yet impl
+        assertEquals(10, player.getBalance());
+    }
+
 
 }
