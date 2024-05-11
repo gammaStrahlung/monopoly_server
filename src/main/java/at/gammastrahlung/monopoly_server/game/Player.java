@@ -57,6 +57,7 @@ public class Player {
         this.balance = startingBalance; //balance gets initialized with a starting balance
         this.currentFieldIndex = 0;
         this.isInJail = false;
+        this.roundsInJail = 0;
     }
 
     // increases player balance

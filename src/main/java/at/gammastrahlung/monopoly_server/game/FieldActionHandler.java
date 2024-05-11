@@ -46,6 +46,7 @@ public class FieldActionHandler {
     }
 
     void payTax(Player currentPlayer, FieldType fieldType) {
+        // Check if field income or luxury tax, deduct amount from player account
         int taxAmount = (fieldType == FieldType.INCOME_TAX) ? INCOME_TAX_AMOUNT : LUXURY_TAX_AMOUNT;
         currentPlayer.pay(taxAmount);
 

@@ -6,9 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -121,7 +118,7 @@ class EventCardTests {
 
         eventCard.applyAction(mockPlayer, getOutOfJail, game);
 
-        verify(mockPlayer).getOutOfJail();
+        verify(mockPlayer).releaseFromJail();
 
     }
 

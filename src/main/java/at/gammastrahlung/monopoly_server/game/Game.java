@@ -22,7 +22,7 @@ public class Game {
 
     // bonus money the player gets for passing the start
     private static final int BONUS_MONEY = 200;
-
+    private static final int GET_OUT_OF_JAIL_FINE = 50;
 
     // Contains all games that are currently being played, that allows us to find a specific game
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
@@ -116,13 +116,48 @@ public class Game {
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
-        currentPlayer.moveAvatar(currentFieldIndex, diceValue);
 
-        // Check if player is entitled to bonus salary
-        awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+        // Check if player is in jail
+        if (currentPlayer.isInJail()) {
+            // Player is in Jail and they don't throw doubles
+            if (dice.getValue1() != dice.getValue2()) {
+                if(currentPlayer.getRoundsInJail() < 3){
+                    currentPlayer.incrementRoundsInJail();
+                }
+                else {
+                    // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
+                    currentPlayer.pay(GET_OUT_OF_JAIL_FINE);
+                    currentPlayer.releaseFromJail();
+                    currentPlayer.moveAvatar(currentFieldIndex, diceValue);
 
-        // Handle available actions according to the field the player lands on
-        handleFieldAction(currentPlayer.getCurrentFieldIndex());
+                    // Check if player is entitled to bonus salary
+                    awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+                    // Handle available actions according to the field the player lands on
+                    handleFieldAction(currentPlayer.getCurrentFieldIndex());
+                }
+            } else {
+                // Player throws doubles, release them from jail and proceed with moving them
+                currentPlayer.releaseFromJail();
+                currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+                // Check if player is entitled to bonus salary
+                awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+                // Handle available actions according to the field the player lands on
+                handleFieldAction(currentPlayer.getCurrentFieldIndex());
+            }
+        } else {
+            // Player is not in jail, proceed with moving them
+            currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+            // Check if player is entitled to bonus salary
+            awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+            // Handle available actions according to the field the player lands on
+            handleFieldAction(currentPlayer.getCurrentFieldIndex());
+        }
+
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
