@@ -133,10 +133,17 @@ class PlayerTest {
     }
 
     @Test
-    void hasGetOutOfJailFreeCard(){
+    void HasGetOutOfJailFreeCardTest() {
+        // Create a player object
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
+        // Initially, the player should not have a get out of jail free card
+        assertFalse(player.isHasGetOutOfJailFreeCard());
+
+        // Set the hasGetOutOfJailFreeCard field to true
         player.setHasGetOutOfJailFreeCard(true);
-        assertTrue(player.hasGetOutOfJailFreeCard);
+
+        // Check if the setter works correctly
+        assertTrue(player.isHasGetOutOfJailFreeCard());
     }
 }

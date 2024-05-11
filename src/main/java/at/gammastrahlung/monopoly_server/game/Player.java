@@ -66,6 +66,7 @@ public class Player {
         this.currentFieldIndex = 0;
         this.isInJail = false;
         this.roundsInJail = 0;
+        this.hasGetOutOfJailFreeCard = false;
     }
 
     // increases player balance

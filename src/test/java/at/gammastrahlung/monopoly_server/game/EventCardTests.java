@@ -118,7 +118,7 @@ class EventCardTests {
 
         eventCard.applyAction(mockPlayer, getOutOfJail, game);
 
-        verify(mockPlayer).releaseFromJail();
+        verify(mockPlayer).setHasGetOutOfJailFreeCard(true);
 
     }
 
