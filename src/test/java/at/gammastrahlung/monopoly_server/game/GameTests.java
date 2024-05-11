@@ -5,6 +5,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.ByteArrayOutputStream;
@@ -339,5 +340,85 @@ class GameTests {
         assertFalse(game.placeBid(new Player(), 100), "Placing a bid with no active auction should return false.");
     }
 
+    @Test
+    void startAuction_InitializesAuctionSystem() {
+        Game game = new Game();
+        Property property = mock(Property.class);
+        game.startAuction(property);
+        assertNotNull(game.getCurrentAuction(), "Auction should be initialized");
+    }
+
+
+    @Test
+    void placeBid_NoAuction_ReturnsFalse() {
+        Game game = new Game();
+        Player player = new Player();
+        assertFalse(game.placeBid(player, 100), "Should return false as no auction is active");
+    }
+
+
+    @Test
+    void finalizeAuction_AuctionExists_NoWinner() {
+        Game game = new Game();
+        Property property = mock(Property.class);
+        game.startAuction(property);
+
+        game.finalizeAuction();
+        assertNull(game.getCurrentAuction(), "Auction should be reset to null even if no winner exists");
+    }
+
+    @Test
+    void finalizeAuction_NoAuction() {
+        Game game = new Game();
+        game.finalizeAuction();
+        assertNull(game.getCurrentAuction(), "Finalizing a non-existent auction should handle gracefully");
+    }
+
+
+    @Test
+    void constructor_UniqueGameId() {
+        Game gameOne = new Game();
+        Game gameTwo = new Game();
+        assertNotEquals(gameOne.getGameId(), gameTwo.getGameId(), "Each game should have a unique game ID");
+    }
+
+    @Test
+    void startAuction_InitializesAuctionSystem2() {
+        Game game = new Game();
+        Property property = new Property();
+        game.startAuction(property);
+        assertNotNull(game.getCurrentAuction(), "Auction should be initialized");
+    }
+
+
+    @Test
+    void placeBid_NoAuction_ReturnsFalse2() {
+        Game game = new Game();
+        Player player = new Player();
+        assertFalse(game.placeBid(player, 100), "Should return false as no auction is active");
+    }
+
+
+    @Test
+    void placeBid_AuctionExists_BidPlaced() {
+        Game game = new Game();
+        Property property = Mockito.mock(Property.class);
+        game.startAuction(property);
+        Player player = new Player();
+        player.addBalance(200);
+        assertTrue(game.placeBid(player, 100), "Bid should be placed successfully");
+    }
+
+    @Test
+    void finalizeAuction_AuctionExists_WinnerExists() {
+        Game game = new Game();
+        Property property = Mockito.mock(Property.class);
+        game.startAuction(property);
+        Player player = new Player();
+        player.addBalance(200);
+        game.placeBid(player, 100);
+        game.finalizeAuction();
+        assertNull(game.getCurrentAuction(), "Auction should be reset to null after finalization");
+    }
 
 }

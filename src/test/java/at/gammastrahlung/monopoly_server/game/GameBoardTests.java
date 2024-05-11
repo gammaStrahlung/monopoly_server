@@ -97,4 +97,20 @@ class GameBoardTests {
         assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
         assertEquals(30, firstCard.getMoveToField());
     }
+    @Test
+    void testGetPropertyByIdValid() {
+        // Test for a valid property ID that exists on the board
+        int validPropertyId = 1; // Angenommen, dies ist eine gültige ID für "Mediterranean Avenue"
+        Property property = gameBoard.getPropertyById(validPropertyId);
+        assertNotNull(property, "Property should not be null for a valid ID.");
+        assertEquals(validPropertyId, property.getFieldId(), "Property ID should match the requested ID.");
+    }
+
+    @Test
+    void testGetPropertyByIdInvalid() {
+        // Test for an invalid property ID that does not exist on the board
+        int invalidPropertyId = 100; // Eine ID, die definitiv nicht auf dem Brett existiert
+        Property property = gameBoard.getPropertyById(invalidPropertyId);
+        assertNull(property, "Property should be null for an invalid ID.");
+    }
 }
