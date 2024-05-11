@@ -121,34 +121,47 @@ public class Game {
         if (currentPlayer.isInJail()) {
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
-                if(currentPlayer.getRoundsInJail() < 3){
-                    currentPlayer.incrementRoundsInJail();
-                }
-                else {
-                    // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
-                    currentPlayer.pay(GET_OUT_OF_JAIL_FINE);
-                    currentPlayer.releaseFromJail();
-                    currentPlayer.moveAvatar(currentFieldIndex, diceValue);
-
-                    // Check if player is entitled to bonus salary
-                    awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
-
-                    // Handle available actions according to the field the player lands on
-                    handleFieldAction(currentPlayer.getCurrentFieldIndex());
-                }
+                playerInJailNoDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
             } else {
-                // Player throws doubles, release them from jail and proceed with moving them
-                currentPlayer.releaseFromJail();
-                currentPlayer.moveAvatar(currentFieldIndex, diceValue);
-
-                // Check if player is entitled to bonus salary
-                awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
-
-                // Handle available actions according to the field the player lands on
-                handleFieldAction(currentPlayer.getCurrentFieldIndex());
+                playerInJailThrowsDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
             }
         } else {
-            // Player is not in jail, proceed with moving them
+            movePlayerNotInJail(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
+        }
+
+    }
+
+    private void movePlayerNotInJail(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
+        // Player is not in jail, proceed with moving them
+        currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+        // Check if player is entitled to bonus salary
+        awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+        // Handle available actions according to the field the player lands on
+        handleFieldAction(currentPlayer.getCurrentFieldIndex());
+    }
+
+    private void playerInJailThrowsDoubles(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
+        // Player throws doubles, release them from jail and proceed with moving them
+        currentPlayer.releaseFromJail();
+        currentPlayer.moveAvatar(currentFieldIndex, diceValue);
+
+        // Check if player is entitled to bonus salary
+        awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
+
+        // Handle available actions according to the field the player lands on
+        handleFieldAction(currentPlayer.getCurrentFieldIndex());
+    }
+
+    private void playerInJailNoDoubles(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
+        if(currentPlayer.getRoundsInJail() < 3){
+            currentPlayer.incrementRoundsInJail();
+        }
+        else {
+            // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
+            currentPlayer.pay(GET_OUT_OF_JAIL_FINE);
+            currentPlayer.releaseFromJail();
             currentPlayer.moveAvatar(currentFieldIndex, diceValue);
 
             // Check if player is entitled to bonus salary
@@ -157,7 +170,6 @@ public class Game {
             // Handle available actions according to the field the player lands on
             handleFieldAction(currentPlayer.getCurrentFieldIndex());
         }
-
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
