@@ -1,11 +1,15 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
+import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,7 +119,7 @@ class GameTests {
     }
 
     @Test
-    void awardBonusMoney(){
+    void awardBonusMoney() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
 
         game.join(player);
@@ -140,7 +144,7 @@ class GameTests {
     }
 
     @Test
-    void endPlayerTurn(){
+    void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
@@ -232,5 +236,54 @@ class GameTests {
         for (int i = 0; i < 5; i++) {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
+    }
+
+    @Test
+    void processRailroadPayment_NoOwner_Fails() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
+        Railroad railroad = mock(Railroad.class);
+        when(railroad.getOwner()).thenReturn(null);
+
+        assertFalse(game.processRailroadPayment(payer, railroad));
+    }
+
+    @Test
+    void processPropertyPayment_OwnerExistsAndNotPayer_SuccessfulPayment() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
+        Player owner = new Player(UUID.randomUUID(), "Owner", game, 50);
+        Property property = mock(Property.class);
+        when(property.getOwner()).thenReturn(owner);
+        when(property.getRentPrices()).thenReturn(Map.of(0, 20));
+
+        assertTrue(game.processPropertyPayment(payer, property));
+        assertEquals(80, payer.getBalance());
+        assertEquals(70, owner.getBalance());
+    }
+
+    @Test
+    void processUtilityPayment_OwnerExistsAndNotPayer_SuccessfulPayment() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
+        Player owner = new Player(UUID.randomUUID(), "Owner", game, 50);
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(owner);
+        when(utility.getToPay()).thenReturn(30);
+
+        assertTrue(game.processUtilityPayment(payer, utility));
+        assertEquals(70, payer.getBalance());
+        assertEquals(80, owner.getBalance());
+    }
+
+    @Test
+    void makePayment_InsufficientFunds() {
+        Game game = new Game();
+        Player from = new Player(UUID.randomUUID(), "From", game, 10);
+        Player to = new Player(UUID.randomUUID(), "To", game, 50);
+
+        assertFalse(game.makePayment(from, to, 20));
+        assertEquals(10, from.getBalance());
+        assertEquals(50, to.getBalance());
     }
 }

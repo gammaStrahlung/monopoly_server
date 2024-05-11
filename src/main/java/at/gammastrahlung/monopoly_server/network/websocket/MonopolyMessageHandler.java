@@ -12,12 +12,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import java.util.ArrayList;
 
 public class MonopolyMessageHandler {
 
-    private static final Gson gson =  new GsonBuilder()
+    private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(Field.class, new FieldSerializer())
             .excludeFieldsWithoutExposeAnnotation()
@@ -65,10 +66,11 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage,clientMessage.getPlayer());
+                case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage, clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
-                case "move_avatar" -> generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
+                case "move_avatar" ->
+                        generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -83,6 +85,7 @@ public class MonopolyMessageHandler {
         }
 
         WebSocketSender.sendToPlayers(response, receivers);
+
     }
 
     /**
@@ -129,11 +132,11 @@ public class MonopolyMessageHandler {
                     .build();
         else
             return ServerMessage.builder()
-                .type(ServerMessage.MessageType.SUCCESS)
-                .messagePath("join")
-                .jsonData(gson.toJson(game))
-                .player(player)
-                .build();
+                    .type(ServerMessage.MessageType.SUCCESS)
+                    .messagePath("join")
+                    .jsonData(gson.toJson(game))
+                    .player(player)
+                    .build();
     }
 
     /**
@@ -178,7 +181,8 @@ public class MonopolyMessageHandler {
 
     /**
      * Generates an update message based on the type of the updateObject
-     * @param messageType the type of the message
+     *
+     * @param messageType  the type of the message
      * @param updateObject The Object that should be updated
      * @return ServerMessage wih the given type and a updateType matching the type of the updateObject
      */
@@ -205,7 +209,7 @@ public class MonopolyMessageHandler {
         return message.build();
     }
 
-    private static ServerMessage rollDiceAndMoveCurrentPlayer(ClientMessage clientMessage, WebSocketPlayer player){
+    private static ServerMessage rollDiceAndMoveCurrentPlayer(ClientMessage clientMessage, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
         game.rollDiceAndMoveCurrentPlayer();
@@ -223,4 +227,48 @@ public class MonopolyMessageHandler {
 
         return initiateRound(player);
     }
-}
+
+    /**
+     * Initiates a payment transaction between two players.
+     * @param clientMessage The client message containing transaction details.
+     * @param session The WebSocket session of the initiating player.
+     * @return ServerMessage indicating the result of the transaction initiation.
+     */
+    public static ServerMessage initiatePayment(ClientMessage clientMessage, WebSocketSession session) {
+        WebSocketPlayer initiatingPlayer = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
+        if (initiatingPlayer == null) {
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Player not found")
+                    .build();
+        }
+
+        int paymentAmount;
+        try {
+            paymentAmount = Integer.parseInt(clientMessage.getMessage());
+        } catch (NumberFormatException e) {
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Invalid payment amount")
+                    .build();
+        }
+
+        WebSocketPlayer targetPlayer = WebSocketPlayer.getPlayerById(clientMessage.getTargetPlayerId());
+        if (targetPlayer == null) {
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Target player not found")
+                    .build();
+        }
+
+        return ServerMessage.builder()
+                .type(ServerMessage.MessageType.SUCCESS)
+                .jsonData("Payment initiation successful")
+                .build();
+    }
+
+    }
+
+
+
+
