@@ -1,16 +1,24 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.junit.platform.commons.logging.Logger;
+
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.mockito.Mockito;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,7 +27,7 @@ import static org.mockito.Mockito.*;
 class GameTests {
 
     private Game game;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameTests.class);
     private ArrayList<Player> players;
 
     @BeforeEach
@@ -286,4 +294,90 @@ class GameTests {
         assertEquals(10, from.getBalance());
         assertEquals(50, to.getBalance());
     }
+    @Test
+    void processRailroadPayment_AllOwnedBySamePlayer() {
+        Game game = new Game();
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
+        Railroad railroad = Mockito.mock(Railroad.class);
+
+        when(railroad.getOwner()).thenReturn(owner);
+        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 100));
+
+        // Simulate that the game board includes this railroad and it is owned by the owner
+        Field[] gameBoard = new Field[40];
+        gameBoard[5] = railroad;
+        game.getGameBoard().setGameBoard(gameBoard);
+
+        // The owner owns one railroad, hence "1RR" price is applicable
+        boolean result = game.processRailroadPayment(payer, railroad);
+
+        assertTrue(result);
+        assertEquals(400, payer.getBalance());
+        assertEquals(1600, owner.getBalance());  // Adjusted to reflect the correct expected balance after transaction
+    }
+
+
+
+
+
+    @Test
+    void processPropertyPayment_NoOwner() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
+        Property property = Mockito.mock(Property.class);
+        when(property.getOwner()).thenReturn(null);
+
+        boolean result = game.processPropertyPayment(payer, property);
+
+        assertFalse(result);
+        assertEquals(500, payer.getBalance());
+    }
+
+    @Test
+    void processUtilityPayment_Successful() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
+        Utility utility = Mockito.mock(Utility.class);
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 500);
+        when(utility.getOwner()).thenReturn(owner);
+        when(utility.getToPay()).thenReturn(100);
+
+        boolean result = game.processUtilityPayment(payer, utility);
+
+        assertTrue(result);
+        assertEquals(400, payer.getBalance());
+        assertEquals(600, owner.getBalance());
+    }
+
+    @Test
+    void processRailroadPayment_OwnerDoesNotExist() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
+        Railroad railroad = new Railroad(); // Kein Besitzer gesetzt
+
+        boolean result = game.processRailroadPayment(payer, railroad);
+
+        assertFalse(result);
+        assertEquals(500, payer.getBalance());
+    }
+
+
+
+    @Test
+    void processRailroadPayment_Failure_OwnerIsPayer() {
+        Game game = new Game();
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
+        Railroad railroad = Mockito.mock(Railroad.class);
+
+        when(railroad.getOwner()).thenReturn(owner);
+        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 100));
+
+        // Owner is also the payer
+        boolean result = game.processRailroadPayment(owner, railroad);
+
+        assertFalse(result);
+        assertEquals(1500, owner.getBalance()); // Balance remains unchanged since owner is paying to themselves
+    }
+
 }
