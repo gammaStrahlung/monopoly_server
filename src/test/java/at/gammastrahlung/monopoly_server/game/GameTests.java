@@ -240,7 +240,7 @@ class GameTests {
     void testProcessMortgage() {
         UUID playerId = UUID.randomUUID();
         Player player = new Player(playerId, "Test Player", null, 1000);
-        game.addPlayer(player);  // Correct way to add players
+        game.addPlayer(player);
 
         Property property = Property.builder()
                 .fieldId(1)
@@ -255,12 +255,19 @@ class GameTests {
                 .build();
         game.getGameBoard().getGameBoard()[1] = property;
 
+        // Test if mortgage is successful when conditions are met
         assertTrue(game.processMortgage(1, playerId));
         assertTrue(property.isMortgaged());
         assertEquals(1250, player.getBalance());
 
+        // Test if already mortgaged property cannot be mortgaged again
+        assertFalse(game.processMortgage(1, playerId));
+
+        // Test mortgage failure on property with buildings
+        property.setHouseCount(1);  // Assuming setHouseCount is a method that exists to modify house count
         assertFalse(game.processMortgage(1, playerId));
     }
+
 
     @Test
     void testRepayMortgage() {
@@ -282,13 +289,49 @@ class GameTests {
         property.setMortgaged(true);
         game.getGameBoard().getGameBoard()[1] = property;
 
+        // Test successful mortgage repayment
         assertTrue(game.repayMortgage(1, playerId));
         assertFalse(property.isMortgaged());
-        assertEquals(725, player.getBalance()); // Corrected balance after mortgage repayment
+        assertEquals(725, player.getBalance()); // Corrected balance after mortgage repayment with 10% interest
 
-        player.setBalance(50); // Set balance to an amount insufficient for repayment
-        assertFalse(game.repayMortgage(1, playerId)); // Verify that repayment fails with insufficient funds
+        // Test failure due to insufficient funds
+        player.setBalance(50);
+        assertFalse(game.repayMortgage(1, playerId));
+
+        // Adding a test where the property isn't mortgaged
+        property.setMortgaged(false);
+        assertFalse(game.repayMortgage(1, playerId));
     }
+    @Test
+    void testMortgageProperty() {
+        Player currentPlayer = new Player(UUID.randomUUID(), "Test Player", null, 1000);
+        game.addPlayer(currentPlayer);
+        game.setCurrentPlayerIndex(0); // Assuming the first player in the list is the current player
+
+        Property property = Property.builder()
+                .fieldId(1)
+                .name("Test Property")
+                .price(500)
+                .owner(currentPlayer)
+                .color(PropertyColor.BROWN)
+                .rentPrices(new HashMap<>())
+                .mortgageValue(250)
+                .houseCost(50)
+                .hotelCost(50)
+                .build();
+        game.getGameBoard().getGameBoard()[1] = property;
+
+        // Test successful mortgage
+        assertTrue(game.mortgageProperty(1));
+        assertTrue(property.isMortgaged());
+        System.out.println("Property mortgaged successfully.");
+
+        // Test failure due to property already mortgaged
+        assertFalse(game.mortgageProperty(1));
+        System.out.println("Failed to mortgage property.");
+    }
+
+
 
 
     @Test
