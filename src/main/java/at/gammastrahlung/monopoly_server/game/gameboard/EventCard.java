@@ -1,16 +1,15 @@
 package at.gammastrahlung.monopoly_server.game.gameboard;
 
+import at.gammastrahlung.monopoly_server.game.Game;
 import com.google.gson.annotations.Expose;
 
 import at.gammastrahlung.monopoly_server.game.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @SuperBuilder
 public class EventCard {
 
@@ -27,37 +26,82 @@ public class EventCard {
     private int moveToField;
 
 
-    public void applyAction(Player player, EventCard card) {  // implement in another issue
-        /*switch (cardType) {
+    public void applyAction(Player player, EventCard card, Game game) {
+        switch (card.getCardType()) {
             case GO_TO_JAIL:
+                player.goToJail();
                 break;
-
             case PAY_MONEY_CARD:
+                player.pay(card.getPayOrGetMoney());
                 break;
-
             case GET_MONEY_CARD:
+                player.addBalance(card.getPayOrGetMoney());
                 break;
-
             case MOVE_TO_FIELD:
-                break;
+                player.setCurrentFieldIndex(card.getMoveToField());
 
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
+                break;
             case MOVE_TO_RAILROAD:
-                break;
+                int nextRailroadIndex = findNextRailroadIndex(player.getCurrentFieldIndex());
+                player.setCurrentFieldIndex(nextRailroadIndex);
 
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
+                break;
             case STREET_REPAIRS:
+                //TODO Implement
                 break;
-
             case GET_OUT_OF_JAIL:
+                player.getOutOfJail();
                 break;
-
             case MOVE_TO_UTILITY:
-                break;
+                int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
+                player.setCurrentFieldIndex(nextUtilityIndex);
 
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
+                break;
             case MOVE_SPACES:
-                break;
+                player.moveAvatar(player.getCurrentFieldIndex(), -3);
 
+                // Handle actions on the field the player gets moved to
+                handleFieldAction(player, game);
+                break;
             default:
                 break;
-        }*/
+        }
     }
+
+    private static void handleFieldAction(Player player, Game game) {
+        game.handleFieldAction(player.getCurrentFieldIndex());
+    }
+
+    public int findNextRailroadIndex(int currentPosition) {
+        int[] railroadIndexes = {5, 15, 25, 35};
+
+        for (int index : railroadIndexes) {
+            // If the current position is less than the current railroad index
+            if (currentPosition < index) {
+                return index; // Return the next railroad index
+            }
+        }
+
+        // If the current position is beyond the last railroad index, return the first one
+        return railroadIndexes[0];
+    }
+
+    public int findNextUtilityIndex(int currentPosition) {
+        int[] utilityIndexes = {12, 28};
+        for (int index : utilityIndexes) {
+            if (index > currentPosition) {
+                return index;
+            }
+        }
+        return utilityIndexes[0]; // If no next utility index is found, return the current position
+    }
+
+
+
 }

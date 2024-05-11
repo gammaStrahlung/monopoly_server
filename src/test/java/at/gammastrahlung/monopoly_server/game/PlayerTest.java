@@ -82,21 +82,45 @@ class PlayerTest {
         player.moveAvatar(player.currentFieldIndex,46);
         assertEquals(13, player.getCurrentFieldIndex());
 
+        //test if avatar can move backwards
+        player.moveAvatar(player.getCurrentFieldIndex(), -3);
+        assertEquals(10, player.currentFieldIndex);
     }
 
     @Test
     void goToJailTest(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
-
+        player.setInJail(false);
         player.goToJail();
 
         assertTrue(player.isInJail);
     }
 
     @Test
-    void testIsInJailInitializedToFalse() {
+    void getOutOfJailTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        player.setInJail(true);
+        player.getOutOfJail();
+
+        assertFalse(player.isInJail);
+    }
+
+    @Test
+    void isInJailInitializedToFalseTest() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
         assertFalse(player.isInJail()); // Check if isInJail is initialized to false
+    }
+
+    @Test
+    void payTest(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.pay(30);
+        assertEquals(70, player.getBalance());
+
+        player.pay(100);
+        // assert that nothing happens since else branch is not yet impl
+        assertEquals(70, player.getBalance());
     }
 }
