@@ -349,4 +349,10 @@ public class Game {
         return success;
     }
 
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
+    }
+
+
 }

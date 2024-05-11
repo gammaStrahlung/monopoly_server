@@ -1,12 +1,14 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.lang.reflect.Method;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -233,4 +235,78 @@ class GameTests {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
     }
+
+    @Test
+    void testProcessMortgage() {
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player(playerId, "Test Player", null, 1000);
+        game.addPlayer(player);  // Correct way to add players
+
+        Property property = Property.builder()
+                .fieldId(1)
+                .name("Test Property")
+                .price(500)
+                .owner(player)
+                .color(PropertyColor.BROWN)
+                .rentPrices(new HashMap<>())
+                .mortgageValue(250)
+                .houseCost(50)
+                .hotelCost(50)
+                .build();
+        game.getGameBoard().getGameBoard()[1] = property;
+
+        assertTrue(game.processMortgage(1, playerId));
+        assertTrue(property.isMortgaged());
+        assertEquals(1250, player.getBalance());
+
+        assertFalse(game.processMortgage(1, playerId));
+    }
+
+    @Test
+    void testRepayMortgage() {
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player(playerId, "Test Player", null, 1000);
+        game.addPlayer(player);
+
+        Property property = Property.builder()
+                .fieldId(1)
+                .name("Test Property")
+                .price(500)
+                .owner(player)
+                .color(PropertyColor.BROWN)
+                .rentPrices(new HashMap<>())
+                .mortgageValue(250)
+                .houseCost(50)
+                .hotelCost(50)
+                .build();
+        property.setMortgaged(true);
+        game.getGameBoard().getGameBoard()[1] = property;
+
+        assertTrue(game.repayMortgage(1, playerId));
+        assertFalse(property.isMortgaged());
+        assertEquals(725, player.getBalance()); // Corrected balance after mortgage repayment
+
+        player.setBalance(50); // Set balance to an amount insufficient for repayment
+        assertFalse(game.repayMortgage(1, playerId)); // Verify that repayment fails with insufficient funds
+    }
+
+
+    @Test
+    void testPlayerRetrievalUsingReflection() {
+        UUID playerId = UUID.randomUUID();
+        Player player = new Player(playerId, "Test Player", null, 1000);
+        game.addPlayer(player);
+
+        try {
+            Method getPlayerById = Game.class.getDeclaredMethod("getPlayerById", UUID.class);
+            getPlayerById.setAccessible(true); // Make the method accessible
+
+            Player retrievedPlayer = (Player) getPlayerById.invoke(game, playerId);
+            assertNotNull(retrievedPlayer);
+            assertEquals(playerId, retrievedPlayer.getId());
+        } catch (Exception e) {
+            fail("Reflection to access getPlayerById failed", e);
+        }
+    }
+
 }
