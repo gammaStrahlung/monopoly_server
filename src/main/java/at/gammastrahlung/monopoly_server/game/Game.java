@@ -1,21 +1,20 @@
 package at.gammastrahlung.monopoly_server.game;
-
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import com.google.gson.annotations.Expose;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
 @Getter
 @Setter
-@AllArgsConstructor
+
 public class Game {
+
+
     // Game configuration
     private static final int MIN_GAME_ID = 100000;
     private static final int MAX_GAME_ID = 999999;
@@ -114,7 +113,7 @@ public class Game {
         }
     }
 
-    public void rollDiceAndMoveCurrentPlayer(){
+    public void rollDiceAndMoveCurrentPlayer() {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
@@ -129,13 +128,13 @@ public class Game {
         handleFieldAction(currentPlayer.getCurrentFieldIndex());
     }
 
-    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
-        if(nextFieldIndex < currentFieldIndex && nextFieldIndex > 0){
+    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer) {
+        if (nextFieldIndex < currentFieldIndex && nextFieldIndex > 0) {
             currentPlayer.addBalance(BONUS_MONEY);
         }
     }
 
-    public void endCurrentPlayerTurn(){
+    public void endCurrentPlayerTurn() {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
     }
 
@@ -222,12 +221,13 @@ public class Game {
         }
     }
 
-     private void initializeGameBoard() {
+    private void initializeGameBoard() {
         // Initialize the game board
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
     }
+
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(players);
     }
@@ -249,6 +249,7 @@ public class Game {
          */
         ENDED
     }
+
     // Starts a new auction for a specific property
     public void startAuction(Property auctionProperty) {
         currentAuction = new AuctionSystem(auctionProperty, new AuctionSystem.AuctionEventListener() {
@@ -292,7 +293,8 @@ public class Game {
 
     /**
      * Notifies a single player with a message.
-     * @param player The player to notify.
+     *
+     * @param player  The player to notify.
      * @param message The message to send.
      */
     private void notifyPlayer(Player player, String message) {
@@ -302,6 +304,7 @@ public class Game {
 
     /**
      * Notifies all players with a given message.
+     *
      * @param message The message to broadcast to all players.
      */
     private void notifyPlayers(String message) {

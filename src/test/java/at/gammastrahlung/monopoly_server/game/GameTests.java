@@ -2,6 +2,7 @@ package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,8 @@ class GameTests {
 
     @BeforeEach
     public void initialize() {
+
+
         game = new Game();
 
         // Create Mock players
@@ -117,7 +120,7 @@ class GameTests {
     }
 
     @Test
-    void awardBonusMoney(){
+    void awardBonusMoney() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
 
         game.join(player);
@@ -142,7 +145,7 @@ class GameTests {
     }
 
     @Test
-    void endPlayerTurn(){
+    void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
@@ -235,6 +238,7 @@ class GameTests {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
     }
+
     @Test
     void testSetterAndGetters() {
         Game game = new Game();
@@ -285,7 +289,6 @@ class GameTests {
     }
 
 
-
     @Test
     void testGameEnd() {
         game.join(players.get(0));
@@ -311,8 +314,29 @@ class GameTests {
 
     @Test
     void testGameInitialization() {
-        assertNotNull(game.getGameId(), "Game ID should be initialized");
-        assertEquals(Game.GameState.STARTED, game.getState(), "Initial game state should be STARTED");
+        assertTrue(game.getGameId() != 0, "Game ID should be initialized and not be default value.");
+        assertEquals(Game.GameState.STARTED, game.getState(), "Initial game state should be STARTED.");
+    }
+
+    @Test
+    void ensureUniqueGameId() {
+        Game game1 = new Game();
+        Game game2 = new Game();
+        assertNotEquals(game1.getGameId(), game2.getGameId(), "Each game should have a unique game ID.");
+    }
+
+    @Test
+    void startAuctionUpdates() {
+        Game game = new Game();
+        Property property = new Property();
+        game.startAuction(property);
+        assertNotNull(game.getCurrentAuction(), "Starting an auction should set current auction to non-null.");
+    }
+
+    @Test
+    void placeBidWithNoActiveAuction() {
+        Game game = new Game();
+        assertFalse(game.placeBid(new Player(), 100), "Placing a bid with no active auction should return false.");
     }
 
 

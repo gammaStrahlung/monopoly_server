@@ -58,7 +58,7 @@ public class Player {
 
     // decreases player balance - balance can also gio into the negatives
     public synchronized void subtractBalance(int amount) {
-            this.balance -= amount;
+        this.balance -= amount;
     }
 
 
@@ -70,10 +70,10 @@ public class Player {
     public void update(Player player) {
         // will get implemented in next sprint
     }
-  
+
     @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof Player))
+        if (!(obj instanceof Player))
             return false;
         return id.equals(((Player) obj).id);
     }
@@ -85,18 +85,18 @@ public class Player {
 
     /**
      * Updates currentFieldIndex by the diced value
-     * @param currentFieldIndex field on which the player is currently positioned
-     * @param value how far the player may move forward
      *
+     * @param currentFieldIndex field on which the player is currently positioned
+     * @param value             how far the player may move forward
      */
-    public void moveAvatar(int currentFieldIndex, int value){
+    public void moveAvatar(int currentFieldIndex, int value) {
         this.currentFieldIndex = (currentFieldIndex + value) % 40;
     }
 
     /**
      * Updates isInJail to true
      */
-    public void goToJail(){
+    public void goToJail() {
         this.isInJail = true;
     }
 }
