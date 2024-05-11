@@ -1,12 +1,14 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -233,4 +235,85 @@ class GameTests {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
     }
+    @Test
+    void testSetterAndGetters() {
+        Game game = new Game();
+        Dice dice = new Dice();
+        game.setDice(dice);
+        assertEquals(dice, game.getDice(), "The setter or getter for dice is not functioning properly.");
+    }
+
+    @Test
+    void testUniqueGameIdGeneration() {
+        Set<Integer> gameIds = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            Game game = new Game();
+            gameIds.add(game.getGameId());
+        }
+        assertEquals(100, gameIds.size(), "Game IDs are not unique.");
+    }
+
+
+    @Test
+    void testUniqueIdGeneration() {
+        Set<Integer> ids = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            Game game = new Game();
+            ids.add(game.getGameId());
+        }
+        assertEquals(100, ids.size(), "Game IDs should be unique across multiple instantiations.");
+    }
+
+    @Test
+    void testGameLoopIdUniqueness() {
+        Game game = new Game();
+        int initialGameId = game.getGameId();
+        while (true) {
+            game = new Game();
+            if (game.getGameId() != initialGameId) {
+                break;
+            }
+        }
+        assertNotEquals(initialGameId, game.getGameId(), "Game ID should eventually be unique after re-instantiation.");
+    }
+
+    @Test
+    void testStartAuction() {
+        Property property = new Property();  // Assume you have a constructor or a setup method
+        game.startAuction(property);
+        assertNotNull(game.getCurrentAuction(), "Auction should be initialized");
+    }
+
+
+
+    @Test
+    void testGameEnd() {
+        game.join(players.get(0));
+        game.setGameOwner(players.get(0));
+        game.endGame(players.get(0));
+        assertEquals(Game.GameState.ENDED, game.getState(), "Game should be set to ENDED state");
+        assertTrue(game.getPlayers().isEmpty(), "Players list should be cleared after game ends");
+    }
+
+    @Test
+    void testInvalidGameStartByNonOwner() {
+        game.join(players.get(0));
+        game.join(players.get(1)); // Player 1 is not the owner
+        assertFalse(game.startGame(players.get(1)), "Non-owner should not be able to start the game");
+    }
+
+    @Test
+    void testPlayerRejoin() {
+        game.join(players.get(0));
+        game.startGame(players.get(0));
+        assertTrue(game.join(players.get(0)), "Player should be able to re-join the game");
+    }
+
+    @Test
+    void testGameInitialization() {
+        assertNotNull(game.getGameId(), "Game ID should be initialized");
+        assertEquals(Game.GameState.STARTED, game.getState(), "Initial game state should be STARTED");
+    }
+
+
 }
