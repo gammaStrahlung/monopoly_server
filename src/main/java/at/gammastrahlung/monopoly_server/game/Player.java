@@ -120,6 +120,7 @@ public class Player {
 
     public void releaseFromJail() {
         this.isInJail = false;
+        this.roundsInJail = 0;
     }
 
     public void incrementRoundsInJail() {
