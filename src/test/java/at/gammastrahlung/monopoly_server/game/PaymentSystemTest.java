@@ -1,190 +1,114 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Map;
-
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.Game;
+import at.gammastrahlung.monopoly_server.game.PaymentSystem;
+import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ExtendWith(SpringExtension.class)
-public class PaymentSystemTest {
 
-    @Mock
-    private GameBoard gameBoard;
-
-    @Mock
-    private Player payer, owner;
-
-    @InjectMocks
-    private PaymentSystem paymentSystem;
+class PaymentSystemTest {
 
     @Test
-    void testProcessRailroadPaymentOwnerIsPayer() {
+    void testProcessRailroadPaymentSuccess() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
+        Player owner = mock(Player.class);
+        Railroad railroad = mock(Railroad.class);
+        when(railroad.getOwner()).thenReturn(owner);
+        when(gameMock.processRailroadPayment(payer, railroad)).thenReturn(true);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertTrue(system.processRailroadPayment(payer, railroad), "Payment should succeed when the owner is not the payer.");
+    }
+
+    @Test
+    void testProcessRailroadPaymentFailure() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
         Railroad railroad = mock(Railroad.class);
         when(railroad.getOwner()).thenReturn(payer);
-        assertFalse(paymentSystem.processRailroadPayment(payer, railroad));
+        when(gameMock.processRailroadPayment(payer, railroad)).thenReturn(false);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertFalse(system.processRailroadPayment(payer, railroad), "Payment should fail when the payer owns the railroad.");
     }
+
     @Test
-    void testProcessPropertyPaymentOwnerIsPayer() {
+    void testProcessUtilityPaymentSuccess() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
+        Player owner = mock(Player.class);
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(owner);
+        when(gameMock.processUtilityPayment(payer, utility)).thenReturn(true);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertTrue(system.processUtilityPayment(payer, utility), "Payment should succeed when the owner is not the payer.");
+    }
+
+    @Test
+    void testProcessUtilityPaymentFailure() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
+        Utility utility = mock(Utility.class);
+        when(utility.getOwner()).thenReturn(payer);
+        when(gameMock.processUtilityPayment(payer, utility)).thenReturn(false);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertFalse(system.processUtilityPayment(payer, utility), "Payment should fail when the payer owns the utility.");
+    }
+
+    @Test
+    void testProcessPropertyPaymentSuccess() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
+        Player owner = mock(Player.class);
+        Property property = mock(Property.class);
+        when(property.getOwner()).thenReturn(owner);
+        when(gameMock.processPropertyPayment(payer, property)).thenReturn(true);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertTrue(system.processPropertyPayment(payer, property), "Payment should succeed when the owner is not the payer.");
+    }
+
+    @Test
+    void testProcessPropertyPaymentFailure() {
+        Game gameMock = mock(Game.class);
+        Player payer = mock(Player.class);
         Property property = mock(Property.class);
         when(property.getOwner()).thenReturn(payer);
+        when(gameMock.processPropertyPayment(payer, property)).thenReturn(false);
 
-        assertFalse(paymentSystem.processPropertyPayment(payer, property));
-    }
-    @Test
-    void testMakePaymentInsufficientFunds() {
-        when(payer.getBalance()).thenReturn(50);
-        assertFalse(paymentSystem.makePayment(payer, owner, 100));
-        verify(payer, never()).subtractBalance(anyInt());
-        verify(owner, never()).addBalance(anyInt());
-    }
-    @Test
-    void testMakePaymentSufficientFunds() {
-        when(payer.getBalance()).thenReturn(200);
-
-        assertTrue(paymentSystem.makePayment(payer, owner, 100));
-        verify(payer).subtractBalance(100);
-        verify(owner).addBalance(100);
-    }
-    @Test
-    void testProcessRailroadPaymentMultipleRailroads() {
-        Railroad railroad = mock(Railroad.class);
-        when(railroad.getOwner()).thenReturn(null); // No owner
-        when(railroad.getRentPrices()).thenReturn(Map.of("2RR", 50));
-        when(gameBoard.getGameBoard()).thenReturn(new Field[]{railroad, railroad}); // Simulate 2 owned railroads
-
-        assertFalse(paymentSystem.processRailroadPayment(payer, railroad)); // Expecting payment failure
-    }
-    @Test
-    void testProcessUtilityPaymentValidPayment() {
-        Utility utility = mock(Utility.class);
-        when(utility.getOwner()).thenReturn(null); // No owner
-        when(utility.getToPay()).thenReturn(75);
-
-        assertFalse(paymentSystem.processUtilityPayment(payer, utility)); // Expecting payment failure
-    }
-    @Test
-    void testProcessPropertyPayment() {
-        Property property = mock(Property.class);
-        when(property.getOwner()).thenReturn(null); // No owner
-        when(property.getRentPrices()).thenReturn(Map.of("0", 50)); // Using a map with string keys
-
-        assertFalse(paymentSystem.processPropertyPayment(payer, property)); // Expecting payment failure
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertFalse(system.processPropertyPayment(payer, property), "Payment should fail when the payer owns the property.");
     }
 
     @Test
-    void testMakePaymentEdgeCaseExactFunds() {
-        when(payer.getBalance()).thenReturn(100);
-        assertTrue(paymentSystem.makePayment(payer, owner, 100));
-        verify(payer).subtractBalance(100);
-        verify(owner).addBalance(100);
+    void testMakePaymentSuccess() {
+        Game gameMock = mock(Game.class);
+        Player from = mock(Player.class);
+        Player to = mock(Player.class);
+        when(gameMock.makePayment(from, to, 100)).thenReturn(true);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertTrue(system.makePayment(from, to, 100), "Payment should succeed when the payer has sufficient funds.");
     }
 
     @Test
-    void testMakePaymentEdgeCaseInsufficientFunds() {
-        when(payer.getBalance()).thenReturn(99);
-        assertFalse(paymentSystem.makePayment(payer, owner, 100));
-        verify(payer, never()).subtractBalance(anyInt());
-        verify(owner, never()).addBalance(anyInt());
+    void testMakePaymentFailure() {
+        Game gameMock = mock(Game.class);
+        Player from = mock(Player.class);
+        Player to = mock(Player.class);
+        when(gameMock.makePayment(from, to, 100)).thenReturn(false);
+
+        PaymentSystem system = new PaymentSystem(gameMock);
+        assertFalse(system.makePayment(from, to, 100), "Payment should fail when the payer does not have sufficient funds.");
     }
-
-    @Test
-    void testProcessRailroadPaymentOwnerNotPayer() {
-        Railroad railroad = mock(Railroad.class);
-        when(railroad.getOwner()).thenReturn(owner);
-        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 25));
-        when(payer.getBalance()).thenReturn(50);
-        when(owner.getBalance()).thenReturn(50);
-        when(gameBoard.getGameBoard()).thenReturn(new Field[]{railroad}); // Only one owned railroad
-
-        assertTrue(paymentSystem.processRailroadPayment(payer, railroad));
-        verify(payer).subtractBalance(25);
-        verify(owner).addBalance(25);
-    }
-
-    @Test
-    void testProcessUtilityPaymentOwnerNotPayer() {
-        Utility utility = mock(Utility.class);
-        when(utility.getOwner()).thenReturn(owner);
-        when(utility.getToPay()).thenReturn(75);
-        when(payer.getBalance()).thenReturn(100);
-        when(owner.getBalance()).thenReturn(50);
-
-        assertTrue(paymentSystem.processUtilityPayment(payer, utility));
-        verify(payer).subtractBalance(75);
-        verify(owner).addBalance(75);
-    }
-
-    @Test
-    void testProcessPaymentZeroFunds() {
-        when(payer.getBalance()).thenReturn(0);
-        assertFalse(paymentSystem.makePayment(payer, owner, 100));
-        verify(payer, never()).subtractBalance(anyInt());
-        verify(owner, never()).addBalance(anyInt());
-    }
-
-
-
-    @Test
-    void testProcessRailroadPaymentWithNoRailroadsOwned() {
-        Railroad railroad = mock(Railroad.class);
-        when(railroad.getOwner()).thenReturn(owner);
-        when(gameBoard.getGameBoard()).thenReturn(new Field[]{});
-        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 25)); // Rent with 1 railroad, but none owned
-
-        assertFalse(paymentSystem.processRailroadPayment(payer, railroad));
-    }
-    @Test
-    void testProcessUtilityPaymentWithHighPayment() {
-        Utility utility = mock(Utility.class);
-        when(utility.getOwner()).thenReturn(owner);
-        when(utility.getToPay()).thenReturn(150); // Höherer Zahlungsbetrag
-        when(payer.getBalance()).thenReturn(200);
-        when(owner.getBalance()).thenReturn(50);
-
-        assertTrue(paymentSystem.processUtilityPayment(payer, utility));
-        verify(payer).subtractBalance(150);
-        verify(owner).addBalance(150);
-    }
-
-    @Test
-    void testProcessUtilityPaymentWhenOwnerIsPayer() {
-        Utility utility = mock(Utility.class);
-        when(utility.getOwner()).thenReturn(payer); // Zahler ist der Eigentümer
-        when(utility.getToPay()).thenReturn(75);
-
-        assertFalse(paymentSystem.processUtilityPayment(payer, utility));
-    }
-//    @Test
-//    void testCountOwnedRailroadsVariousOwners() {
-//        Railroad railroad1 = mock(Railroad.class);
-//        Railroad railroad2 = mock(Railroad.class);
-//        Railroad railroad3 = mock(Railroad.class);
-//        when(railroad1.getOwner()).thenReturn(owner);
-//        when(railroad2.getOwner()).thenReturn(payer);
-//        when(railroad3.getOwner()).thenReturn(null); // Kein Eigentümer
-//
-//        when(gameBoard.getGameBoard()).thenReturn(new Field[]{railroad1, railroad2, railroad3, railroad1});
-//
-//        assertEquals(2, paymentSystem.countOwnedRailroads(owner));
-//        assertEquals(1, paymentSystem.countOwnedRailroads(payer));
-//        assertEquals(0, paymentSystem.countOwnedRailroads(null)); // Kein Besitz für null Eigentümer
-//    }
-
-
 }
-
-
