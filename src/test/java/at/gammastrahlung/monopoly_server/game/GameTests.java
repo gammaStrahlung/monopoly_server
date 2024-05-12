@@ -1,12 +1,13 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
+import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -315,5 +316,61 @@ class GameTests {
         for (int i = 0; i < 5; i++) {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
+    }
+
+
+    @Test
+    void testProcessPropertyPayment_PropertyWithHouses_ShouldChargeCorrectRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
+        Property property = new Property();
+        property.setOwner(owner);
+        property.setHouseCount(3);
+        Map<Object, Integer> rentPrices = new HashMap<>();
+        rentPrices.put(3, 300);
+        property.setRentPrices(rentPrices);
+        game.getGameBoard().getGameBoard()[3] = property;
+
+        boolean result = game.processPropertyPayment(payer, property);
+        assertTrue(result, "Payment should succeed when payer has enough balance.");
+        assertEquals(1200, payer.getBalance(), "Payer's balance should be decremented by rent amount.");
+        assertEquals(1800, owner.getBalance(), "Owner's balance should be incremented by rent amount.");
+    }
+
+
+
+    @Test
+    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Railroad railroad = new Railroad();
+        railroad.setOwner(null);
+
+        boolean result = game.processRailroadPayment(payer, railroad);
+        assertFalse(result, "Payment should fail when railroad is not owned.");
+        assertEquals(1500, payer.getBalance(), "Payer's balance should remain unchanged.");
+    }
+
+    @Test
+    void testProcessPropertyPayment_UnownedProperty_ShouldNotChargeRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Property property = new Property();
+        property.setOwner(null);
+
+        boolean result = game.processPropertyPayment(payer, property);
+        assertFalse(result, "Payment should fail when property is not owned.");
+        assertEquals(1500, payer.getBalance(), "Payer's balance should remain unchanged.");
+    }
+
+    @Test
+    void testMakePayment_InsufficientFunds_ShouldNotTransferMoney() {
+        Game game = new Game();
+        Player from = new Player(UUID.randomUUID(), "Debtor", null, 100);
+        Player to = new Player(UUID.randomUUID(), "Creditor", null, 1500);
+        assertFalse(game.makePayment(from, to, 200), "Payment should fail if from player has insufficient funds.");
+        assertEquals(100, from.getBalance(), "Debtor's balance should remain unchanged due to insufficient funds.");
+        assertEquals(1500, to.getBalance(), "Creditor's balance should remain unchanged.");
     }
 }

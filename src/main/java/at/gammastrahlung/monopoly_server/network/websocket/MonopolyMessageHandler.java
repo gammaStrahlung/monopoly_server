@@ -3,8 +3,7 @@ package at.gammastrahlung.monopoly_server.network.websocket;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
@@ -98,6 +97,7 @@ public class MonopolyMessageHandler {
 
         // Create a new game
         Game game = new Game();
+        player.setBalance(1500);
 
         // Player that creates the game should also join the game
         game.join(player);
@@ -124,13 +124,16 @@ public class MonopolyMessageHandler {
         Game game = Game.joinByGameId(gameId, player);
 
         // Joining the game was unsuccessful
-        if (game == null)
-            return ServerMessage.builder()
-                    .type(ServerMessage.MessageType.ERROR)
-                    .messagePath("join")
-                    .player(player)
-                    .build();
-        else
+        if (game == null){
+            if (!game.getPlayers().contains(player)) {
+                player.setBalance(1500);
+            }
+        return ServerMessage.builder()
+                .type(ServerMessage.MessageType.ERROR)
+                .messagePath("join")
+                .player(player)
+                .build();
+    } else
             return ServerMessage.builder()
                     .type(ServerMessage.MessageType.SUCCESS)
                     .messagePath("join")
@@ -266,8 +269,59 @@ public class MonopolyMessageHandler {
                 .jsonData("Payment initiation successful")
                 .build();
     }
+    public static ServerMessage handlePayment(ClientMessage clientMessage, WebSocketSession session) {
+        WebSocketPlayer player = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
+        if (player == null) {
+            return ServerMessage.builder()
+                    .messagePath("payment")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Player not found")
+                    .build();
+        }
 
+        // Extract payment details from clientMessage
+        String targetFieldIdString = clientMessage.getMessage();
+        int targetFieldId;
+        try {
+            targetFieldId = Integer.parseInt(targetFieldIdString);
+        } catch (NumberFormatException e) {
+            return ServerMessage.builder()
+                    .messagePath("payment")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Invalid field ID")
+                    .build();
+        }
+
+        Field targetField = player.getCurrentGame().getGameBoard().getGameBoard()[targetFieldId];
+        boolean paymentResult = false;
+
+        // Check the type of the field and process payment accordingly
+        if (targetField instanceof Railroad) {
+            paymentResult = player.getCurrentGame().processRailroadPayment(player, (Railroad) targetField);
+        } else if (targetField instanceof Property) {
+            paymentResult = player.getCurrentGame().processPropertyPayment(player, (Property) targetField);
+        } else if (targetField instanceof Utility) {
+            paymentResult = player.getCurrentGame().processUtilityPayment(player, (Utility) targetField);
+        }
+
+        // Create response message based on the result of the payment
+        if (paymentResult) {
+            return ServerMessage.builder()
+                    .messagePath("payment")
+                    .type(ServerMessage.MessageType.SUCCESS)
+                    .jsonData("Payment processed successfully")
+                    .build();
+        } else {
+            return ServerMessage.builder()
+                    .messagePath("payment")
+                    .type(ServerMessage.MessageType.ERROR)
+                    .jsonData("Payment failed")
+                    .build();
+        }
     }
+
+
+}
 
 
 
