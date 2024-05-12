@@ -69,4 +69,7 @@ public class WebSocketPlayer extends Player {
     public static WebSocketPlayer getPlayerByWebSocketSessionID(String webSocketSessionId) {
         return players.get(webSocketSessionId);
     }
-}
+
+    public static WebSocketPlayer getPlayerById(String id) {
+        return players.get(id);
+}}

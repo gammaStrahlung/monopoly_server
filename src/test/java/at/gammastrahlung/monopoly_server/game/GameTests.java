@@ -1,12 +1,24 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
+import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.mockito.Mockito.*;
+
+
 import java.util.UUID;
+
+import at.gammastrahlung.monopoly_server.game.*;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -198,7 +210,7 @@ class GameTests {
     }
 
     @Test
-    void awardBonusMoney(){
+    void awardBonusMoney() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
 
         game.join(player);
@@ -223,7 +235,7 @@ class GameTests {
     }
 
     @Test
-    void endPlayerTurn(){
+    void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
@@ -316,4 +328,110 @@ class GameTests {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
     }
+
+
+    @Test
+    void testProcessPropertyPayment_PropertyWithHouses_ShouldChargeCorrectRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
+        Property property = new Property();
+        property.setOwner(owner);
+        property.setHouseCount(3);
+        Map<Object, Integer> rentPrices = new HashMap<>();
+        rentPrices.put(3, 300);
+        property.setRentPrices(rentPrices);
+        game.getGameBoard().getGameBoard()[3] = property;
+
+        boolean result = game.processPropertyPayment(payer, property);
+        assertTrue(result, "Payment should succeed when payer has enough balance.");
+        assertEquals(1200, payer.getBalance(), "Payer's balance should be decremented by rent amount.");
+        assertEquals(1800, owner.getBalance(), "Owner's balance should be incremented by rent amount.");
+    }
+
+
+    @Test
+    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Railroad railroad = new Railroad();
+        railroad.setOwner(null);
+
+        boolean result = game.processRailroadPayment(payer, railroad);
+        assertFalse(result, "Payment should fail when railroad is not owned.");
+        assertEquals(1500, payer.getBalance(), "Payer's balance should remain unchanged.");
+    }
+
+    @Test
+    void testProcessPropertyPayment_UnownedProperty_ShouldNotChargeRent() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
+        Property property = new Property();
+        property.setOwner(null);
+
+        boolean result = game.processPropertyPayment(payer, property);
+        assertFalse(result, "Payment should fail when property is not owned.");
+        assertEquals(1500, payer.getBalance(), "Payer's balance should remain unchanged.");
+    }
+
+    @Test
+    void testMakePayment_InsufficientFunds_ShouldNotTransferMoney() {
+        Game game = new Game();
+        Player from = new Player(UUID.randomUUID(), "Debtor", null, 100);
+        Player to = new Player(UUID.randomUUID(), "Creditor", null, 1500);
+        assertFalse(game.makePayment(from, to, 200), "Payment should fail if from player has insufficient funds.");
+        assertEquals(100, from.getBalance(), "Debtor's balance should remain unchanged due to insufficient funds.");
+        assertEquals(1500, to.getBalance(), "Creditor's balance should remain unchanged.");
+    }
+
+
+    @Test
+    void testInitializePlayersBalance() {
+        Game game = new Game();
+        game.join(new Player(UUID.randomUUID(), "Player1", game, 0));
+        game.join(new Player(UUID.randomUUID(), "Player2", game, 0));
+        game.initializePlayersBalance();
+
+        for (Player player : game.getPlayers()) {
+            assertEquals(1500, player.getBalance(), "Each player should have a balance initialized to $1500.");
+        }
+    }
+
+    @Test
+    public void testProcessRailroadPayment_OwnerAndNotOwner() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
+        Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
+        Railroad railroad = new Railroad();
+        railroad.setOwner(owner);
+        // Mock the method to return 2 railroads owned by the owner
+        game.getGameBoard().getGameBoard()[5] = railroad; // Assuming index 5 is a Railroad
+        game.getGameBoard().getGameBoard()[15] = railroad; // Assuming index 15 is also owned by the same owner
+
+        assertTrue(game.processRailroadPayment(payer, railroad));
+        // Validate that the payer's balance was deducted by the correct rent amount
+        assertEquals(1450, payer.getBalance());
+
+        railroad.setOwner(null);
+        assertFalse(game.processRailroadPayment(payer, railroad));
+    }
+    @Test
+    public void testProcessUtilityPayment_OwnerAndNotOwner() {
+        Game game = new Game();
+        Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
+        Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
+        Utility utility = Utility.builder()
+                .owner(owner)
+                .toPay(100)
+                .build();
+
+        assertTrue(game.processUtilityPayment(payer, utility));
+        // Validate that the payer's balance was deducted by the correct payment amount
+        assertEquals(1400, payer.getBalance());
+
+        utility.setOwner(null);
+        assertFalse(game.processUtilityPayment(payer, utility));
+    }
+
+
 }

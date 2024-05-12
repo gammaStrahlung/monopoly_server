@@ -94,4 +94,33 @@ class WebSocketPlayerTest {
         assertNull(p.getWebSocketSession());
         assertNull(WebSocketPlayer.getPlayerByWebSocketSessionID(webSocketSession.getId()));
     }
+
+    @Test
+    void getPlayerById_PlayerExists() {
+        // Setup
+        UUID playerId = UUID.randomUUID();
+        WebSocketSession session = Mockito.mock(WebSocketSession.class);
+        Mockito.when(session.getId()).thenReturn("session1");
+        WebSocketPlayer player = new WebSocketPlayer(playerId, "Test Player", null, session);
+        player.setWebSocketSession(session);  // This adds the player to the map
+
+        // Action
+        WebSocketPlayer result = WebSocketPlayer.getPlayerById(session.getId());
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(player, result);
+
+        // Cleanup
+        player.setWebSocketSession(null);  // Removes the player from the map
+    }
+
+    @Test
+    void getPlayerById_PlayerDoesNotExist() {
+        // Action
+        WebSocketPlayer result = WebSocketPlayer.getPlayerById("nonexistent");
+
+        // Assert
+        assertNull(result);
+    }
 }
