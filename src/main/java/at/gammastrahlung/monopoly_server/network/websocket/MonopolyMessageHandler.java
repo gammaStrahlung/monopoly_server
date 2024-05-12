@@ -119,28 +119,28 @@ public class MonopolyMessageHandler {
      * else ServerMessage has MessageType ERROR.
      */
     public static ServerMessage joinGame(int gameId, WebSocketPlayer player) {
+        player.setBalance(1500);
 
         // Try to join the game
         Game game = Game.joinByGameId(gameId, player);
 
         // Joining the game was unsuccessful
-        if (game == null){
-            if (!game.getPlayers().contains(player)) {
-                player.setBalance(1500);
-            }
-        return ServerMessage.builder()
-                .type(ServerMessage.MessageType.ERROR)
-                .messagePath("join")
-                .player(player)
-                .build();
-    } else
+        if (game == null) {
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .messagePath("join")
+                    .player(player)
+                    .build();
+        } else {
             return ServerMessage.builder()
                     .type(ServerMessage.MessageType.SUCCESS)
                     .messagePath("join")
                     .jsonData(gson.toJson(game))
                     .player(player)
                     .build();
+        }
     }
+
 
     /**
      * Called by the client to start the current game
