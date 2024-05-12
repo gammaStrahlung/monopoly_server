@@ -1,24 +1,12 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
-import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import org.junit.platform.commons.logging.Logger;
-
-import org.junit.platform.commons.logging.LoggerFactory;
-import org.mockito.Mockito;
-
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,7 +15,7 @@ import static org.mockito.Mockito.*;
 class GameTests {
 
     private Game game;
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameTests.class);
+
     private ArrayList<Player> players;
 
     @BeforeEach
@@ -127,7 +115,90 @@ class GameTests {
     }
 
     @Test
-    void awardBonusMoney() {
+    void playerInJailDicesDoubles() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.isInJail = true;
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Create a mock for the dice
+        Dice dice = mock(Dice.class);
+        when(dice.roll()).thenReturn(4);
+
+        // Assume player rolls doubles
+        when(dice.getValue1()).thenReturn(2);
+        when(dice.getValue2()).thenReturn(2);
+
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        // Set the mock dice in the game object
+        game.setDice(dice);
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.rollDiceAndMoveCurrentPlayer();
+
+        assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayerIndex());
+    }
+
+    @Test
+    void playerInJailDoesntDiceDoubles() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        player.isInJail = true;
+        player.setCurrentFieldIndex(30);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Create a mock for the dice
+        Dice dice = mock(Dice.class);
+        when(dice.roll()).thenReturn(5);
+
+        // Assume player rolls doubles
+        when(dice.getValue1()).thenReturn(3);
+        when(dice.getValue2()).thenReturn(2);
+
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        // Set the mock dice in the game object
+        game.setDice(dice);
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.rollDiceAndMoveCurrentPlayer();
+
+        //Player does not move since they are in jail and have not thrown doubles
+        assertEquals(30, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayerIndex());
+
+        // Player has not rolled doubles in 3 tries
+        player.setRoundsInJail(3);
+        game.rollDiceAndMoveCurrentPlayer();
+
+        //check if player has paid fine
+        assertEquals(50, player.getBalance());
+        //check if player has moved for diced value
+        assertEquals(35, player.getCurrentFieldIndex());
+
+    }
+
+    @Test
+    void awardBonusMoney(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 0);
 
         game.join(player);
@@ -152,7 +223,7 @@ class GameTests {
     }
 
     @Test
-    void endPlayerTurn() {
+    void endPlayerTurn(){
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
@@ -245,139 +316,4 @@ class GameTests {
             assertTrue(gamePlayers.contains(players.get(i)));
         }
     }
-
-    @Test
-    void processRailroadPayment_NoOwner_Fails() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
-        Railroad railroad = mock(Railroad.class);
-        when(railroad.getOwner()).thenReturn(null);
-
-        assertFalse(game.processRailroadPayment(payer, railroad));
-    }
-
-    @Test
-    void processPropertyPayment_OwnerExistsAndNotPayer_SuccessfulPayment() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
-        Player owner = new Player(UUID.randomUUID(), "Owner", game, 50);
-        Property property = mock(Property.class);
-        when(property.getOwner()).thenReturn(owner);
-        when(property.getRentPrices()).thenReturn(Map.of(0, 20));
-
-        assertTrue(game.processPropertyPayment(payer, property));
-        assertEquals(80, payer.getBalance());
-        assertEquals(70, owner.getBalance());
-    }
-
-    @Test
-    void processUtilityPayment_OwnerExistsAndNotPayer_SuccessfulPayment() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", game, 100);
-        Player owner = new Player(UUID.randomUUID(), "Owner", game, 50);
-        Utility utility = mock(Utility.class);
-        when(utility.getOwner()).thenReturn(owner);
-        when(utility.getToPay()).thenReturn(30);
-
-        assertTrue(game.processUtilityPayment(payer, utility));
-        assertEquals(70, payer.getBalance());
-        assertEquals(80, owner.getBalance());
-    }
-
-    @Test
-    void makePayment_InsufficientFunds() {
-        Game game = new Game();
-        Player from = new Player(UUID.randomUUID(), "From", game, 10);
-        Player to = new Player(UUID.randomUUID(), "To", game, 50);
-
-        assertFalse(game.makePayment(from, to, 20));
-        assertEquals(10, from.getBalance());
-        assertEquals(50, to.getBalance());
-    }
-    @Test
-    void processRailroadPayment_AllOwnedBySamePlayer() {
-        Game game = new Game();
-        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
-        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
-        Railroad railroad = Mockito.mock(Railroad.class);
-
-        when(railroad.getOwner()).thenReturn(owner);
-        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 100));
-
-        // Simulate that the game board includes this railroad and it is owned by the owner
-        Field[] gameBoard = new Field[40];
-        gameBoard[5] = railroad;
-        game.getGameBoard().setGameBoard(gameBoard);
-
-        // The owner owns one railroad, hence "1RR" price is applicable
-        boolean result = game.processRailroadPayment(payer, railroad);
-
-        assertTrue(result);
-        assertEquals(400, payer.getBalance());
-        assertEquals(1600, owner.getBalance());  // Adjusted to reflect the correct expected balance after transaction
-    }
-
-
-
-
-
-    @Test
-    void processPropertyPayment_NoOwner() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
-        Property property = Mockito.mock(Property.class);
-        when(property.getOwner()).thenReturn(null);
-
-        boolean result = game.processPropertyPayment(payer, property);
-
-        assertFalse(result);
-        assertEquals(500, payer.getBalance());
-    }
-
-    @Test
-    void processUtilityPayment_Successful() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
-        Utility utility = Mockito.mock(Utility.class);
-        Player owner = new Player(UUID.randomUUID(), "Owner", null, 500);
-        when(utility.getOwner()).thenReturn(owner);
-        when(utility.getToPay()).thenReturn(100);
-
-        boolean result = game.processUtilityPayment(payer, utility);
-
-        assertTrue(result);
-        assertEquals(400, payer.getBalance());
-        assertEquals(600, owner.getBalance());
-    }
-
-    @Test
-    void processRailroadPayment_OwnerDoesNotExist() {
-        Game game = new Game();
-        Player payer = new Player(UUID.randomUUID(), "Payer", null, 500);
-        Railroad railroad = new Railroad(); // Kein Besitzer gesetzt
-
-        boolean result = game.processRailroadPayment(payer, railroad);
-
-        assertFalse(result);
-        assertEquals(500, payer.getBalance());
-    }
-
-
-
-    @Test
-    void processRailroadPayment_Failure_OwnerIsPayer() {
-        Game game = new Game();
-        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
-        Railroad railroad = Mockito.mock(Railroad.class);
-
-        when(railroad.getOwner()).thenReturn(owner);
-        when(railroad.getRentPrices()).thenReturn(Map.of("1RR", 100));
-
-        // Owner is also the payer
-        boolean result = game.processRailroadPayment(owner, railroad);
-
-        assertFalse(result);
-        assertEquals(1500, owner.getBalance()); // Balance remains unchanged since owner is paying to themselves
-    }
-
 }

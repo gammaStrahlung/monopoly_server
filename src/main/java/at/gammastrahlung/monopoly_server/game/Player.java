@@ -36,7 +36,23 @@ public class Player {
     @Expose
     protected int currentFieldIndex;
 
+    /**
+     * Field is true if player is in jail, false if free
+     */
+    @Expose
     protected boolean isInJail;
+
+    /**
+     * The field keeps track for how many rounds the player has consecutively spent in jail (max. 3)
+     */
+    @Expose
+    protected int roundsInJail;
+
+    /**
+     * Field is true if the player has a get out of jail free card
+     */
+    @Expose
+    protected boolean hasGetOutOfJailFreeCard;
 
     /**
      * The game the player is currently playing
@@ -50,6 +66,8 @@ public class Player {
         this.balance = startingBalance; //balance gets initialized with a starting balance
         this.currentFieldIndex = 0;
         this.isInJail = false;
+        this.roundsInJail = 0;
+        this.hasGetOutOfJailFreeCard = false;
     }
 
     // increases player balance
@@ -99,6 +117,7 @@ public class Player {
      */
     public void goToJail(){
         this.isInJail = true;
+        this.roundsInJail = 0; // Reset rounds spent in jail when entering jail
     }
 
     public void pay(int amountToPay) {
@@ -110,7 +129,12 @@ public class Player {
         }
     }
 
-    public void getOutOfJail() {
+    public void releaseFromJail() {
         this.isInJail = false;
+        this.roundsInJail = 0;
+    }
+
+    public void incrementRoundsInJail() {
+        this.roundsInJail++;
     }
 }
