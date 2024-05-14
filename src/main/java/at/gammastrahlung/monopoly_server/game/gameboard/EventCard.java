@@ -51,7 +51,8 @@ public class EventCard {
                 handleFieldAction(player, game);
                 break;
             case STREET_REPAIRS:
-                //TODO Implement
+                int repairAmount = calculateStreetRepairs(player, game);
+                player.pay(repairAmount);
                 break;
             case GET_OUT_OF_JAIL:
                 player.setHasGetOutOfJailFreeCard(true);
@@ -72,6 +73,23 @@ public class EventCard {
             default:
                 break;
         }
+    }
+
+
+    public int calculateStreetRepairs(Player player, Game game) {
+        int totalPayment = 0;
+        int houseCount = 0;
+
+        GameBoard gameBoard = game.getGameBoard();
+
+        for(Field field : gameBoard.getGameBoard()){
+            if(field instanceof Property property && property.getOwner() == player){
+                houseCount += ((Property) field).getHouseCount();
+            }
+        }
+
+        totalPayment = (houseCount * 40);
+        return totalPayment;
     }
 
     private static void handleFieldAction(Player player, Game game) {
