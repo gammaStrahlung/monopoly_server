@@ -1,7 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.CardType;
-import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -167,6 +166,54 @@ class EventCardTests {
 
         // Verify that moveAvatar is called with the expected parameters
         verify(player).moveAvatar(currentPosition, -3);
+    }
+
+    @Test
+    void streetRepairsCase() {
+        // Create a spy of the Player object
+        Player player = spy(new Player());
+
+        // Create a mock GameBoard
+        GameBoard gameBoard = mock(GameBoard.class);
+
+        // Create a mock Property
+        Property property = mock(Property.class);
+        when(property.getOwner()).thenReturn(player);
+        when(property.getHouseCount()).thenReturn(1);
+
+        // Set up the behavior of the mock GameBoard
+        when(game.getGameBoard()).thenReturn(gameBoard);
+        when(gameBoard.getGameBoard()).thenReturn(new Field[]{property}); // Return a non-null array
+
+        // Create an instance of EventCard with the cardType STREET_REPAIRS
+        EventCard streetRepairsCard = EventCard.builder()
+                .description("Pay for street repairs.")
+                .cardType(CardType.STREET_REPAIRS)
+                .build();
+
+        // Call the applyAction method
+        eventCard.applyAction(player, streetRepairsCard, game);
+
+        // Verify that the player pays the correct amount
+        int amountToPay = 40; // Assuming one property with one house
+        verify(player).pay(amountToPay);
+    }
+
+
+    @Test
+    public void testCalculateStreetRepairs() {
+        Player player = new Player();
+
+        GameBoard gameBoard = mock(GameBoard.class);
+        when(game.getGameBoard()).thenReturn(gameBoard);
+
+        Property property = mock(Property.class);
+        when(property.getOwner()).thenReturn(player);
+        when(property.getHouseCount()).thenReturn(1);
+        when(gameBoard.getGameBoard()).thenReturn(new Field[]{property});
+
+        int totalPayment = eventCard.calculateStreetRepairs(player, game);
+        assertEquals(40, totalPayment);
     }
 
 
