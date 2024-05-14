@@ -83,7 +83,7 @@ public class EventCard {
         GameBoard gameBoard = game.getGameBoard();
 
         for(Field field : gameBoard.getGameBoard()){
-            if(field instanceof Property && ((Property) field).getOwner() == player){
+            if(field instanceof Property property && property.getOwner() == player){
                 houseCount += ((Property) field).getHouseCount();
             }
         }
