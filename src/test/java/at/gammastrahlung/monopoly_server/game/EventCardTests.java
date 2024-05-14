@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -201,7 +200,7 @@ class EventCardTests {
 
 
     @Test
-    public void testCalculateStreetRepairs() {
+    void testCalculateStreetRepairs() {
         Player player = new Player();
 
         GameBoard gameBoard = mock(GameBoard.class);
