@@ -23,6 +23,9 @@ public class Game {
     private static final int BONUS_MONEY = 200;
     private static final int GET_OUT_OF_JAIL_FINE = 50;
 
+    // Initial balance
+    private static final int INITIAL_BALANCE = 1500;
+
     // Contains all games that are currently being played, that allows us to find a specific game
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
 
@@ -239,6 +242,9 @@ public class Game {
      * @return If the join was successful.
      */
     public boolean join(Player player) {
+        // Set initial player balance
+        player.setBalance(INITIAL_BALANCE);
+
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
         if (!players.contains(player)) {
@@ -256,12 +262,12 @@ public class Game {
             if (gameOwner == null)
                 gameOwner = player;
 
-            return true;
         } else {
             // Player is re-joining -> update old player object
             players.get(players.indexOf(player)).update(player);
-            return true;
         }
+
+        return true;
     }
 
      private void initializeGameBoard() {

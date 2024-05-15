@@ -97,7 +97,6 @@ public class MonopolyMessageHandler {
 
         // Create a new game
         Game game = new Game();
-        player.setBalance(1500);
 
         // Player that creates the game should also join the game
         game.join(player);
@@ -119,8 +118,6 @@ public class MonopolyMessageHandler {
      * else ServerMessage has MessageType ERROR.
      */
     public static ServerMessage joinGame(int gameId, WebSocketPlayer player) {
-        player.setBalance(1500);
-
         // Try to join the game
         Game game = Game.joinByGameId(gameId, player);
 
