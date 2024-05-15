@@ -298,34 +298,57 @@ public class Game {
         ENDED
     }
 
-    public boolean processRailroadPayment(Player payer, Railroad railroad) {
-        if (railroad.getOwner() != null && !railroad.getOwner().equals(payer)) {
-            int ownedRailroads = countOwnedRailroads(railroad.getOwner());
-            String key = ownedRailroads + "RR";
-            Integer rentAmount = railroad.getRentPrices().get(key);
-            if (rentAmount != null) {
-                return makePayment(payer, railroad.getOwner(), rentAmount);
-            }
-        }
+    /**
+     * Processes a payment for the given field
+     * @param player
+     * @return
+     */
+    public boolean processPayment(Player player) {
+        Field f = gameBoard.getGameBoard()[player.getCurrentFieldIndex()];
+
+        if (f instanceof Railroad)
+            return processRailroadPayment(player, (Railroad) f);
+        if (f instanceof Property)
+            return processPropertyPayment(player, (Property) f);
+        if (f instanceof Utility)
+            return processUtilityPayment(player, (Utility) f);
+
         return false;
     }
 
-    public boolean processPropertyPayment(Player payer, Property property) {
-        if (property.getOwner() != null && !property.getOwner().equals(payer)) {
-            int houseCount = property.getHouseCount();
-            Object rentKey = (houseCount == 5) ? "HOTEL" : houseCount;
-            int rentAmount = property.getRentPrices().getOrDefault(rentKey, 0);
-            return makePayment(payer, property.getOwner(), rentAmount);
+    public boolean processRailroadPayment(Player player, Railroad railroad) {
+        if (railroad.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
+                !railroad.getOwner().equals(player)) // Player doesn't need to pay if he owns the Railroad
+            return false;
+
+        int ownedRailroads = countOwnedRailroads(railroad.getOwner());
+        String key = ownedRailroads + "RR";
+        Integer rentAmount = railroad.getRentPrices().get(key);
+        if (rentAmount != null) {
+            return makePayment(player, railroad.getOwner(), rentAmount);
         }
+
         return false;
     }
 
-    public boolean processUtilityPayment(Player payer, Utility utility) {
-        if (utility.getOwner() != null && !utility.getOwner().equals(payer)) {
-            int rentAmount = utility.getToPay(); // Assumes getToPay() gives the correct amount due
-            return makePayment(payer, utility.getOwner(), rentAmount);
-        }
-        return false;
+    public boolean processPropertyPayment(Player player, Property property) {
+        if (property.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
+                !property.getOwner().equals(player))  // Player doesn't need to pay if he owns the Property
+            return false;
+
+        int houseCount = property.getHouseCount();
+        Object rentKey = (houseCount == 5) ? gameBoard.getHOTEL() : houseCount;
+        int rentAmount = property.getRentPrices().getOrDefault(rentKey, 0);
+        return makePayment(player, property.getOwner(), rentAmount);
+    }
+
+    public boolean processUtilityPayment(Player player, Utility utility) {
+        if (utility.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
+                !utility.getOwner().equals(player)) // Player doesn't need to pay if he owns the Utility
+            return false;
+
+        int rentAmount = utility.getToPay(); // Assumes getToPay() gives the correct amount due
+        return makePayment(player, utility.getOwner(), rentAmount);
     }
 
     private int countOwnedRailroads(Player owner) {
