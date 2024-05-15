@@ -1,8 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
-import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -346,7 +344,7 @@ class GameTests {
 
 
     @Test
-    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {;
+    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Railroad railroad = new Railroad();
         railroad.setOwner(game.getGameBoard().getBank()); // Railroad is initially owned by the bank
@@ -409,5 +407,28 @@ class GameTests {
 
         utility.setOwner(game.getGameBoard().getBank()); // Bank owns buildings no player owns
         assertFalse(game.processUtilityPayment(payer, utility));
+    }
+
+    @Test
+    void testProcessPayment() {
+        Player player = players.get(0);
+
+        // Railroad Test
+        Railroad r = (Railroad) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Railroad).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(r.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        // Property Test
+        Property p = (Property) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Property).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(p.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        // Utility Test
+        Utility u = (Utility) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Utility).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(u.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        when(player.getCurrentFieldIndex()).thenReturn(0); // Go field
+        assertFalse(game.processPayment(player));
     }
 }
