@@ -1,27 +1,18 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
-import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
 
-
 import java.util.UUID;
-
-import at.gammastrahlung.monopoly_server.game.*;
-import at.gammastrahlung.monopoly_server.game.gameboard.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GameTests {
@@ -31,7 +22,7 @@ class GameTests {
     private ArrayList<Player> players;
 
     @BeforeEach
-    public void initialize() {
+    void initialize() {
         game = new Game();
 
         // Create Mock players
@@ -173,6 +164,9 @@ class GameTests {
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
+        // Balance after join in a regular game is 1500, thus we need to change if for this test
+        player.setBalance(100);
+
         // Create a mock for the dice
         Dice dice = mock(Dice.class);
         when(dice.roll()).thenReturn(5);
@@ -223,15 +217,15 @@ class GameTests {
 
         // Player does not pass start
         game.awardBonusMoney(5, 10, player);
-        assertEquals(0, player.getBalance());
+        assertEquals(1500, player.getBalance()); // Initial balance after join is 1500
 
         // Player lands on start (does not get money)
         game.awardBonusMoney(35, 0, player);
-        assertEquals(0, player.getBalance());
+        assertEquals(1500, player.getBalance()); // Initial balance after join is 1500
 
         // Player passes start
         game.awardBonusMoney(30, 2, player);
-        assertEquals(200, player.getBalance());
+        assertEquals(1500 + 200, player.getBalance()); // Initial balance after join is 1500, bonus money is 200
     }
 
     @Test
@@ -332,7 +326,6 @@ class GameTests {
 
     @Test
     void testProcessPropertyPayment_PropertyWithHouses_ShouldChargeCorrectRent() {
-        Game game = new Game();
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
         Property property = new Property();
@@ -352,10 +345,9 @@ class GameTests {
 
     @Test
     void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {
-        Game game = new Game();
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Railroad railroad = new Railroad();
-        railroad.setOwner(null);
+        railroad.setOwner(game.getGameBoard().getBank()); // Railroad is initially owned by the bank
 
         boolean result = game.processRailroadPayment(payer, railroad);
         assertFalse(result, "Payment should fail when railroad is not owned.");
@@ -364,10 +356,9 @@ class GameTests {
 
     @Test
     void testProcessPropertyPayment_UnownedProperty_ShouldNotChargeRent() {
-        Game game = new Game();
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Property property = new Property();
-        property.setOwner(null);
+        property.setOwner(game.getGameBoard().getBank()); // Property is initially owned by the bank
 
         boolean result = game.processPropertyPayment(payer, property);
         assertFalse(result, "Payment should fail when property is not owned.");
@@ -376,7 +367,6 @@ class GameTests {
 
     @Test
     void testMakePayment_InsufficientFunds_ShouldNotTransferMoney() {
-        Game game = new Game();
         Player from = new Player(UUID.randomUUID(), "Debtor", null, 100);
         Player to = new Player(UUID.randomUUID(), "Creditor", null, 1500);
         assertFalse(game.makePayment(from, to, 200), "Payment should fail if from player has insufficient funds.");
@@ -384,22 +374,8 @@ class GameTests {
         assertEquals(1500, to.getBalance(), "Creditor's balance should remain unchanged.");
     }
 
-
     @Test
-    void testInitializePlayersBalance() {
-        Game game = new Game();
-        game.join(new Player(UUID.randomUUID(), "Player1", game, 0));
-        game.join(new Player(UUID.randomUUID(), "Player2", game, 0));
-        game.initializePlayersBalance();
-
-        for (Player player : game.getPlayers()) {
-            assertEquals(1500, player.getBalance(), "Each player should have a balance initialized to $1500.");
-        }
-    }
-
-    @Test
-    public void testProcessRailroadPayment_OwnerAndNotOwner() {
-        Game game = new Game();
+    void testProcessRailroadPayment_OwnerAndNotOwner() {
         Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
         Railroad railroad = new Railroad();
@@ -412,12 +388,12 @@ class GameTests {
         // Validate that the payer's balance was deducted by the correct rent amount
         assertEquals(1450, payer.getBalance());
 
-        railroad.setOwner(null);
+        railroad.setOwner(game.getGameBoard().getBank());
         assertFalse(game.processRailroadPayment(payer, railroad));
     }
+
     @Test
-    public void testProcessUtilityPayment_OwnerAndNotOwner() {
-        Game game = new Game();
+    void testProcessUtilityPayment_OwnerAndNotOwner() {
         Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
         Utility utility = Utility.builder()
@@ -429,9 +405,30 @@ class GameTests {
         // Validate that the payer's balance was deducted by the correct payment amount
         assertEquals(1400, payer.getBalance());
 
-        utility.setOwner(null);
+        utility.setOwner(game.getGameBoard().getBank()); // Bank owns buildings no player owns
         assertFalse(game.processUtilityPayment(payer, utility));
     }
 
+    @Test
+    void testProcessPayment() {
+        Player player = players.get(0);
 
+        // Railroad Test
+        Railroad r = (Railroad) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Railroad).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(r.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        // Property Test
+        Property p = (Property) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Property).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(p.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        // Utility Test
+        Utility u = (Utility) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Utility).findFirst().orElseThrow();
+        when(player.getCurrentFieldIndex()).thenReturn(u.getFieldId());
+        assertFalse(game.processPayment(player));
+
+        when(player.getCurrentFieldIndex()).thenReturn(0); // Go field
+        assertFalse(game.processPayment(player));
+    }
 }

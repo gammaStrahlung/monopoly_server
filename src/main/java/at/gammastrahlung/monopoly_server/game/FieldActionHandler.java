@@ -5,13 +5,14 @@ import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FieldActionHandler {
 
     private static final int INCOME_TAX_AMOUNT = 200;
     private static final int LUXURY_TAX_AMOUNT = 100;
-    private Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
+    private final Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
 
 
     public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
@@ -31,16 +32,15 @@ public class FieldActionHandler {
                 card = drawCard(game.getGameBoard().getChanceDeck());
                 card.applyAction(currentPlayer, card, game);
                 break;
-            case INCOME_TAX:
+            case INCOME_TAX, LUXURY_TAX:
                 payTax(currentPlayer, fieldType);
                 break;
-            case LUXURY_TAX:
-                payTax(currentPlayer, fieldType);
+            case RAILROAD, UTILITY, PROPERTY:
+                game.processPayment(currentPlayer);
                 break;
-            // TODO Add cases for other field types RAILROAD, UTILITY, PROPERTY
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
-                logger.info("Unhandled field type: " + fieldType);
+                logger.log(Level.INFO, "Unhandled field type: {0}", fieldType);
                 break;
         }
     }

@@ -27,7 +27,7 @@ public class Property extends Field{
     @Expose
     private int hotelCost;
     @Expose
-    private int houseCount = 0;
+    private int houseCount;
 
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);

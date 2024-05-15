@@ -97,7 +97,6 @@ public class MonopolyMessageHandler {
 
         // Create a new game
         Game game = new Game();
-        player.setBalance(1500);
 
         // Player that creates the game should also join the game
         game.join(player);
@@ -119,8 +118,6 @@ public class MonopolyMessageHandler {
      * else ServerMessage has MessageType ERROR.
      */
     public static ServerMessage joinGame(int gameId, WebSocketPlayer player) {
-        player.setBalance(1500);
-
         // Try to join the game
         Game game = Game.joinByGameId(gameId, player);
 
@@ -230,99 +227,4 @@ public class MonopolyMessageHandler {
 
         return initiateRound(player);
     }
-
-    /**
-     * Initiates a payment transaction between two players.
-     * @param clientMessage The client message containing transaction details.
-     * @param session The WebSocket session of the initiating player.
-     * @return ServerMessage indicating the result of the transaction initiation.
-     */
-    public static ServerMessage initiatePayment(ClientMessage clientMessage, WebSocketSession session) {
-        WebSocketPlayer initiatingPlayer = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
-        if (initiatingPlayer == null) {
-            return ServerMessage.builder()
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Player not found")
-                    .build();
-        }
-
-        int paymentAmount;
-        try {
-            paymentAmount = Integer.parseInt(clientMessage.getMessage());
-        } catch (NumberFormatException e) {
-            return ServerMessage.builder()
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Invalid payment amount")
-                    .build();
-        }
-
-        WebSocketPlayer targetPlayer = WebSocketPlayer.getPlayerById(clientMessage.getTargetPlayerId());
-        if (targetPlayer == null) {
-            return ServerMessage.builder()
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Target player not found")
-                    .build();
-        }
-
-        return ServerMessage.builder()
-                .type(ServerMessage.MessageType.SUCCESS)
-                .jsonData("Payment initiation successful")
-                .build();
-    }
-    public static ServerMessage handlePayment(ClientMessage clientMessage, WebSocketSession session) {
-        WebSocketPlayer player = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
-        if (player == null) {
-            return ServerMessage.builder()
-                    .messagePath("payment")
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Player not found")
-                    .build();
-        }
-
-        // Extract payment details from clientMessage
-        String targetFieldIdString = clientMessage.getMessage();
-        int targetFieldId;
-        try {
-            targetFieldId = Integer.parseInt(targetFieldIdString);
-        } catch (NumberFormatException e) {
-            return ServerMessage.builder()
-                    .messagePath("payment")
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Invalid field ID")
-                    .build();
-        }
-
-        Field targetField = player.getCurrentGame().getGameBoard().getGameBoard()[targetFieldId];
-        boolean paymentResult = false;
-
-        // Check the type of the field and process payment accordingly
-        if (targetField instanceof Railroad) {
-            paymentResult = player.getCurrentGame().processRailroadPayment(player, (Railroad) targetField);
-        } else if (targetField instanceof Property) {
-            paymentResult = player.getCurrentGame().processPropertyPayment(player, (Property) targetField);
-        } else if (targetField instanceof Utility) {
-            paymentResult = player.getCurrentGame().processUtilityPayment(player, (Utility) targetField);
-        }
-
-        // Create response message based on the result of the payment
-        if (paymentResult) {
-            return ServerMessage.builder()
-                    .messagePath("payment")
-                    .type(ServerMessage.MessageType.SUCCESS)
-                    .jsonData("Payment processed successfully")
-                    .build();
-        } else {
-            return ServerMessage.builder()
-                    .messagePath("payment")
-                    .type(ServerMessage.MessageType.ERROR)
-                    .jsonData("Payment failed")
-                    .build();
-        }
-    }
-
-
 }
-
-
-
-

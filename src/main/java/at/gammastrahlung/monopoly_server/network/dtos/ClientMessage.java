@@ -17,5 +17,4 @@ public class ClientMessage {
 
     private String message;
     private WebSocketPlayer player;
-    private String targetPlayerId;
 }
