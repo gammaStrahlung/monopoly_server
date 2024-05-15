@@ -2,10 +2,10 @@ package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
-import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FieldActionHandler {
@@ -40,7 +40,7 @@ public class FieldActionHandler {
                 break;
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
-                logger.info("Unhandled field type: " + fieldType);
+                logger.log(Level.INFO, "Unhandled field type: {0}", fieldType);
                 break;
         }
     }

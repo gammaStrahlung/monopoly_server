@@ -306,12 +306,12 @@ public class Game {
     public boolean processPayment(Player player) {
         Field f = gameBoard.getGameBoard()[player.getCurrentFieldIndex()];
 
-        if (f instanceof Railroad)
-            return processRailroadPayment(player, (Railroad) f);
-        if (f instanceof Property)
-            return processPropertyPayment(player, (Property) f);
-        if (f instanceof Utility)
-            return processUtilityPayment(player, (Utility) f);
+        if (f instanceof Railroad railroad)
+            return processRailroadPayment(player, railroad);
+        if (f instanceof Property property)
+            return processPropertyPayment(player, property);
+        if (f instanceof Utility utility)
+            return processUtilityPayment(player, utility);
 
         return false;
     }
@@ -353,7 +353,7 @@ public class Game {
 
     private int countOwnedRailroads(Player owner) {
         return (int) java.util.Arrays.stream(gameBoard.getGameBoard())
-                .filter(field -> field instanceof Railroad && ((Railroad) field).getOwner().equals(owner))
+                .filter(field -> field instanceof Railroad railroad && railroad.getOwner().equals(owner))
                 .count();
     }
 

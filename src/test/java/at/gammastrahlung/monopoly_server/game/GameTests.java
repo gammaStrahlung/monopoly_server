@@ -5,24 +5,16 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Railroad;
 import at.gammastrahlung.monopoly_server.game.gameboard.Utility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
 
-
 import java.util.UUID;
-
-import at.gammastrahlung.monopoly_server.game.*;
-import at.gammastrahlung.monopoly_server.game.gameboard.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class GameTests {
@@ -32,7 +24,7 @@ class GameTests {
     private ArrayList<Player> players;
 
     @BeforeEach
-    public void initialize() {
+    void initialize() {
         game = new Game();
 
         // Create Mock players
@@ -336,7 +328,6 @@ class GameTests {
 
     @Test
     void testProcessPropertyPayment_PropertyWithHouses_ShouldChargeCorrectRent() {
-        Game game = new Game();
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
         Property property = new Property();
@@ -355,8 +346,7 @@ class GameTests {
 
 
     @Test
-    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {
-        Game game = new Game();
+    void testProcessRailroadPayment_UnownedRailroad_ShouldNotPayRent() {;
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Railroad railroad = new Railroad();
         railroad.setOwner(game.getGameBoard().getBank()); // Railroad is initially owned by the bank
@@ -368,7 +358,6 @@ class GameTests {
 
     @Test
     void testProcessPropertyPayment_UnownedProperty_ShouldNotChargeRent() {
-        Game game = new Game();
         Player payer = new Player(UUID.randomUUID(), "Payer", null, 1500);
         Property property = new Property();
         property.setOwner(game.getGameBoard().getBank()); // Property is initially owned by the bank
@@ -380,7 +369,6 @@ class GameTests {
 
     @Test
     void testMakePayment_InsufficientFunds_ShouldNotTransferMoney() {
-        Game game = new Game();
         Player from = new Player(UUID.randomUUID(), "Debtor", null, 100);
         Player to = new Player(UUID.randomUUID(), "Creditor", null, 1500);
         assertFalse(game.makePayment(from, to, 200), "Payment should fail if from player has insufficient funds.");
@@ -389,8 +377,7 @@ class GameTests {
     }
 
     @Test
-    public void testProcessRailroadPayment_OwnerAndNotOwner() {
-        Game game = new Game();
+    void testProcessRailroadPayment_OwnerAndNotOwner() {
         Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
         Railroad railroad = new Railroad();
@@ -406,9 +393,9 @@ class GameTests {
         railroad.setOwner(game.getGameBoard().getBank());
         assertFalse(game.processRailroadPayment(payer, railroad));
     }
+
     @Test
-    public void testProcessUtilityPayment_OwnerAndNotOwner() {
-        Game game = new Game();
+    void testProcessUtilityPayment_OwnerAndNotOwner() {
         Player payer = new Player(UUID.randomUUID(), "Payer", game, 1500);
         Player owner = new Player(UUID.randomUUID(), "Owner", game, 1500);
         Utility utility = Utility.builder()
@@ -423,6 +410,4 @@ class GameTests {
         utility.setOwner(game.getGameBoard().getBank()); // Bank owns buildings no player owns
         assertFalse(game.processUtilityPayment(payer, utility));
     }
-
-
 }
