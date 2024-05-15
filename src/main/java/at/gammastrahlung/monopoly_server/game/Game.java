@@ -300,8 +300,8 @@ public class Game {
 
     /**
      * Processes a payment for the given field
-     * @param player
-     * @return
+     * @param player the player that has to pay
+     * @return If the player paid or not
      */
     public boolean processPayment(Player player) {
         Field f = gameBoard.getGameBoard()[player.getCurrentFieldIndex()];
@@ -317,8 +317,8 @@ public class Game {
     }
 
     public boolean processRailroadPayment(Player player, Railroad railroad) {
-        if (railroad.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
-                !railroad.getOwner().equals(player)) // Player doesn't need to pay if he owns the Railroad
+        if (railroad.getOwner() == gameBoard.getBank() || // Don't need to pay the bank
+                railroad.getOwner().equals(player)) // Player doesn't need to pay if he owns the Railroad
             return false;
 
         int ownedRailroads = countOwnedRailroads(railroad.getOwner());
@@ -332,8 +332,8 @@ public class Game {
     }
 
     public boolean processPropertyPayment(Player player, Property property) {
-        if (property.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
-                !property.getOwner().equals(player))  // Player doesn't need to pay if he owns the Property
+        if (property.getOwner() == gameBoard.getBank() || // Don't need to pay the bank
+                property.getOwner().equals(player))  // Player doesn't need to pay if he owns the Property
             return false;
 
         int houseCount = property.getHouseCount();
@@ -343,8 +343,8 @@ public class Game {
     }
 
     public boolean processUtilityPayment(Player player, Utility utility) {
-        if (utility.getOwner() != gameBoard.getBank() && // Don't need to pay the bank
-                !utility.getOwner().equals(player)) // Player doesn't need to pay if he owns the Utility
+        if (utility.getOwner() == gameBoard.getBank() || // Don't need to pay the bank
+                utility.getOwner().equals(player)) // Player doesn't need to pay if he owns the Utility
             return false;
 
         int rentAmount = utility.getToPay(); // Assumes getToPay() gives the correct amount due
