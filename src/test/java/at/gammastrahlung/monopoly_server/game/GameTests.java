@@ -384,19 +384,6 @@ class GameTests {
         assertEquals(1500, to.getBalance(), "Creditor's balance should remain unchanged.");
     }
 
-
-    @Test
-    void testInitializePlayersBalance() {
-        Game game = new Game();
-        game.join(new Player(UUID.randomUUID(), "Player1", game, 0));
-        game.join(new Player(UUID.randomUUID(), "Player2", game, 0));
-        game.initializePlayersBalance();
-
-        for (Player player : game.getPlayers()) {
-            assertEquals(1500, player.getBalance(), "Each player should have a balance initialized to $1500.");
-        }
-    }
-
     @Test
     public void testProcessRailroadPayment_OwnerAndNotOwner() {
         Game game = new Game();

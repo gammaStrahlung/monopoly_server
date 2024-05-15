@@ -297,6 +297,7 @@ public class Game {
          */
         ENDED
     }
+
     public boolean processRailroadPayment(Player payer, Railroad railroad) {
         if (railroad.getOwner() != null && !railroad.getOwner().equals(payer)) {
             int ownedRailroads = countOwnedRailroads(railroad.getOwner());
@@ -347,11 +348,5 @@ public class Game {
         // Implement logic for insufficient funds here
         // For example: Sell houses, take out mortgage, or declare bankruptcy
         return false;
-    }
-
-    public void initializePlayersBalance() {
-        for (Player player : this.players) {
-            player.setBalance(1500);  // Assuming setBalance method exists or modify Player's constructor to accept balance
-        }
     }
 }
