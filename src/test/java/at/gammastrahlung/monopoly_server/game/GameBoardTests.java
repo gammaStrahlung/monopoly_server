@@ -77,7 +77,7 @@ class GameBoardTests {
     }
 
     @Test
-    public void testInitializeCommunityChestDeck() {
+    void testInitializeCommunityChestDeck() {
         assertEquals(15, gameBoard.getCommunityChestDeck().size());
 
         EventCard firstCard = gameBoard.getCommunityChestDeck().get(0);
@@ -88,7 +88,7 @@ class GameBoardTests {
     }
 
     @Test
-    public void testInitializeChanceDeck() {
+    void testInitializeChanceDeck() {
         assertEquals(14, gameBoard.getChanceDeck().size());
 
         EventCard firstCard = gameBoard.getChanceDeck().get(0);

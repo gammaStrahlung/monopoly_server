@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class DiceTests {
+class DiceTests {
     private Dice dice;
 
     @BeforeEach
@@ -16,13 +16,13 @@ public class DiceTests {
     }
 
     @Test
-    public void constructorTest(){
+    void constructorTest(){
         assertEquals(1, dice.getValue1());
         assertEquals(5, dice.getValue2());
     }
 
     @Test
-    public void initializeDiceTest(){
+    void initializeDiceTest(){
         dice.roll();
 
         assertTrue(dice.getValue1() >= 1 && dice.getValue1() <= 6);
@@ -30,7 +30,7 @@ public class DiceTests {
     }
 
     @Test
-    public void setDiceTest(){
+    void setDiceTest(){
         dice.setValue1(1);
         dice.setValue2(3);
 
