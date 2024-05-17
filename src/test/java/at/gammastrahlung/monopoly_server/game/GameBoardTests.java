@@ -21,7 +21,7 @@ class GameBoardTests {
 
     @BeforeEach
     public void setUp() {
-        gameBoard = GameBoard.builder().build();
+        gameBoard = new GameBoard();
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
