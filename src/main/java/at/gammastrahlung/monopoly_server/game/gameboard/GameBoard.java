@@ -2,8 +2,8 @@ package at.gammastrahlung.monopoly_server.game.gameboard;
 
 import at.gammastrahlung.monopoly_server.game.Player;
 import com.google.gson.annotations.Expose;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -13,9 +13,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class GameBoard {
     @Expose
-    private Player bank = new Player();
+    private Player bank;
     @Expose
     private Field[] fields;
 
@@ -31,19 +32,26 @@ public class GameBoard {
     @Expose
     private ArrayList<EventCard> communityChestDeck;
 
-    @Builder
-    public GameBoard() {
-        // Needed for Player.equals to work
-        bank.setId(UUID.randomUUID());
-    }
+    private String communityChest;
+    private String goToJail;
+    private String chance;
 
     public void initializeGameBoard() {
+
+        bank = new Player();
+        bank.setId(UUID.randomUUID());
+
         // Define values for standard game board
         gameBoardSize = 40;
         fullSet = "full_set";
         hotel = "hotel";
-        
+
         fields = new Field[gameBoardSize];
+
+        // Recurring field / card names
+        communityChest = "Community Chest";
+        goToJail = "Go to Jail";
+        chance = "Chance";
 
         fields[0] = Field.builder()
                 .fieldId(0)
@@ -75,7 +83,7 @@ public class GameBoard {
 
         fields[2] = Field.builder()
                 .fieldId(2)
-                .name("Community Chest")
+                .name(communityChest)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
@@ -139,7 +147,7 @@ public class GameBoard {
 
         fields[7] = Field.builder()
                 .fieldId(7)
-                .name("Chance")
+                .name(chance)
                 .type(FieldType.CHANCE)
                 .build();
 
@@ -281,7 +289,7 @@ public class GameBoard {
 
         fields[17] = Field.builder()
                 .fieldId(17)
-                .name("Community Chest")
+                .name(communityChest)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
@@ -351,7 +359,7 @@ public class GameBoard {
 
         fields[22] = Field.builder()
                 .fieldId(22)
-                .name("Chance")
+                .name(chance)
                 .type(FieldType.CHANCE)
                 .build();
 
@@ -506,7 +514,7 @@ public class GameBoard {
 
         fields[33] = Field.builder()
                 .fieldId(33)
-                .name("Community Chest")
+                .name(communityChest)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
@@ -541,7 +549,7 @@ public class GameBoard {
 
         fields[36] = Field.builder()
                 .fieldId(36)
-                .name("Chance")
+                .name(chance)
                 .build();
 
         Map<Object, Integer> rentPrices15 = new HashMap<>();
@@ -610,7 +618,7 @@ public class GameBoard {
         communityChestDeck = new ArrayList<>();
 
         communityChestDeck.add(EventCard.builder()
-                .description("Go to Jail")
+                .description(goToJail)
                 .cardType(CardType.GO_TO_JAIL)
                 .moveToField(30)
                 .build());
@@ -703,7 +711,7 @@ public class GameBoard {
         chanceDeck = new ArrayList<>();
 
         chanceDeck.add(EventCard.builder()
-                .description("Go to Jail")
+                .description(goToJail)
                 .cardType(CardType.GO_TO_JAIL)
                 .moveToField(30)
                 .build());
