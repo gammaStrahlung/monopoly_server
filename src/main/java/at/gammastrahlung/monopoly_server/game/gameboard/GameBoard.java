@@ -20,11 +20,11 @@ public class GameBoard {
     private Field[] fields;
 
     @Expose
-    private final int gameBoardSize = 40;
+    private int gameBoardSize;
     @Expose
-    private final String fullSet = "full_set";
+    private String fullSet;
     @Expose
-    private final String hotel = "hotel";
+    private String hotel;
 
     @Expose
     private ArrayList<EventCard> chanceDeck;
@@ -33,12 +33,18 @@ public class GameBoard {
 
     @Builder
     public GameBoard() {
-        fields = new Field[gameBoardSize];
         // Needed for Player.equals to work
         bank.setId(UUID.randomUUID());
     }
 
     public void initializeGameBoard() {
+        // Define values for standard game board
+        gameBoardSize = 40;
+        fullSet = "full_set";
+        hotel = "hotel";
+        
+        fields = new Field[gameBoardSize];
+
         fields[0] = Field.builder()
                 .fieldId(0)
                 .name("Go")
