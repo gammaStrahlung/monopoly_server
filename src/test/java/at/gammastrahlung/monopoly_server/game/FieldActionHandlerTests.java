@@ -82,8 +82,6 @@ class FieldActionHandlerTests {
         deck.add(card1);
         deck.add(card2);
 
-        // Mock the game and game board
-        Game game = mock(Game.class);
         GameBoard gameBoard = mock(GameBoard.class);
         when(game.getGameBoard()).thenReturn(gameBoard);
         when(gameBoard.getChanceDeck()).thenReturn(deck);
@@ -137,9 +135,6 @@ class FieldActionHandlerTests {
         // Mock the player
         Player currentPlayer = mock(Player.class);
 
-        // Mock the game
-        Game game = mock(Game.class);
-
         // Call the method to handle the income tax action
         spyHandler.handleFieldAction(FieldType.INCOME_TAX, currentPlayer, game);
 
@@ -154,9 +149,6 @@ class FieldActionHandlerTests {
 
         // Mock the player
         Player currentPlayer = mock(Player.class);
-
-        // Mock the game
-        Game game = mock(Game.class);
 
         // Call the method to handle the luxury tax action
         spyHandler.handleFieldAction(FieldType.LUXURY_TAX, currentPlayer, game);

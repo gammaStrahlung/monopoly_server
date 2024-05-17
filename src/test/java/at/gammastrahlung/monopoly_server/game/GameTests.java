@@ -334,7 +334,7 @@ class GameTests {
         Map<Object, Integer> rentPrices = new HashMap<>();
         rentPrices.put(3, 300);
         property.setRentPrices(rentPrices);
-        game.getGameBoard().getGameBoard()[3] = property;
+        game.getGameBoard().getFields()[3] = property;
 
         boolean result = game.processPropertyPayment(payer, property);
         assertTrue(result, "Payment should succeed when payer has enough balance.");
@@ -381,8 +381,8 @@ class GameTests {
         Railroad railroad = new Railroad();
         railroad.setOwner(owner);
         // Mock the method to return 2 railroads owned by the owner
-        game.getGameBoard().getGameBoard()[5] = railroad; // Assuming index 5 is a Railroad
-        game.getGameBoard().getGameBoard()[15] = railroad; // Assuming index 15 is also owned by the same owner
+        game.getGameBoard().getFields()[5] = railroad; // Assuming index 5 is a Railroad
+        game.getGameBoard().getFields()[15] = railroad; // Assuming index 15 is also owned by the same owner
 
         assertTrue(game.processRailroadPayment(payer, railroad));
         // Validate that the payer's balance was deducted by the correct rent amount
@@ -414,17 +414,17 @@ class GameTests {
         Player player = players.get(0);
 
         // Railroad Test
-        Railroad r = (Railroad) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Railroad).findFirst().orElseThrow();
+        Railroad r = (Railroad) Arrays.stream(game.getGameBoard().getFields()).filter(f -> f instanceof Railroad).findFirst().orElseThrow();
         when(player.getCurrentFieldIndex()).thenReturn(r.getFieldId());
         assertFalse(game.processPayment(player));
 
         // Property Test
-        Property p = (Property) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Property).findFirst().orElseThrow();
+        Property p = (Property) Arrays.stream(game.getGameBoard().getFields()).filter(f -> f instanceof Property).findFirst().orElseThrow();
         when(player.getCurrentFieldIndex()).thenReturn(p.getFieldId());
         assertFalse(game.processPayment(player));
 
         // Utility Test
-        Utility u = (Utility) Arrays.stream(game.getGameBoard().getGameBoard()).filter(f -> f instanceof Utility).findFirst().orElseThrow();
+        Utility u = (Utility) Arrays.stream(game.getGameBoard().getFields()).filter(f -> f instanceof Utility).findFirst().orElseThrow();
         when(player.getCurrentFieldIndex()).thenReturn(u.getFieldId());
         assertFalse(game.processPayment(player));
 
