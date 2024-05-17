@@ -46,7 +46,8 @@ class PropertyTest {
     @MethodSource("provideTestCases")
     void testBuildHouse(int initialHouseCount, int cost, int expectedBalance, int expectedHouseCount) {
         Game currentGame = new Game();
-        GameBoard mockedGameBoard = new GameBoard();
+        GameBoard gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard();
         Player owner = new Player(UUID.randomUUID(), "Owner", currentGame, 1000);
         Property property = Property.builder()
                 .houseCost(100)   // Assuming the cost for houses is always 100
@@ -54,7 +55,7 @@ class PropertyTest {
                 .houseCount(initialHouseCount)
                 .owner(owner)
                 .build();
-        Property.setGameBoard(mockedGameBoard);
+        Property.setGameBoard(gameBoard);
 
         property.buildHouse();
 
@@ -87,6 +88,7 @@ class PropertyTest {
     @MethodSource("provideBuildableCases")
     void testBuildable(List<Field> gameBoardFields, Player propertyOwner, boolean expectedOutcome) {
         GameBoard gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard();
         Field[] fieldsArray = gameBoardFields.toArray(new Field[0]); // Convert List<Field> to Field[]
         gameBoard.setFields(fieldsArray); // Assuming this method sets the list of fields in the game board
 
