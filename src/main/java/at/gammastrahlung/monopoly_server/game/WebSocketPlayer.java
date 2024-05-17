@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,6 +60,18 @@ public class WebSocketPlayer extends Player {
             setWebSocketSession(((WebSocketPlayer) player).getWebSocketSession());
             players.put(webSocketSession.getId(), this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // The only thing equals should check is the UUID, as everything else could change and the player would still be
+        // the same
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), webSocketSession);
     }
 
     /**
