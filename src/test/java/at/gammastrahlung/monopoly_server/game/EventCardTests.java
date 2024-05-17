@@ -182,7 +182,7 @@ class EventCardTests {
 
         // Set up the behavior of the mock GameBoard
         when(game.getGameBoard()).thenReturn(gameBoard);
-        when(gameBoard.getGameBoard()).thenReturn(new Field[]{property}); // Return a non-null array
+        when(gameBoard.getFields()).thenReturn(new Field[]{property}); // Return a non-null array
 
         // Create an instance of EventCard with the cardType STREET_REPAIRS
         EventCard streetRepairsCard = EventCard.builder()
@@ -209,7 +209,7 @@ class EventCardTests {
         Property property = mock(Property.class);
         when(property.getOwner()).thenReturn(player);
         when(property.getHouseCount()).thenReturn(1);
-        when(gameBoard.getGameBoard()).thenReturn(new Field[]{property});
+        when(gameBoard.getFields()).thenReturn(new Field[]{property});
 
         int totalPayment = eventCard.calculateStreetRepairs(player, game);
         assertEquals(40, totalPayment);

@@ -30,17 +30,17 @@ class GameBoardTests {
     @Test
     void testInitialization() {
         assertNotNull(gameBoard.getBank());
-        assertNotNull(gameBoard.getGameBoard());
-        assertEquals(40, gameBoard.getGameBoard().length);
-        assertEquals(40, gameBoard.getGAME_BOARD_SIZE());
-        assertEquals("full_set", gameBoard.getFULL_SET());
-        assertEquals("hotel", gameBoard.getHOTEL());
+        assertNotNull(gameBoard.getFields());
+        assertEquals(40, gameBoard.getFields().length);
+        assertEquals(40, gameBoard.getGameBoardSize());
+        assertEquals("full_set", gameBoard.getFullSet());
+        assertEquals("hotel", gameBoard.getHotel());
     }
 
     @Test
     void testBankOwnership() {
         // Check that the bank owns all properties and utilities initially
-        for (Field field : gameBoard.getGameBoard()) {
+        for (Field field : gameBoard.getFields()) {
             if (field instanceof Property) {
                 Player owner = ((Property) field).getOwner();
                 assertNotNull(owner); // Ensure owner is not null
@@ -62,14 +62,14 @@ class GameBoardTests {
         Player player1 = new Player(player1Id, "Player 1", null, 0);
         Player player2 = new Player(player2Id, "Player 2", null, 0);
 
-        ((Property) gameBoard.getGameBoard()[1]).setOwner(player1);
-        ((Property) gameBoard.getGameBoard()[3]).setOwner(player2);
+        ((Property) gameBoard.getFields()[1]).setOwner(player1);
+        ((Property) gameBoard.getFields()[3]).setOwner(player2);
 
         // Call the cleanUpBoard method
         gameBoard.cleanUpBoard();
 
         // Check if every property has no owner
-        for (Field field : gameBoard.getGameBoard()) {
+        for (Field field : gameBoard.getFields()) {
             if (field instanceof Property) {
                 assertNull(((Property) field).getOwner());
             }

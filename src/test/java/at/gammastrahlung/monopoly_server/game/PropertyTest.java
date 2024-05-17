@@ -88,7 +88,7 @@ class PropertyTest {
     void testBuildable(List<Field> gameBoardFields, Player propertyOwner, boolean expectedOutcome) {
         GameBoard gameBoard = new GameBoard();
         Field[] fieldsArray = gameBoardFields.toArray(new Field[0]); // Convert List<Field> to Field[]
-        gameBoard.setGameBoard(fieldsArray); // Assuming this method sets the list of fields in the game board
+        gameBoard.setFields(fieldsArray); // Assuming this method sets the list of fields in the game board
 
         Property propertyUnderTest = Property.builder()
                 .color(PropertyColor.RED)

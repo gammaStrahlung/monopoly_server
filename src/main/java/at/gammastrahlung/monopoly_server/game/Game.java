@@ -105,7 +105,7 @@ public class Game {
     }
 
     public void handleFieldAction(int fieldId) {
-        Field field = gameBoard.getGameBoard()[fieldId];
+        Field field = gameBoard.getFields()[fieldId];
         FieldActionHandler handler = new FieldActionHandler();
         if (field != null) {
             handler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
@@ -304,7 +304,7 @@ public class Game {
      * @return If the player paid or not
      */
     public boolean processPayment(Player player) {
-        Field f = gameBoard.getGameBoard()[player.getCurrentFieldIndex()];
+        Field f = gameBoard.getFields()[player.getCurrentFieldIndex()];
 
         if (f instanceof Railroad railroad)
             return processRailroadPayment(player, railroad);
@@ -337,7 +337,7 @@ public class Game {
             return false;
 
         int houseCount = property.getHouseCount();
-        Object rentKey = (houseCount == 5) ? gameBoard.getHOTEL() : houseCount;
+        Object rentKey = (houseCount == 5) ? gameBoard.getHotel() : houseCount;
         int rentAmount = property.getRentPrices().getOrDefault(rentKey, 0);
         return makePayment(player, property.getOwner(), rentAmount);
     }
@@ -352,7 +352,7 @@ public class Game {
     }
 
     private int countOwnedRailroads(Player owner) {
-        return (int) java.util.Arrays.stream(gameBoard.getGameBoard())
+        return (int) java.util.Arrays.stream(gameBoard.getFields())
                 .filter(field -> field instanceof Railroad railroad && railroad.getOwner().equals(owner))
                 .count();
     }
