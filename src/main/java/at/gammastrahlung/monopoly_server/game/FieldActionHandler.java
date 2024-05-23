@@ -33,7 +33,7 @@ public class FieldActionHandler {
                 card.applyAction(currentPlayer, card, game);
                 break;
             case INCOME_TAX, LUXURY_TAX:
-                payTax(currentPlayer, fieldType);
+                payTax(currentPlayer, fieldType, game);
                 break;
             case RAILROAD, UTILITY, PROPERTY:
                 game.processPayment(currentPlayer);
@@ -45,11 +45,15 @@ public class FieldActionHandler {
         }
     }
 
-    void payTax(Player currentPlayer, FieldType fieldType) {
+    void payTax(Player currentPlayer, FieldType fieldType, Game game) {
         // Check if field income or luxury tax, deduct amount from player account
         int taxAmount = (fieldType == FieldType.INCOME_TAX) ? INCOME_TAX_AMOUNT : LUXURY_TAX_AMOUNT;
         currentPlayer.pay(taxAmount);
 
+        // Log the action
+        String taxType = (fieldType == FieldType.INCOME_TAX) ? "Income Tax" : "Luxury Tax";
+        String message = currentPlayer.getName() + " landed on " + taxType + " and paid " + taxAmount + ".";
+        game.getLogger().logMessage(message);
     }
 
     public void goToJail(Player currentPlayer) {

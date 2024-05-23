@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
 import at.gammastrahlung.monopoly_server.game.Game;
+import at.gammastrahlung.monopoly_server.game.GameLogger;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
@@ -97,6 +98,11 @@ public class MonopolyMessageHandler {
 
         // Create a new game
         Game game = new Game();
+
+        // Create the logger and pass the game
+        GameLogger gameLogger = new WebSocketGameLogger(game);
+        game.setLogger(gameLogger);
+
 
         // Player that creates the game should also join the game
         game.join(player);

@@ -63,6 +63,10 @@ public class Game {
     @Expose
     private final List<Player> players = new ArrayList<>();
 
+    @Getter
+    @Setter
+    private GameLogger logger;
+
 
     /**
      * Creates a new game and sets the gameId
