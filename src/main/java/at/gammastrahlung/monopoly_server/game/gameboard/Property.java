@@ -28,6 +28,8 @@ public class Property extends Field{
     private int hotelCost;
     @Expose
     private int houseCount;
+    @Expose
+    private int currentRent = defineCurrentRent();
 
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
@@ -60,5 +62,21 @@ public class Property extends Field{
             }
         }
         return buildable;
+    }
+
+    public int defineCurrentRent(){
+        int currentRent = rentPrices.get(0);
+        assert rentPrices != null;
+        boolean buildable = buildable();
+
+        if (buildable && houseCount == 0) {
+            currentRent = rentPrices.get("fullSet");
+        } else if (houseCount > 0 && houseCount < 5) {
+            currentRent = rentPrices.get(houseCount);
+        } else if(houseCount == 5){
+            currentRent = rentPrices.get("hotel");
+        }
+
+        return currentRent;
     }
 }

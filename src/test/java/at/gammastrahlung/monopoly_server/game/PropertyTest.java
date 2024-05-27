@@ -3,7 +3,9 @@ package at.gammastrahlung.monopoly_server.game;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
@@ -103,5 +105,45 @@ class PropertyTest {
                 "Expected buildable() to return " + expectedOutcome);
     }
 
+    private static Stream<Arguments> provideRentCases() {
+        Map<Object, Integer> rentPrices = new HashMap<>();
+        rentPrices.put(0, 6);
+        rentPrices.put("fullSet", 12);
+        rentPrices.put(1, 30);
+        rentPrices.put(2, 90);
+        rentPrices.put(3, 270);
+        rentPrices.put(4, 400);
+        rentPrices.put("hotel", 550);
 
+        return Stream.of(
+                Arguments.of(rentPrices, 0, true, 12), // No houses, buildable, full set rent
+                Arguments.of(rentPrices, 0, false, 6), // No houses, not buildable, base rent
+                Arguments.of(rentPrices, 1, false, 30), // 1 house
+                Arguments.of(rentPrices, 2, false, 90), // 2 houses
+                Arguments.of(rentPrices, 3, false, 270), // 3 houses
+                Arguments.of(rentPrices, 4, false, 400), // 4 houses
+                Arguments.of(rentPrices, 5, false, 550)  // Hotel
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRentCases")
+    void testDefineCurrentRent(Map<Object, Integer> rentPrices, int houseCount, int expectedRent) {
+        Property property;
+        Player player = new Player(UUID.randomUUID(), "player", null, 1000);
+
+
+        property = Property.builder()
+                .rentPrices(rentPrices)
+                .houseCount(houseCount)
+                .color(PropertyColor.RED)
+                .owner(player)
+                .rentPrices(rentPrices)
+                .build();
+
+        Property property2 = Property.builder().color(PropertyColor.RED).owner(player).build();
+        Property property3 = Property.builder().color(PropertyColor.RED).owner(player).build();
+
+        assertEquals(expectedRent, property.defineCurrentRent());
+    }
 }
