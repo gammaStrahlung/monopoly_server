@@ -67,9 +67,7 @@ public class Property extends Field{
     public int defineCurrentRent(){
         int currentRent = rentPrices.get(0);
         assert rentPrices != null;
-        boolean buildable = buildable();
-
-        if (buildable && houseCount == 0) {
+        if (buildable() && houseCount == 0) {
             currentRent = rentPrices.get("fullSet");
         } else if (houseCount > 0 && houseCount < 5) {
             currentRent = rentPrices.get(houseCount);
