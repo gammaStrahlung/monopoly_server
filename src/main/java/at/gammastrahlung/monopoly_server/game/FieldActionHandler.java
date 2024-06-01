@@ -22,7 +22,7 @@ public class FieldActionHandler {
                 // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
                 break;
             case GO_TO_JAIL:
-                goToJail(currentPlayer);
+                goToJail(currentPlayer, game);
                 break;
             case COMMUNITY_CHEST:
                 card = drawCard(game.getGameBoard().getCommunityChestDeck());
@@ -56,9 +56,13 @@ public class FieldActionHandler {
         game.getLogger().logMessage(message);
     }
 
-    public void goToJail(Player currentPlayer) {
+    public void goToJail(Player currentPlayer, Game game) {
         // Logic for handling the "Go to Jail" action
         currentPlayer.goToJail();
+
+        // Log the action
+        String message = currentPlayer.getName() + " landed on the 'Go to Jail field and is sent to Jail";
+        game.getLogger().logMessage(message);
     }
 
     public EventCard drawCard(List<EventCard> deck) {
