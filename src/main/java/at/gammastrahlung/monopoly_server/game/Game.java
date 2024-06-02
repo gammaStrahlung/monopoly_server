@@ -133,6 +133,11 @@ public class Game {
 
     }
 
+    public void cheating(){
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.setCheating(true);
+    }
+
     private void movePlayerNotInJail(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
         // Player is not in jail, proceed with moving them
         currentPlayer.moveAvatar(currentFieldIndex, diceValue);
