@@ -70,6 +70,7 @@ public class MonopolyMessageHandler {
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
                 case "move_avatar" ->
                         generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
+                case "cheating" -> cheating(clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -227,4 +228,17 @@ public class MonopolyMessageHandler {
 
         return initiateRound(player);
     }
+
+    private static ServerMessage cheating(WebSocketPlayer player){
+        Game game = player.getCurrentGame();
+
+        game.cheating();
+
+        return ServerMessage.builder()
+                .messagePath("cheating")
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .build();
+    }
+
 }
