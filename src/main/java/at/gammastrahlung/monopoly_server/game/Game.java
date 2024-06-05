@@ -114,7 +114,7 @@ public class Game {
         Field field = gameBoard.getFields()[fieldId];
         FieldActionHandler handler = new FieldActionHandler();
         if (field != null) {
-            handler.handleFieldAction(field.getType(), getCurrentPlayer(), this);
+            handler.handleFieldAction(field, getCurrentPlayer(), this);
         }
     }
 
@@ -123,20 +123,24 @@ public class Game {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
 
+        if(!currentPlayer.isInJail){
+            this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
+        }
+
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
         if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard){
             this.getLogger().logMessage(currentPlayer.getName() + " released from Jail because of their 'Get Out Of Jail Free Card'.");
         }
-        this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
 
         // Check if player is in jail
         if (currentPlayer.isInJail() && !currentPlayer.hasGetOutOfJailFreeCard) {
             this.getLogger().logMessage(currentPlayer.getName() + " is in Jail, they need doubles to get out.");
+            this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
-                this.getLogger().logMessage("No doubles, better luck next time!");
+                this.getLogger().logMessage("No doubles!");
                 playerInJailNoDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
             } else {
                 this.getLogger().logMessage("Congrats on doubles! " + currentPlayer.getName() + " is released from Jail and moves for rolled value.");
@@ -174,6 +178,7 @@ public class Game {
     private void playerInJailNoDoubles(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
         if(currentPlayer.getRoundsInJail() < 3){
             currentPlayer.incrementRoundsInJail();
+            this.getLogger().logMessage("Rounds spent in Jail: " + currentPlayer.getRoundsInJail() + ". Maximal stay in Jail is 3 rounds." );
         }
         else {
             // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
@@ -184,15 +189,17 @@ public class Game {
             // Check if player is entitled to bonus salary
             awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
 
+            this.getLogger().logMessage(currentPlayer.getName() + " is released from Jail after paying the 'Get out of Jail Fine' of " + GET_OUT_OF_JAIL_FINE + "$." );
+
             // Handle available actions according to the field the player lands on
             handleFieldAction(currentPlayer.getCurrentFieldIndex());
         }
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
-        if (nextFieldIndex < currentFieldIndex || (!isFirstRound && (currentFieldIndex == 0 && nextFieldIndex > 0))){
+        if ((nextFieldIndex < currentFieldIndex && nextFieldIndex != 0) || (!isFirstRound && currentFieldIndex == 0 && nextFieldIndex > 0)) {
             currentPlayer.addBalance(BONUS_MONEY);
-            this.getLogger().logMessage(currentPlayer.getName() + " has been awarded bonus money for passing GO");
+            this.getLogger().logMessage(currentPlayer.getName() + " has been awarded " + BONUS_MONEY + "$ of bonus money for passing GO");
         }
     }
 
