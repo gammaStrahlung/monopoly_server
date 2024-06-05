@@ -229,7 +229,8 @@ public class MonopolyMessageHandler {
 
     private static ServerMessage endCurrentPlayerTurn(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
-        game.endCurrentPlayerTurn();
+        Player currentPlayer = game.getCurrentPlayer();
+        game.endCurrentPlayerTurn(currentPlayer);
 
         return initiateRound(player);
     }

@@ -19,6 +19,9 @@ public class FieldActionHandler {
         EventCard card;
         switch (fieldType) {
             case GO, FREE_PARKING, JAIL:
+                String fieldTypeStr = fieldType == FieldType.GO ? "GO" : fieldType == FieldType.FREE_PARKING ? "Free Parking" : "Visiting Jail";
+                String messageNoAction = currentPlayer.getName() + " landed on the " + fieldTypeStr + " field. No action needed.";
+                game.getLogger().logMessage(messageNoAction);
                 // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
                 break;
             case GO_TO_JAIL:
@@ -36,9 +39,8 @@ public class FieldActionHandler {
                 payTax(currentPlayer, fieldType, game);
                 break;
             case RAILROAD, UTILITY, PROPERTY:
-                String fieldTypeStr = fieldType == FieldType.RAILROAD ? "Railroad" :
-                        fieldType == FieldType.UTILITY ? "Utility" : "Property";
-                String message = currentPlayer.getName() + " landed on " + fieldTypeStr + ".";
+                String fieldTypeS = fieldType == FieldType.RAILROAD ? "Railroad" : fieldType == FieldType.UTILITY ? "Utility" : "Property";
+                String message = currentPlayer.getName() + " landed on a " + fieldTypeS + " field.";
                 game.getLogger().logMessage(message);
 
                 game.processPayment(currentPlayer);

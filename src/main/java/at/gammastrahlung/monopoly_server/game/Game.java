@@ -122,19 +122,24 @@ public class Game {
         turnNumber++;
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
-        this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue);
 
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
+        if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard){
+            this.getLogger().logMessage(currentPlayer.getName() + " released from Jail because of their 'Get Out Of Jail Free Card'.");
+        }
+        this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
 
         // Check if player is in jail
         if (currentPlayer.isInJail() && !currentPlayer.hasGetOutOfJailFreeCard) {
-            this.getLogger().logMessage(currentPlayer.getName() + " is in Jail, you need doubles to get out");
+            this.getLogger().logMessage(currentPlayer.getName() + " is in Jail, they need doubles to get out.");
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
+                this.getLogger().logMessage("No doubles, better luck next time!");
                 playerInJailNoDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
             } else {
+                this.getLogger().logMessage("Congrats on doubles! " + currentPlayer.getName() + " is released from Jail and moves for rolled value.");
                 playerInJailThrowsDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
             }
         } else {
@@ -191,12 +196,12 @@ public class Game {
         }
     }
 
-    public void endCurrentPlayerTurn(){
+    public void endCurrentPlayerTurn(Player currentPlayer){
         if(turnNumber > players.size()){
             isFirstRound = false;
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
-
+        this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
     }
 
     public Player getCurrentPlayer() {
@@ -340,6 +345,7 @@ public class Game {
         String key = ownedRailroads + "RR";
         Integer rentAmount = railroad.getRentPrices().get(key);
         if (rentAmount != null) {
+            this.getLogger().logMessage(player + " has paid " + rentAmount + " to " + railroad.getOwner());
             return makePayment(player, railroad.getOwner(), rentAmount);
         }
 
@@ -354,6 +360,7 @@ public class Game {
         int houseCount = property.getHouseCount();
         Object rentKey = (houseCount == 5) ? gameBoard.getHotel() : houseCount;
         int rentAmount = property.getRentPrices().getOrDefault(rentKey, 0);
+        this.getLogger().logMessage(player + " has paid " + rentAmount + " to " + property.getOwner());
         return makePayment(player, property.getOwner(), rentAmount);
     }
 
@@ -363,6 +370,7 @@ public class Game {
             return false;
 
         int rentAmount = utility.getToPay(); // Assumes getToPay() gives the correct amount due
+        this.getLogger().logMessage(player + " has paid " + rentAmount + " to " + utility.getOwner());
         return makePayment(player, utility.getOwner(), rentAmount);
     }
 

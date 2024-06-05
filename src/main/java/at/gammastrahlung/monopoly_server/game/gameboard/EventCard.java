@@ -28,7 +28,7 @@ public class EventCard {
 
     public void applyAction(Player player, EventCard card, Game game) {
         // Log drawn card
-        String logMessage = player.getName() + " drew a " + cardType + " card: " + description;
+        String logMessage = player.getName() + " drew a card: " + description;
         game.getLogger().logMessage(logMessage);
 
         // Log the action effect
@@ -36,6 +36,7 @@ public class EventCard {
         switch (card.getCardType()) {
             case GO_TO_JAIL:
                 player.goToJail();
+                player.setCurrentFieldIndex(10);
                 actionEffect = player.getName() + " is sent to Jail.";
                 break;
             case PAY_MONEY_CARD:

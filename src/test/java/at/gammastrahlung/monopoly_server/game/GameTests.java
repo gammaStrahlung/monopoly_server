@@ -238,11 +238,11 @@ class GameTests {
         assertTrue(game.startGame(players.get(0)));
 
         game.setCurrentPlayerIndex(1);
-        game.endCurrentPlayerTurn();
+        game.endCurrentPlayerTurn(currentPlayer);
         assertEquals(2, game.getCurrentPlayerIndex());
 
         game.setCurrentPlayerIndex(4);
-        game.endCurrentPlayerTurn();
+        game.endCurrentPlayerTurn(currentPlayer);
         assertEquals(1, game.getCurrentPlayerIndex());
     }
 
