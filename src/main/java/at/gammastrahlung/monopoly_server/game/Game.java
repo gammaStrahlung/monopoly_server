@@ -67,6 +67,8 @@ public class Game {
     @Setter
     private GameLogger logger;
 
+    private boolean isFirstRound = true;
+    private int turnNumber = 0;
 
     /**
      * Creates a new game and sets the gameId
@@ -117,14 +119,18 @@ public class Game {
     }
 
     public void rollDiceAndMoveCurrentPlayer(){
+        turnNumber++;
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
+        this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue);
+
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
 
         // Check if player is in jail
         if (currentPlayer.isInJail() && !currentPlayer.hasGetOutOfJailFreeCard) {
+            this.getLogger().logMessage(currentPlayer.getName() + " is in Jail, you need doubles to get out");
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
                 playerInJailNoDoubles(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
@@ -179,13 +185,18 @@ public class Game {
     }
 
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
-        if(nextFieldIndex < currentFieldIndex && nextFieldIndex > 0){
+        if (nextFieldIndex < currentFieldIndex || (!isFirstRound && (currentFieldIndex == 0 && nextFieldIndex > 0))){
             currentPlayer.addBalance(BONUS_MONEY);
+            this.getLogger().logMessage(currentPlayer.getName() + " has been awarded bonus money for passing GO");
         }
     }
 
     public void endCurrentPlayerTurn(){
+        if(turnNumber > players.size()){
+            isFirstRound = false;
+        }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
+
     }
 
     public Player getCurrentPlayer() {

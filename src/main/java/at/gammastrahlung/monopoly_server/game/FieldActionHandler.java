@@ -36,6 +36,11 @@ public class FieldActionHandler {
                 payTax(currentPlayer, fieldType, game);
                 break;
             case RAILROAD, UTILITY, PROPERTY:
+                String fieldTypeStr = fieldType == FieldType.RAILROAD ? "Railroad" :
+                        fieldType == FieldType.UTILITY ? "Utility" : "Property";
+                String message = currentPlayer.getName() + " landed on " + fieldTypeStr + ".";
+                game.getLogger().logMessage(message);
+
                 game.processPayment(currentPlayer);
                 break;
             default:
@@ -59,9 +64,9 @@ public class FieldActionHandler {
     public void goToJail(Player currentPlayer, Game game) {
         // Logic for handling the "Go to Jail" action
         currentPlayer.goToJail();
-
+        currentPlayer.setCurrentFieldIndex(10);
         // Log the action
-        String message = currentPlayer.getName() + " landed on the 'Go to Jail field and is sent to Jail";
+        String message = currentPlayer.getName() + " landed on the 'Go to Jail field and is sent to Jail. To get out roll doubles next round or use a 'get-out-of-jail free card";
         game.getLogger().logMessage(message);
     }
 
