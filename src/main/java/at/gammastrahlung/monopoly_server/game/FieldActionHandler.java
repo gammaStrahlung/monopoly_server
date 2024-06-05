@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 
 import java.security.SecureRandom;
@@ -15,12 +16,11 @@ public class FieldActionHandler {
     private final Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
 
 
-    public void handleFieldAction(FieldType fieldType, Player currentPlayer, Game game) {// add other param if needed
+    public void handleFieldAction(Field field, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
-        switch (fieldType) {
+        switch (field.getType()) {
             case GO, FREE_PARKING, JAIL:
-                String fieldTypeStr = fieldType == FieldType.GO ? "GO" : fieldType == FieldType.FREE_PARKING ? "Free Parking" : "Visiting Jail";
-                String messageNoAction = currentPlayer.getName() + " landed on the " + fieldTypeStr + " field. No action needed.";
+                String messageNoAction = currentPlayer.getName() + " landed on the " + field.getName() + " field. No action needed.";
                 game.getLogger().logMessage(messageNoAction);
                 // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
                 break;
@@ -36,18 +36,17 @@ public class FieldActionHandler {
                 card.applyAction(currentPlayer, card, game);
                 break;
             case INCOME_TAX, LUXURY_TAX:
-                payTax(currentPlayer, fieldType, game);
+                payTax(currentPlayer, field.getType(), game);
                 break;
             case RAILROAD, UTILITY, PROPERTY:
-                String fieldTypeS = fieldType == FieldType.RAILROAD ? "Railroad" : fieldType == FieldType.UTILITY ? "Utility" : "Property";
-                String message = currentPlayer.getName() + " landed on a " + fieldTypeS + " field.";
+                String message = currentPlayer.getName() + " landed on the '" + field.getName() + "' field.";
                 game.getLogger().logMessage(message);
 
                 game.processPayment(currentPlayer);
                 break;
             default:
                 // Temporary Log a message for unimplemented field types but do nothing
-                logger.log(Level.INFO, "Unhandled field type: {0}", fieldType);
+                logger.log(Level.INFO, "Unhandled field type: {0}", field.getType());
                 break;
         }
     }
@@ -68,7 +67,7 @@ public class FieldActionHandler {
         currentPlayer.goToJail();
         currentPlayer.setCurrentFieldIndex(10);
         // Log the action
-        String message = currentPlayer.getName() + " landed on the 'Go to Jail field and is sent to Jail. To get out roll doubles next round or use a 'get-out-of-jail free card";
+        String message = currentPlayer.getName() + " landed on the 'Go to Jail' field and is sent to Jail. To get out roll doubles next round or use a 'Get Out Of Jail free card'";
         game.getLogger().logMessage(message);
     }
 
