@@ -1,5 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
+import at.gammastrahlung.monopoly_server.game.Dice;
 import at.gammastrahlung.monopoly_server.game.Game;
 import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
@@ -70,6 +71,9 @@ public class MonopolyMessageHandler {
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
                 case "move_avatar" ->
                         generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
+                case "move_avatar_cheating" ->
+                        moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
+                case "cheating" -> cheating(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -226,5 +230,35 @@ public class MonopolyMessageHandler {
         game.endCurrentPlayerTurn();
 
         return initiateRound(player);
+    }
+
+    private static ServerMessage cheating(int totalValue, WebSocketPlayer player){
+        Game game = player.getCurrentGame();
+        Dice dice = player.getCurrentGame().getDice();
+
+        dice.setValue1(totalValue/2);
+        dice.setValue2(totalValue - totalValue/2);
+
+        game.cheating();
+
+        return ServerMessage.builder()
+                .messagePath("cheating")
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .build();
+    }
+
+
+    /**
+     * Handles move avatar differently if player wants to cheat
+     * @param message Server message
+     * @param player current player
+     * @return generate a update message
+     */
+    public static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
+        Game game = player.getCurrentGame();
+        game.moveCheatingPlayer();
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, message.getPlayer().getCurrentGame());
     }
 }

@@ -115,6 +115,8 @@ public class Game {
     public void rollDiceAndMoveCurrentPlayer(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
+        currentPlayer.setLastDicedValue(diceValue);
+
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
@@ -131,6 +133,21 @@ public class Game {
             movePlayerNotInJail(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
         }
 
+    }
+
+    public void cheating(){
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.setCheating(true);
+    }
+
+    public void moveCheatingPlayer(){
+        Player currentPlayer = getCurrentPlayer();
+        Dice dice = currentPlayer.getCurrentGame().getDice();
+
+        int currentFieldIndex = currentPlayer.getCurrentFieldIndex() - currentPlayer.getLastDicedValue();
+        int nextFieldIndex = (currentFieldIndex + dice.getValue1() + dice.getValue2()) % 40;
+
+        movePlayerNotInJail(currentPlayer, currentFieldIndex, dice.getValue1() + dice.getValue2(), nextFieldIndex);
     }
 
     private void movePlayerNotInJail(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
