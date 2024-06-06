@@ -89,6 +89,36 @@ class GameTests {
     }
 
     @Test
+    void moveCheatingPlayer(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        game.join(player);
+
+        Dice dice = new Dice();
+        dice.setValue1(1);
+        dice.setValue2(3);
+
+        game.setDice(dice);
+        player.setCurrentFieldIndex(7);
+        player.setLastDicedValue(3);
+
+        game.moveCheatingPlayer();
+        assertEquals(8, game.getCurrentPlayer().getCurrentFieldIndex() );
+
+    }
+
+    @Test
+    void isCheating(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        game.join(player);
+
+        assertFalse(player.isCheating());
+
+        game.cheating();
+
+        assertTrue(player.isCheating);
+    }
+
+    @Test
     void rollDiceAndMoveCurrentPlayer() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 

@@ -54,6 +54,11 @@ public class Player {
     @Expose
     protected boolean hasGetOutOfJailFreeCard;
 
+    @Expose
+    protected boolean isCheating;
+
+    protected int lastDicedValue;
+
     /**
      * The game the player is currently playing
      */
@@ -68,6 +73,8 @@ public class Player {
         this.isInJail = false;
         this.roundsInJail = 0;
         this.hasGetOutOfJailFreeCard = false;
+        this.isCheating = false;
+        this.lastDicedValue = 0;
     }
 
     // increases player balance
