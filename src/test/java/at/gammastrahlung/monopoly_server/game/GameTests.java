@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 @SpringBootTest
 class GameTests {
@@ -85,7 +84,7 @@ class GameTests {
         assertTrue(game.startGame(players.get(0)));
 
         game.setCurrentPlayerIndex(2);
-        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer = game.getCurrentPlayer();
 
         assertEquals(players.get(2), currentPlayer);
     }
