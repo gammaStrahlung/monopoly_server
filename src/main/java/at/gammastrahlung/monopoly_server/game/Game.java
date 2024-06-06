@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
+import at.gammastrahlung.monopoly_server.network.websocket.WebSocketGameLogger;
 import com.google.gson.annotations.Expose;
 
 import lombok.AllArgsConstructor;
@@ -65,7 +66,7 @@ public class Game {
 
     @Getter
     @Setter
-    private GameLogger logger;
+    private GameLogger logger = new WebSocketGameLogger(this);
 
     private boolean isFirstRound = true;
     private int turnNumber = 0;

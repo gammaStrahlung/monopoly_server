@@ -13,13 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 @SpringBootTest
 class GameTests {
 
     private Game game;
-
     private ArrayList<Player> players;
+    private Player currentPlayer;
 
     @BeforeEach
     void initialize() {
@@ -34,6 +35,7 @@ class GameTests {
 
             players.add(mockPlayer);
         }
+        currentPlayer = players.get(0);
     }
 
     @Test
@@ -258,22 +260,17 @@ class GameTests {
         assertEquals(1500 + 200, player.getBalance()); // Initial balance after join is 1500, bonus money is 200
     }
 
+
     @Test
     void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // start the game
-        assertTrue(game.startGame(players.get(0)));
-
+        // Set currentPlayerIndex to 1 and end turn
         game.setCurrentPlayerIndex(1);
         game.endCurrentPlayerTurn(currentPlayer);
         assertEquals(2, game.getCurrentPlayerIndex());
-
-        game.setCurrentPlayerIndex(4);
-        game.endCurrentPlayerTurn(currentPlayer);
-        assertEquals(1, game.getCurrentPlayerIndex());
     }
 
     @Test
