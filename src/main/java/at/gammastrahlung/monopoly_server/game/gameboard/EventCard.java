@@ -27,18 +27,29 @@ public class EventCard {
 
 
     public void applyAction(Player player, EventCard card, Game game) {
+        // Log drawn card
+        String logMessage = player.getName() + " drew a card: " + description;
+        game.getLogger().logMessage(logMessage);
+
+        // Log the action effect
+        String actionEffect = "";
         switch (card.getCardType()) {
             case GO_TO_JAIL:
                 player.goToJail();
+                player.setCurrentFieldIndex(10);
+                actionEffect = player.getName() + " is sent to Jail.";
                 break;
             case PAY_MONEY_CARD:
                 player.pay(card.getPayOrGetMoney());
+                actionEffect = player.getName() + " pays " + card.payOrGetMoney + ".";
                 break;
             case GET_MONEY_CARD:
                 player.addBalance(card.getPayOrGetMoney());
+                actionEffect = player.getName() + " receives " + card.payOrGetMoney + ".";
                 break;
             case MOVE_TO_FIELD:
                 player.setCurrentFieldIndex(card.getMoveToField());
+                actionEffect = player.getName() + " moves to field " + card.moveToField + ".";
 
                 // Handle actions on the field the player gets moved to
                 handleFieldAction(player, game);
@@ -46,6 +57,7 @@ public class EventCard {
             case MOVE_TO_RAILROAD:
                 int nextRailroadIndex = findNextRailroadIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextRailroadIndex);
+                actionEffect = player.getName() + " moves to the next railroad at " + nextRailroadIndex + ".";
 
                 // Handle actions on the field the player gets moved to
                 handleFieldAction(player, game);
@@ -53,26 +65,33 @@ public class EventCard {
             case STREET_REPAIRS:
                 int repairAmount = calculateStreetRepairs(player, game);
                 player.pay(repairAmount);
+                actionEffect = player.getName() + " pays " + repairAmount + " for street repairs.";
                 break;
             case GET_OUT_OF_JAIL:
                 player.setHasGetOutOfJailFreeCard(true);
+                actionEffect = player.getName() + " receives a 'Get Out of Jail Free' card.";
                 break;
             case MOVE_TO_UTILITY:
                 int nextUtilityIndex = findNextUtilityIndex(player.getCurrentFieldIndex());
                 player.setCurrentFieldIndex(nextUtilityIndex);
+                actionEffect = player.getName() + " moves to the next utility at field" + nextUtilityIndex + ".";
 
                 // Handle actions on the field the player gets moved to
                 handleFieldAction(player, game);
                 break;
             case MOVE_SPACES:
                 player.moveAvatar(player.getCurrentFieldIndex(), -3);
-
+                actionEffect = player.getName() + " moves back 3 spaces.";
+                
                 // Handle actions on the field the player gets moved to
                 handleFieldAction(player, game);
                 break;
             default:
                 break;
         }
+
+        // Log the action effect
+        game.getLogger().logMessage(actionEffect);
     }
 
 

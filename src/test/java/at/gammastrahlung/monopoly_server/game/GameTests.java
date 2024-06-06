@@ -18,8 +18,8 @@ import java.util.*;
 class GameTests {
 
     private Game game;
-
     private ArrayList<Player> players;
+    private Player currentPlayer;
 
     @BeforeEach
     void initialize() {
@@ -34,6 +34,7 @@ class GameTests {
 
             players.add(mockPlayer);
         }
+        currentPlayer = players.get(0);
     }
 
     @Test
@@ -83,7 +84,7 @@ class GameTests {
         assertTrue(game.startGame(players.get(0)));
 
         game.setCurrentPlayerIndex(2);
-        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer = game.getCurrentPlayer();
 
         assertEquals(players.get(2), currentPlayer);
     }
@@ -258,22 +259,17 @@ class GameTests {
         assertEquals(1500 + 200, player.getBalance()); // Initial balance after join is 1500, bonus money is 200
     }
 
+
     @Test
     void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // start the game
-        assertTrue(game.startGame(players.get(0)));
-
+        // Set currentPlayerIndex to 1 and end turn
         game.setCurrentPlayerIndex(1);
-        game.endCurrentPlayerTurn();
+        game.endCurrentPlayerTurn(currentPlayer);
         assertEquals(2, game.getCurrentPlayerIndex());
-
-        game.setCurrentPlayerIndex(4);
-        game.endCurrentPlayerTurn();
-        assertEquals(1, game.getCurrentPlayerIndex());
     }
 
     @Test

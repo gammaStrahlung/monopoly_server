@@ -15,12 +15,18 @@ class EventCardTests {
     EventCard eventCard;
     Player mockPlayer;
     Game game;
+    GameLogger gameLogger;
 
     @BeforeEach
     void initialize(){
         eventCard = new EventCard();
         mockPlayer = mock(Player.class);
         game = mock(Game.class);
+
+        gameLogger = mock(GameLogger.class);
+
+        // Configure the game mock to return the mock GameLogger
+        when(game.getLogger()).thenReturn(gameLogger);
     }
 
     @Test
