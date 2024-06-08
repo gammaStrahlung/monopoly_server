@@ -119,7 +119,29 @@ class GameTests {
 
     @Test
     void rollDice(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        // Create a mock for the dice
+        Dice dice = mock(Dice.class);
+        when(dice.roll()).thenReturn(4);
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        // Set the mock dice in the game object
+        game.setDice(dice);
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.rollDice();
+        assertEquals(4, player.getLastDicedValue());
     }
 
     @Test
