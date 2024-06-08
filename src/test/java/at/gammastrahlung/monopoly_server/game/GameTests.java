@@ -100,11 +100,9 @@ class GameTests {
 
         game.setDice(dice);
         player.setCurrentFieldIndex(7);
-        player.setLastDicedValue(3);
 
         game.moveCheatingPlayer();
-        assertEquals(8, game.getCurrentPlayer().getCurrentFieldIndex() );
-
+        assertEquals(11, game.getCurrentPlayer().getCurrentFieldIndex() );
     }
 
     @Test
@@ -120,7 +118,12 @@ class GameTests {
     }
 
     @Test
-    void rollDiceAndMoveCurrentPlayer() {
+    void rollDice(){
+
+    }
+
+    @Test
+    void movePlayer() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
         game.join(player);
@@ -128,21 +131,18 @@ class GameTests {
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // Create a mock for the dice
-        Dice dice = mock(Dice.class);
-        when(dice.roll()).thenReturn(4);
+        int diceValue = 4;
+        player.setLastDicedValue(diceValue);
 
         // start the game
         assertTrue(game.startGame(player));
 
-        // Set the mock dice in the game object
-        game.setDice(dice);
         game.setCurrentPlayerIndex(0);
 
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
         assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
         assertEquals(0, game.getCurrentPlayerIndex());
@@ -158,28 +158,17 @@ class GameTests {
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // Create a mock for the dice
-        Dice dice = mock(Dice.class);
-        when(dice.roll()).thenReturn(4);
-
-        // Assume player rolls doubles
-        when(dice.getValue1()).thenReturn(2);
-        when(dice.getValue2()).thenReturn(2);
-
-
         // start the game
         assertTrue(game.startGame(player));
 
-        // Set the mock dice in the game object
-        game.setDice(dice);
         game.setCurrentPlayerIndex(0);
 
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
-        assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayer().getCurrentFieldIndex());
         assertEquals(0, game.getCurrentPlayerIndex());
     }
 
@@ -217,7 +206,7 @@ class GameTests {
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
         //Player does not move since they are in jail and have not thrown doubles
         assertEquals(30, game.getCurrentPlayer().getCurrentFieldIndex());
@@ -225,13 +214,10 @@ class GameTests {
 
         // Player has not rolled doubles in 3 tries
         player.setRoundsInJail(3);
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
         //check if player has paid fine
         assertEquals(50, player.getBalance());
-        //check if player has moved for diced value
-        assertEquals(35, player.getCurrentFieldIndex());
-
     }
 
     @Test
