@@ -19,6 +19,7 @@ public class Game {
     private static final int MAX_GAME_ID = 999999;
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 8;
+    private static final String ROLLED = " rolled a ";
 
     // bonus money the player gets for passing the start
     private static final int BONUS_MONEY = 200;
@@ -119,15 +120,21 @@ public class Game {
         }
     }
 
-    public void rollDiceAndMoveCurrentPlayer(){
-        turnNumber++;
+    public void rollDice(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
+    }
+
+    public void movePlayer(){
+        turnNumber++;
+        Player currentPlayer = getCurrentPlayer();
+
+        int diceValue = currentPlayer.getLastDicedValue();
 
 
         if(!currentPlayer.isInJail){
-            this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
+            this.getLogger().logMessage(currentPlayer.getName() + ROLLED + diceValue + ".");
         }
 
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
@@ -140,7 +147,7 @@ public class Game {
         // Check if player is in jail
         if (currentPlayer.isInJail() && !currentPlayer.hasGetOutOfJailFreeCard) {
             this.getLogger().logMessage(currentPlayer.getName() + " is in Jail, they need doubles to get out.");
-            this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + diceValue + ".");
+            this.getLogger().logMessage(currentPlayer.getName() + ROLLED + diceValue + ".");
             // Player is in Jail and they don't throw doubles
             if (dice.getValue1() != dice.getValue2()) {
                 this.getLogger().logMessage("No doubles!");
@@ -164,8 +171,11 @@ public class Game {
         Player currentPlayer = getCurrentPlayer();
         Dice dice = currentPlayer.getCurrentGame().getDice();
 
-        int currentFieldIndex = currentPlayer.getCurrentFieldIndex() - currentPlayer.getLastDicedValue();
+        int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + dice.getValue1() + dice.getValue2()) % 40;
+        int dicedValue = dice.getValue1() + dice.getValue2();
+
+        this.getLogger().logMessage(currentPlayer.getName() + ROLLED + dicedValue + ".");
 
         movePlayerNotInJail(currentPlayer, currentFieldIndex, dice.getValue1() + dice.getValue2(), nextFieldIndex);
     }
