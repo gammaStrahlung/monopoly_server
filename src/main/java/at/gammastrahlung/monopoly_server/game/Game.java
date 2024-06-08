@@ -119,11 +119,17 @@ public class Game {
         }
     }
 
-    public void rollDiceAndMoveCurrentPlayer(){
-        turnNumber++;
+    public void rollDice(){
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
+    }
+
+    public void movePlayer(){
+        turnNumber++;
+        Player currentPlayer = getCurrentPlayer();
+
+        int diceValue = currentPlayer.getLastDicedValue();
 
 
         if(!currentPlayer.isInJail){
@@ -164,8 +170,11 @@ public class Game {
         Player currentPlayer = getCurrentPlayer();
         Dice dice = currentPlayer.getCurrentGame().getDice();
 
-        int currentFieldIndex = currentPlayer.getCurrentFieldIndex() - currentPlayer.getLastDicedValue();
+        int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + dice.getValue1() + dice.getValue2()) % 40;
+        int dicedValue = dice.getValue1() + dice.getValue2();
+
+        this.getLogger().logMessage(currentPlayer.getName() + " rolled a " + dicedValue + ".");
 
         movePlayerNotInJail(currentPlayer, currentFieldIndex, dice.getValue1() + dice.getValue2(), nextFieldIndex);
     }

@@ -67,11 +67,10 @@ public class MonopolyMessageHandler {
                 }
                 case "start" -> startGame(clientMessage.getPlayer());
                 case "end" -> endGame(clientMessage.getPlayer());
-                case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage, clientMessage.getPlayer());
+                case "roll_dice" -> rollDice(clientMessage, clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
-                case "move_avatar" ->
-                        generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
+                case "move_avatar" -> movePlayer(clientMessage, clientMessage.getPlayer());
                 case "move_avatar_cheating" ->
                         moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
                 case "cheating" -> cheating(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
@@ -219,16 +218,24 @@ public class MonopolyMessageHandler {
         return message.build();
     }
 
-    private static ServerMessage rollDiceAndMoveCurrentPlayer(ClientMessage clientMessage, WebSocketPlayer player) {
+    private static ServerMessage rollDice(ClientMessage clientMessage, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        game.rollDiceAndMoveCurrentPlayer();
+        game.rollDice();
 
         return ServerMessage.builder()
                 .messagePath("roll_dice")
                 .type(ServerMessage.MessageType.INFO)
                 .game(game)
                 .build();
+    }
+
+    private static ServerMessage movePlayer(ClientMessage clientMessage, WebSocketPlayer player) {
+        Game game = player.getCurrentGame();
+
+        game.movePlayer();
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
     }
 
     private static ServerMessage endCurrentPlayerTurn(WebSocketPlayer player) {
