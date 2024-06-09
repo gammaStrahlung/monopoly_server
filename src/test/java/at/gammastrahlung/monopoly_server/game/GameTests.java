@@ -495,4 +495,11 @@ class GameTests {
         assertEquals(player1, disconnectedPlayers.get(0));
         assertEquals(player2, game.getGameOwner());
     }
+
+    @Test
+    void getGameState() {
+        assertNull(Game.getGameState(game.getGameId(), players.get(0)));
+        game.join(players.get(0));
+        assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
+    }
 }
