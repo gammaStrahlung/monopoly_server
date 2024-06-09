@@ -349,7 +349,26 @@ public class Game {
         // Player will be replaced until reconnect
         player.setComputerPlayer(true);
 
-        logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
+        new Thread(() -> {
+            try {
+                // Wait 10 seconds after disconnect
+                Thread.sleep(10000);
+
+                // Player has reconnected in the meantime
+                if (!player.isComputerPlayer())
+                    return;
+
+                logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
+
+                // Check if player is game owner
+                if (player.equals(gameOwner) && gameOwner.isComputerPlayer()) {
+                    gameOwner = players.stream().filter(player1 -> !player1.equals(gameOwner)).findFirst().orElseThrow();
+                    logger.logMessage(gameOwner.getName() + " is now the game owner.");
+                }
+            } catch (Exception ignored) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
      private void initializeGameBoard() {
