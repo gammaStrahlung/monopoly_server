@@ -76,6 +76,10 @@ public class MonopolyMessageHandler {
                 case "move_avatar_cheating" ->
                         moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
                 case "cheating" -> cheating(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
+                case "game_state" -> {
+                    clientMessage.getPlayer().setWebSocketSession(session);
+                    yield gameState(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
+                }
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -267,17 +271,26 @@ public class MonopolyMessageHandler {
                 .build();
     }
 
-
     /**
      * Handles move avatar differently if player wants to cheat
      * @param message Server message
      * @param player current player
      * @return generate a update message
      */
-    public static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
+    private static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
         Game game = player.getCurrentGame();
         game.moveCheatingPlayer();
 
         return generateUpdateMessage(ServerMessage.MessageType.INFO, message.getPlayer().getCurrentGame());
+    }
+
+    private static ServerMessage gameState(int gameId, WebSocketPlayer player) {
+        Game.GameState gameState = Game.getGameState(gameId, player);
+
+        return ServerMessage.builder()
+                .messagePath("game_state")
+                .type(ServerMessage.MessageType.INFO)
+                .jsonData(gson.toJson(gameState))
+                .build();
     }
 }
