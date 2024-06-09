@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class MonopolyMessageHandler {
 
+    private MonopolyMessageHandler() {}
+
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(Field.class, new FieldSerializer())
