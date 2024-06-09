@@ -297,12 +297,12 @@ public class Game {
      * @return If the join was successful.
      */
     public boolean join(Player player) {
-        // Set initial player balance
-        player.setBalance(INITIAL_BALANCE);
-
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
         if (!players.contains(player)) {
+            // Set initial player balance
+            player.setBalance(INITIAL_BALANCE);
+
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
