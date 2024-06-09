@@ -59,9 +59,9 @@ public class MonopolyMessageHandler {
                         WebSocketSender.sendToPlayers(
                                 generateUpdateMessage(
                                         ServerMessage.MessageType.INFO,
-                                        clientMessage.getPlayer()
+                                        message.getPlayer()
                                 ),
-                                clientMessage.getPlayer().getCurrentGame().getPlayers()
+                                message.getPlayer().getCurrentGame().getPlayers()
                         );
                     }
 
@@ -140,11 +140,14 @@ public class MonopolyMessageHandler {
                     .player(player)
                     .build();
         } else {
+            // Used when re-joining as the old player object gets reused
+            WebSocketPlayer newPlayer = (WebSocketPlayer) game.getPlayers().stream().filter(player::equals).findFirst().orElseThrow();
+
             return ServerMessage.builder()
                     .type(ServerMessage.MessageType.SUCCESS)
                     .messagePath("join")
                     .jsonData(gson.toJson(game))
-                    .player(player)
+                    .player(newPlayer)
                     .build();
         }
     }
