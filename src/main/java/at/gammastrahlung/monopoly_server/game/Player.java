@@ -60,6 +60,11 @@ public class Player {
     protected int lastDicedValue;
 
     /**
+     * When a player disconnects, they become a computer player
+     */
+    protected boolean isComputerPlayer;
+
+    /**
      * The game the player is currently playing
      */
     protected Game currentGame;
@@ -89,12 +94,13 @@ public class Player {
 
 
     /**
-     * Updates the player Object with needed properties depending on the Player Implementation
+     * Updates the player Object on re-join with needed properties depending on the Player Implementation
      *
      * @param player The player object with changed properties
      */
     public void update(Player player) {
-        // will get implemented in next sprint
+        // Player is a real player again
+        setComputerPlayer(false);
     }
   
     @Override

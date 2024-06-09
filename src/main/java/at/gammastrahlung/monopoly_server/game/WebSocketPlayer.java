@@ -52,6 +52,8 @@ public class WebSocketPlayer extends Player {
      */
     @Override
     public void update(Player player) {
+        super.update(player);
+
         if (player.getClass() == this.getClass()) {
             // Only update if player is a WebSocketPlayer
             if (webSocketSession != null)

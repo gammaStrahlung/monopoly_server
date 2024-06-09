@@ -320,6 +320,7 @@ public class Game {
         } else {
             // Player is re-joining -> update old player object
             players.get(players.indexOf(player)).update(player);
+            logger.logMessage(player.getName() + " has reconnected.");
         }
 
         return true;
@@ -338,6 +339,17 @@ public class Game {
         else
             return game.getState();
 
+    }
+
+    /**
+     * Handles when a player disconnects
+     * @param player The player that disconnected
+     */
+    public void playerDisconnected(Player player) {
+        // Player will be replaced until reconnect
+        player.setComputerPlayer(true);
+
+        logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
     }
 
      private void initializeGameBoard() {
