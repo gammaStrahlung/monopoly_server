@@ -325,6 +325,21 @@ public class Game {
         return true;
     }
 
+    /**
+     * Returns the GameState of the game with the given ID
+     * @param gameId The id of the game
+     * @return the gameState of the game or null if game does not exist
+     */
+    public static GameState getGameState(int gameId, Player player) {
+        Game game = games.get(gameId);
+
+        if (game == null || !game.getPlayers().contains(player))
+            return null;
+        else
+            return game.getState();
+
+    }
+
      private void initializeGameBoard() {
         // Initialize the game board
         gameBoard.initializeGameBoard();
