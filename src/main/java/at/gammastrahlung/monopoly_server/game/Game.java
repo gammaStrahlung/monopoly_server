@@ -69,6 +69,10 @@ public class Game {
     @Setter
     private GameLogger logger = new WebSocketGameLogger(this);
 
+    @Getter
+    @Setter
+    private DisconnectNotifier disconnectNotifier;
+
     private boolean isFirstRound = true;
     private int turnNumber = 0;
 
@@ -124,6 +128,10 @@ public class Game {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
+
+        // Automatically move the player if it is a computer player
+        if (currentPlayer.isComputerPlayer())
+            movePlayer();
     }
 
     public void movePlayer(){
@@ -160,6 +168,9 @@ public class Game {
             movePlayerNotInJail(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
         }
 
+        // Automatically end turn if player is computer player
+        if (currentPlayer.isComputerPlayer())
+            endCurrentPlayerTurn(currentPlayer);
     }
 
     public void cheating(){
@@ -237,6 +248,10 @@ public class Game {
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
+
+        // Automatically roll dice if player is computer player
+        if (getCurrentPlayer().isComputerPlayer())
+            rollDice();
     }
 
     public Player getCurrentPlayer() {
@@ -349,26 +364,34 @@ public class Game {
         // Player will be replaced until reconnect
         player.setComputerPlayer(true);
 
-        new Thread(() -> {
-            try {
-                // Wait 10 seconds after disconnect
-                Thread.sleep(10000);
+        try {
+            // Wait 10 seconds after disconnect
+            Thread.sleep(10000);
 
-                // Player has reconnected in the meantime
-                if (!player.isComputerPlayer())
-                    return;
+            // Player has reconnected in the meantime
+            if (!player.isComputerPlayer())
+                return;
 
-                logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
+            logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
 
-                // Check if player is game owner
-                if (player.equals(gameOwner) && gameOwner.isComputerPlayer()) {
-                    gameOwner = players.stream().filter(player1 -> !player1.equals(gameOwner)).findFirst().orElseThrow();
-                    logger.logMessage(gameOwner.getName() + " is now the game owner.");
-                }
-            } catch (Exception ignored) {
-                Thread.currentThread().interrupt();
+            // Check if player is game owner
+            if (player.equals(gameOwner) && gameOwner.isComputerPlayer()) {
+                gameOwner = players.stream().filter(player1 -> !player1.equals(gameOwner)).findFirst().orElseThrow();
+                logger.logMessage(gameOwner.getName() + " is now the game owner.");
             }
-        }).start();
+
+            // Automatically execute actions when current player disconnected
+            if (getCurrentPlayer().equals(player)) {
+                rollDice();
+            }
+
+            // Notify players of disconnect
+            if (disconnectNotifier != null)
+                disconnectNotifier.notifyPlayers(player);
+
+        } catch (Exception ignored) {
+            Thread.currentThread().interrupt();
+        }
     }
 
      private void initializeGameBoard() {

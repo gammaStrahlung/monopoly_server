@@ -1,10 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
-import at.gammastrahlung.monopoly_server.game.Dice;
-import at.gammastrahlung.monopoly_server.game.Game;
-import at.gammastrahlung.monopoly_server.game.GameLogger;
-import at.gammastrahlung.monopoly_server.game.Player;
-import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
+import at.gammastrahlung.monopoly_server.game.*;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
@@ -112,6 +108,19 @@ public class MonopolyMessageHandler {
         GameLogger gameLogger = new WebSocketGameLogger(game);
         game.setLogger(gameLogger);
 
+        // Add disconnect notifier (updates game for other players)
+        game.setDisconnectNotifier(player1 -> {
+            if (player1.getCurrentGame() == null)
+                return;
+
+            ServerMessage message = ServerMessage.builder()
+                    .messagePath("initiate_round")
+                    .player(player)
+                    .jsonData(gson.toJson(player1.getCurrentGame().getCurrentPlayer()))
+                    .build();
+
+            WebSocketSender.sendToPlayers(message, player1.getCurrentGame().getPlayers());
+        });
 
         // Player that creates the game should also join the game
         game.join(player);
