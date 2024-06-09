@@ -69,6 +69,10 @@ public class Game {
     @Setter
     private GameLogger logger = new WebSocketGameLogger(this);
 
+    @Getter
+    @Setter
+    private DisconnectNotifier disconnectNotifier;
+
     private boolean isFirstRound = true;
     private int turnNumber = 0;
 
@@ -124,6 +128,10 @@ public class Game {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
+
+        // Automatically move the player if it is a computer player
+        if (currentPlayer.isComputerPlayer())
+            movePlayer();
     }
 
     public void movePlayer(){
@@ -160,6 +168,9 @@ public class Game {
             movePlayerNotInJail(currentPlayer, currentFieldIndex, diceValue, nextFieldIndex);
         }
 
+        // Automatically end turn if player is computer player
+        if (currentPlayer.isComputerPlayer())
+            endCurrentPlayerTurn(currentPlayer);
     }
 
     public void cheating(){
@@ -237,6 +248,10 @@ public class Game {
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
+
+        // Automatically roll dice if player is computer player
+        if (getCurrentPlayer().isComputerPlayer())
+            rollDice();
     }
 
     public Player getCurrentPlayer() {
@@ -297,12 +312,12 @@ public class Game {
      * @return If the join was successful.
      */
     public boolean join(Player player) {
-        // Set initial player balance
-        player.setBalance(INITIAL_BALANCE);
-
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
         if (!players.contains(player)) {
+            // Set initial player balance
+            player.setBalance(INITIAL_BALANCE);
+
             if (state != GameState.STARTED)
                 return false; // Can't join when already playing
 
@@ -320,9 +335,63 @@ public class Game {
         } else {
             // Player is re-joining -> update old player object
             players.get(players.indexOf(player)).update(player);
+            logger.logMessage(player.getName() + " has reconnected.");
         }
 
         return true;
+    }
+
+    /**
+     * Returns the GameState of the game with the given ID
+     * @param gameId The id of the game
+     * @return the gameState of the game or null if game does not exist
+     */
+    public static GameState getGameState(int gameId, Player player) {
+        Game game = games.get(gameId);
+
+        if (game == null || !game.getPlayers().contains(player))
+            return null;
+        else
+            return game.getState();
+
+    }
+
+    /**
+     * Handles when a player disconnects
+     * @param player The player that disconnected
+     */
+    public void playerDisconnected(Player player) {
+        // Player will be replaced until reconnect
+        player.setComputerPlayer(true);
+
+        try {
+            // Wait 10 seconds after disconnect
+            Thread.sleep(10000);
+
+            // Player has reconnected in the meantime
+            if (!player.isComputerPlayer())
+                return;
+
+            logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
+
+            // Check if player is game owner
+            if (player.equals(gameOwner) && gameOwner.isComputerPlayer()) {
+                gameOwner = players.stream().filter(player1 -> !player1.equals(gameOwner)).findFirst().orElseThrow();
+                logger.logMessage(gameOwner.getName() + " is now the game owner.");
+            }
+
+            // Automatically execute actions when current player disconnected
+            if (getCurrentPlayer().equals(player)) {
+                rollDice();
+            }
+
+            // Notify players of disconnect
+            if (disconnectNotifier != null)
+                disconnectNotifier.notifyPlayers(player);
+
+        } catch (Exception ignored) {
+            Thread.currentThread().interrupt();
+        }
     }
 
      private void initializeGameBoard() {

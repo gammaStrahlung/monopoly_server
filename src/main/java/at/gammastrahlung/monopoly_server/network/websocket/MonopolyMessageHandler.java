@@ -1,10 +1,6 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
-import at.gammastrahlung.monopoly_server.game.Dice;
-import at.gammastrahlung.monopoly_server.game.Game;
-import at.gammastrahlung.monopoly_server.game.GameLogger;
-import at.gammastrahlung.monopoly_server.game.Player;
-import at.gammastrahlung.monopoly_server.game.WebSocketPlayer;
+import at.gammastrahlung.monopoly_server.game.*;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
@@ -18,6 +14,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class MonopolyMessageHandler {
+
+    private MonopolyMessageHandler() {}
 
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -57,9 +55,9 @@ public class MonopolyMessageHandler {
                         WebSocketSender.sendToPlayers(
                                 generateUpdateMessage(
                                         ServerMessage.MessageType.INFO,
-                                        clientMessage.getPlayer()
+                                        message.getPlayer()
                                 ),
-                                clientMessage.getPlayer().getCurrentGame().getPlayers()
+                                message.getPlayer().getCurrentGame().getPlayers()
                         );
                     }
 
@@ -74,6 +72,10 @@ public class MonopolyMessageHandler {
                 case "move_avatar_cheating" ->
                         moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
                 case "cheating" -> cheating(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
+                case "game_state" -> {
+                    clientMessage.getPlayer().setWebSocketSession(session);
+                    yield gameState(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
+                }
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -106,6 +108,19 @@ public class MonopolyMessageHandler {
         GameLogger gameLogger = new WebSocketGameLogger(game);
         game.setLogger(gameLogger);
 
+        // Add disconnect notifier (updates game for other players)
+        game.setDisconnectNotifier(player1 -> {
+            if (player1.getCurrentGame() == null)
+                return;
+
+            ServerMessage message = ServerMessage.builder()
+                    .messagePath("initiate_round")
+                    .player(player)
+                    .jsonData(gson.toJson(player1.getCurrentGame().getCurrentPlayer()))
+                    .build();
+
+            WebSocketSender.sendToPlayers(message, player1.getCurrentGame().getPlayers());
+        });
 
         // Player that creates the game should also join the game
         game.join(player);
@@ -138,11 +153,14 @@ public class MonopolyMessageHandler {
                     .player(player)
                     .build();
         } else {
+            // Used when re-joining as the old player object gets reused
+            WebSocketPlayer newPlayer = (WebSocketPlayer) game.getPlayers().stream().filter(player::equals).findFirst().orElseThrow();
+
             return ServerMessage.builder()
                     .type(ServerMessage.MessageType.SUCCESS)
                     .messagePath("join")
                     .jsonData(gson.toJson(game))
-                    .player(player)
+                    .player(newPlayer)
                     .build();
         }
     }
@@ -262,17 +280,26 @@ public class MonopolyMessageHandler {
                 .build();
     }
 
-
     /**
      * Handles move avatar differently if player wants to cheat
      * @param message Server message
      * @param player current player
      * @return generate a update message
      */
-    public static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
+    private static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
         Game game = player.getCurrentGame();
         game.moveCheatingPlayer();
 
         return generateUpdateMessage(ServerMessage.MessageType.INFO, message.getPlayer().getCurrentGame());
+    }
+
+    private static ServerMessage gameState(int gameId, WebSocketPlayer player) {
+        Game.GameState gameState = Game.getGameState(gameId, player);
+
+        return ServerMessage.builder()
+                .messagePath("game_state")
+                .type(ServerMessage.MessageType.INFO)
+                .jsonData(gson.toJson(gameState))
+                .build();
     }
 }

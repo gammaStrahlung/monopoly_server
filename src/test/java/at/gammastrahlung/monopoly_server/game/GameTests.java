@@ -465,4 +465,41 @@ class GameTests {
         when(player.getCurrentFieldIndex()).thenReturn(0); // Go field
         assertFalse(game.processPayment(player));
     }
+
+    @Test
+    void disconnectNotifier() {
+        ArrayList<Player> disconnectedPlayers = new ArrayList<>();
+
+        // This can only work with an actual player object
+        Player player1 = new Player();
+        player1.setId(UUID.randomUUID());
+        player1.setName("Player");
+
+        Player player2 = new Player();
+        player2.setId(UUID.randomUUID());
+        player2.setName("Player");
+
+        DisconnectNotifier disconnectNotifier = disconnectedPlayers::add;
+
+        game.setDisconnectNotifier(disconnectNotifier);
+        assertEquals(disconnectNotifier, game.getDisconnectNotifier());
+
+        game.join(player1);
+        game.join(player2);
+
+        // Test if disconnectNotifier is called
+        game.playerDisconnected(player1);
+
+        assertEquals(1,disconnectedPlayers.size());
+        assertTrue(disconnectedPlayers.get(0).isComputerPlayer());
+        assertEquals(player1, disconnectedPlayers.get(0));
+        assertEquals(player2, game.getGameOwner());
+    }
+
+    @Test
+    void getGameState() {
+        assertNull(Game.getGameState(game.getGameId(), players.get(0)));
+        game.join(players.get(0));
+        assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
+    }
 }
