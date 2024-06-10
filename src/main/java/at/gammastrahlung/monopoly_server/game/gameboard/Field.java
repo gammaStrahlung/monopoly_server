@@ -17,4 +17,6 @@ public class Field {
     private String name;
     @Expose
     private FieldType type;
+
+
 }

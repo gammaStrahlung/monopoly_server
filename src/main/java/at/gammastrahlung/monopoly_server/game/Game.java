@@ -498,4 +498,17 @@ public class Game {
         // For example: Sell houses, take out mortgage, or declare bankruptcy
         return false;
     }
+
+    public Player getPlayerById(UUID playerId) {
+        // Assuming you have a list of players
+        for (Player player : players) {
+            if (player.getId().equals(playerId)) {
+                return player;
+            }
+        }
+        return null; // Return null if no player with the given ID is found
+    }
+
+
+
 }

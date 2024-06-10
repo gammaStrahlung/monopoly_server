@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import lombok.Data;
+
 import java.util.UUID;
 
 @Data
