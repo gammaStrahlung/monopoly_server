@@ -789,4 +789,10 @@ public class GameBoard {
                 .cardType(CardType.GET_OUT_OF_JAIL)
                 .build());
     }
+    public Field getFieldByIndex(int index) {
+    if (index < 0 || index >= fields.length) {
+        throw new IllegalArgumentException("Index out of bounds");
+    }
+    return fields[index];
+}
 }
