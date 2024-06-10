@@ -27,12 +27,11 @@ public class Auction {
             }
         }
 
-        if (highestBid != null) {
             Field field = game.getGameBoard().getFieldByIndex(highestBid.getFieldIndex());
             if (field instanceof Property property) {
                 property.setOwner(winningPlayer);
             }
-        }
+
     }
 
 
