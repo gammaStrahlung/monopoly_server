@@ -1,15 +1,12 @@
  package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.Bid;
-import at.gammastrahlung.monopoly_server.game.Game;
-import at.gammastrahlung.monopoly_server.game.Player;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import lombok.Data;
 
 import java.util.List;
-import java.util.UUID;
+
  @Data
 public class Auction {
 
@@ -32,25 +29,20 @@ public class Auction {
 
         if (highestBid != null) {
             Field field = game.getGameBoard().getFieldByIndex(highestBid.getFieldIndex());
-            if (field instanceof Property) {
-                Property property = (Property) field;
+            if (field instanceof Property property) {
                 property.setOwner(winningPlayer);
             }
         }
     }
-}
 
 
+    public boolean checkCurrentField(int currentFieldIndex, Player bank) {
+        Field currentField = gameBoard.getFieldByIndex(currentFieldIndex);
 
+        if (currentField instanceof Property currentProperty) {
+            return currentProperty.getOwner().equals(bank);
+        }
 
-
-
-
-
-
-
-
-
-
-
+        return false;
+    }
 }
