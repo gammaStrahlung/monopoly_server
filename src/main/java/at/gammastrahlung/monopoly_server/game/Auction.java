@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class Auction {
-
-
+    private List<Bid> bids;
+    private Game game;
+    private GameBoard gameBoard;
 
 
 
