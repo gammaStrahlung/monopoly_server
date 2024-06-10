@@ -1,9 +1,6 @@
-package
-at.gammastrahlung.monopoly_server.game;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+package at.gammastrahlung.monopoly_server.game;
 
+import lombok.Data;
 import java.util.UUID;
 
 @Data
