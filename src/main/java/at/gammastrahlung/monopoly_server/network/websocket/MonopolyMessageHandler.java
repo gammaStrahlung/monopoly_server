@@ -7,11 +7,14 @@ import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MonopolyMessageHandler {
 
@@ -76,6 +79,7 @@ public class MonopolyMessageHandler {
                     clientMessage.getPlayer().setWebSocketSession(session);
                     yield gameState(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
                 }
+                case "checkCurrentField"    -> checkCurrentField(clientMessage);
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -302,4 +306,36 @@ public class MonopolyMessageHandler {
                 .jsonData(gson.toJson(gameState))
                 .build();
     }
+
+   private static ServerMessage checkCurrentField(ClientMessage clientMessage){
+    Auction auction = new Auction();
+       String message = clientMessage.getMessage();
+       int  currentFieldIndex;
+
+       try {
+           currentFieldIndex = Integer.parseInt(message);
+       } catch (NumberFormatException e) {
+           System.out.println("Fehler beim Parsen des Feldindex aus der Nachricht: " + message);
+           return ServerMessage.builder()
+                   .messagePath("checkCurrentField")
+                   .type(ServerMessage.MessageType.ERROR)
+                   .build();
+       }
+
+    boolean isProperty = auction.checkCurrentField(currentFieldIndex);
+       if ( isProperty) {
+           return ServerMessage.builder()
+                   .messagePath("checkCurrentField")
+                   .type(ServerMessage.MessageType.INFO)
+                   .jsonData("true")
+                   .build();
+       } else {
+           return ServerMessage.builder()
+                   .messagePath("checkCurrentField")
+                   .type(ServerMessage.MessageType.INFO)
+                   .jsonData("false")
+                   .build();
+       }
+}
+
 }
