@@ -33,8 +33,11 @@ public class GameBoard {
     private ArrayList<EventCard> communityChestDeck;
 
     private String communityChest;
+    private String communityChestBoardName;
     private String goToJail;
+    private String goToJailBoardName;
     private String chance;
+    private String chanceBoardName;
 
     public void initializeGameBoard() {
 
@@ -50,12 +53,16 @@ public class GameBoard {
 
         // Recurring field / card names
         communityChest = "Community Chest";
+        communityChestBoardName = "\uD83C\uDCCF️";
         goToJail = "Go to Jail";
+        goToJailBoardName = "Go to Jail \uD83D\uDE94";
         chance = "Chance";
+        chanceBoardName = "❓";
 
         fields[0] = Field.builder()
                 .fieldId(0)
                 .name("Go")
+                .boardName("⬅\uFE0F GO️")
                 .type(FieldType.GO)
                 .build();
 
@@ -71,6 +78,7 @@ public class GameBoard {
         fields[1] = Property.builder()
                 .fieldId(1)
                 .name("Mediterranean Avenue")
+                .boardName("Med. Ave.")
                 .type(FieldType.PROPERTY)
                 .price(60)
                 .owner(bank)
@@ -84,6 +92,7 @@ public class GameBoard {
         fields[2] = Field.builder()
                 .fieldId(2)
                 .name(communityChest)
+                .boardName(communityChestBoardName)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
@@ -99,6 +108,7 @@ public class GameBoard {
         fields[3] = Property.builder()
                 .fieldId(3)
                 .name("Baltic Avenue")
+                .boardName("Balt. Ave.")
                 .type(FieldType.PROPERTY)
                 .price(60)
                 .owner(bank)
@@ -112,6 +122,7 @@ public class GameBoard {
         fields[4] = TaxField.builder()
                 .fieldId(4)
                 .name("Income Tax")
+                .boardName("Inc. Tax \uD83D\uDCB5")
                 .type(FieldType.INCOME_TAX)
                 .toPay(200)
                 .build();
@@ -119,6 +130,7 @@ public class GameBoard {
         fields[5] = Railroad.builder()
                 .fieldId(5)
                 .name("Reading Railroad")
+                .boardName("Rd. \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
                 .build();
@@ -135,6 +147,7 @@ public class GameBoard {
         fields[6] = Property.builder()
                 .fieldId(6)
                 .name("Oriental Avenue")
+                .boardName("Orie. Ave.")
                 .type(FieldType.PROPERTY)
                 .price(100)
                 .owner(bank)
@@ -148,12 +161,14 @@ public class GameBoard {
         fields[7] = Field.builder()
                 .fieldId(7)
                 .name(chance)
+                .boardName(chanceBoardName)
                 .type(FieldType.CHANCE)
                 .build();
 
         fields[8] = Property.builder()
                 .fieldId(8)
                 .name("Vermont Avenue")
+                .boardName("VT Ave.")
                 .type(FieldType.PROPERTY)
                 .price(100)
                 .owner(bank)
@@ -176,6 +191,7 @@ public class GameBoard {
         fields[9] = Property.builder()
                 .fieldId(9)
                 .name("Connecticut Avenue")
+                .boardName("CT Ave.")
                 .type(FieldType.PROPERTY)
                 .price(120)
                 .owner(bank)
@@ -189,6 +205,7 @@ public class GameBoard {
         fields[10] = Field.builder()
                 .fieldId(10)
                 .name("Jail")
+                .boardName("Jail \uD83D\uDE94")
                 .type(FieldType.JAIL)
                 .build();
 
@@ -204,6 +221,7 @@ public class GameBoard {
         fields[11] = Property.builder()
                 .fieldId(11)
                 .name("St Charles Place")
+                .boardName("St Charles Place")
                 .type(FieldType.PROPERTY)
                 .price(140)
                 .owner(bank)
@@ -216,7 +234,8 @@ public class GameBoard {
 
         fields[12] = Utility.builder()
                 .fieldId(12)
-                .name("Electricity Company")
+                .name("Electric Company")
+                .boardName("\uD83D\uDCA1")
                 .type(FieldType.UTILITY)
                 .owner(bank)
                 .price(150)
@@ -226,6 +245,7 @@ public class GameBoard {
         fields[13] = Property.builder()
                 .fieldId(13)
                 .name("States Avenue")
+                .boardName("States Ave.")
                 .type(FieldType.PROPERTY)
                 .price(140)
                 .owner(bank)
@@ -248,6 +268,7 @@ public class GameBoard {
         fields[14] = Property.builder()
                 .fieldId(14)
                 .name("Virginia Avenue")
+                .boardName("VA Ave.")
                 .type(FieldType.PROPERTY)
                 .price(160)
                 .owner(bank)
@@ -261,6 +282,7 @@ public class GameBoard {
         fields[15] = Railroad.builder()
                 .fieldId(15)
                 .name("Pennsylvania Railroad")
+                .boardName("PA \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
                 .build();
@@ -277,6 +299,7 @@ public class GameBoard {
         fields[16] = Property.builder()
                 .fieldId(16)
                 .name("St. James Place")
+                .boardName("St. James Place")
                 .type(FieldType.PROPERTY)
                 .price(180)
                 .owner(bank)
@@ -290,12 +313,14 @@ public class GameBoard {
         fields[17] = Field.builder()
                 .fieldId(17)
                 .name(communityChest)
+                .boardName(communityChestBoardName)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
         fields[18] = Property.builder()
                 .fieldId(18)
                 .name("Tennessee Avenue")
+                .boardName("TN Ave.")
                 .type(FieldType.PROPERTY)
                 .price(180)
                 .owner(bank)
@@ -319,6 +344,7 @@ public class GameBoard {
         fields[19] = Property.builder()
                 .fieldId(19)
                 .name("New York Avenue")
+                .boardName("NY Ave.")
                 .type(FieldType.PROPERTY)
                 .price(200)
                 .owner(bank)
@@ -332,6 +358,7 @@ public class GameBoard {
         fields[20] = Field.builder()
                 .fieldId(20)
                 .name("Free Parking")
+                .boardName("Free Parking \uD83D\uDE97")
                 .type(FieldType.FREE_PARKING)
                 .build();
 
@@ -347,6 +374,7 @@ public class GameBoard {
         fields[21] = Property.builder()
                 .fieldId(21)
                 .name("Kentucky Avenue")
+                .boardName("KY Ave.")
                 .type(FieldType.PROPERTY)
                 .price(220)
                 .owner(bank)
@@ -360,12 +388,14 @@ public class GameBoard {
         fields[22] = Field.builder()
                 .fieldId(22)
                 .name(chance)
+                .boardName(chanceBoardName)
                 .type(FieldType.CHANCE)
                 .build();
 
         fields[23] = Property.builder()
                 .fieldId(23)
                 .name("Indiana Avenue")
+                .boardName("IN Ave.")
                 .type(FieldType.PROPERTY)
                 .price(220)
                 .owner(bank)
@@ -388,6 +418,7 @@ public class GameBoard {
         fields[24] = Property.builder()
                 .fieldId(24)
                 .name("Illinois Avenue")
+                .boardName("IL Ave.")
                 .type(FieldType.PROPERTY)
                 .price(240)
                 .owner(bank)
@@ -401,6 +432,7 @@ public class GameBoard {
         fields[25] = Railroad.builder()
                 .fieldId(25)
                 .name("B. & O. Railroad")
+                .boardName("B&O \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
                 .build();
@@ -417,6 +449,7 @@ public class GameBoard {
         fields[26] = Property.builder()
                 .fieldId(26)
                 .name("Atlantic Avenue")
+                .boardName("Atl. Ave.")
                 .type(FieldType.PROPERTY)
                 .price(260)
                 .owner(bank)
@@ -430,6 +463,7 @@ public class GameBoard {
         fields[27] = Property.builder()
                 .fieldId(27)
                 .name("Ventnor Avenue")
+                .boardName("Ven. Ave.")
                 .type(FieldType.PROPERTY)
                 .price(260)
                 .owner(bank)
@@ -443,6 +477,7 @@ public class GameBoard {
         fields[28] = Utility.builder()
                 .fieldId(28)
                 .name("Water Works")
+                .boardName("\uD83D\uDEBF")
                 .type(FieldType.UTILITY)
                 .owner(bank)
                 .price(150)
@@ -461,6 +496,7 @@ public class GameBoard {
         fields[29] = Property.builder()
                 .fieldId(29)
                 .name("Marvin Gardens")
+                .boardName("\uD83C\uDFDE\uFE0F")
                 .type(FieldType.PROPERTY)
                 .price(280)
                 .owner(bank)
@@ -473,7 +509,8 @@ public class GameBoard {
 
         fields[30] = Field.builder()
                 .fieldId(30)
-                .name("Go to Jail")
+                .name(goToJail)
+                .boardName(goToJailBoardName)
                 .type(FieldType.GO_TO_JAIL)
                 .build();
 
@@ -489,6 +526,7 @@ public class GameBoard {
         fields[31] = Property.builder()
                 .fieldId(31)
                 .name("Pacific Avenue")
+                .boardName("Pacific Ave.")
                 .type(FieldType.PROPERTY)
                 .price(300)
                 .owner(bank)
@@ -502,6 +540,7 @@ public class GameBoard {
         fields[32] = Property.builder()
                 .fieldId(32)
                 .name("North Carolina Avenue")
+                .boardName("NC Ave.")
                 .type(FieldType.PROPERTY)
                 .price(300)
                 .owner(bank)
@@ -515,6 +554,7 @@ public class GameBoard {
         fields[33] = Field.builder()
                 .fieldId(33)
                 .name(communityChest)
+                .boardName(communityChestBoardName)
                 .type(FieldType.COMMUNITY_CHEST)
                 .build();
 
@@ -530,6 +570,7 @@ public class GameBoard {
         fields[34] = Property.builder()
                 .fieldId(34)
                 .name("Pennsylvania Avenue")
+                .boardName("PA Ave.")
                 .type(FieldType.PROPERTY)
                 .price(320)
                 .owner(bank)
@@ -543,6 +584,7 @@ public class GameBoard {
         fields[35] = Railroad.builder()
                 .fieldId(35)
                 .name("Short Line")
+                .boardName("Short \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
                 .build();
@@ -550,6 +592,7 @@ public class GameBoard {
         fields[36] = Field.builder()
                 .fieldId(36)
                 .name(chance)
+                .boardName(chanceBoardName)
                 .build();
 
         Map<Object, Integer> rentPrices15 = new HashMap<>();
@@ -564,6 +607,7 @@ public class GameBoard {
         fields[37] = Property.builder()
                 .fieldId(37)
                 .name("Park Place")
+                .boardName("Park Place")
                 .type(FieldType.PROPERTY)
                 .price(350)
                 .owner(bank)
@@ -577,6 +621,7 @@ public class GameBoard {
         fields[38] = TaxField.builder()
                 .fieldId(38)
                 .name("Luxury Tax")
+                .boardName("Luxury Tax \uD83D\uDCB5")
                 .type(FieldType.LUXURY_TAX)
                 .toPay(100)
                 .build();
@@ -593,6 +638,7 @@ public class GameBoard {
         fields[39] = Property.builder()
                 .fieldId(39)
                 .name("Boardwalk")
+                .boardName("Boardwalk")
                 .type(FieldType.PROPERTY)
                 .price(400)
                 .owner(bank)
