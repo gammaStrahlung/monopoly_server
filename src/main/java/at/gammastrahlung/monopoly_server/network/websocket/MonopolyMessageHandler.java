@@ -68,6 +68,7 @@ public class MonopolyMessageHandler {
                 case "roll_dice" -> rollDiceAndMoveCurrentPlayer(clientMessage, clientMessage.getPlayer());
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
+                case "build_property" -> buildProperty(clientMessage.getPlayer(), Integer.parseInt(clientMessage.getMessage()));
                 case "move_avatar" ->
                         generateUpdateMessage(ServerMessage.MessageType.INFO, clientMessage.getPlayer().getCurrentGame());
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
@@ -226,5 +227,26 @@ public class MonopolyMessageHandler {
         game.endCurrentPlayerTurn();
 
         return initiateRound(player);
+    }
+    public static ServerMessage buildProperty(WebSocketPlayer player, int fieldId) {
+
+        if (player.getCurrentGame() == null)
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+
+        Property property = ((Property) player.getCurrentGame().getGameBoard().getFields()[fieldId]);
+
+        if (property.buildHouse()) {
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, property);
+        } else {
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
     }
 }
