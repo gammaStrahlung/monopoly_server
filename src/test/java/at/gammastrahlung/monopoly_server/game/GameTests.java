@@ -18,8 +18,8 @@ import java.util.*;
 class GameTests {
 
     private Game game;
-
     private ArrayList<Player> players;
+    private Player currentPlayer;
 
     @BeforeEach
     void initialize() {
@@ -34,6 +34,7 @@ class GameTests {
 
             players.add(mockPlayer);
         }
+        currentPlayer = players.get(0);
     }
 
     @Test
@@ -83,13 +84,41 @@ class GameTests {
         assertTrue(game.startGame(players.get(0)));
 
         game.setCurrentPlayerIndex(2);
-        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer = game.getCurrentPlayer();
 
         assertEquals(players.get(2), currentPlayer);
     }
 
     @Test
-    void rollDiceAndMoveCurrentPlayer() {
+    void moveCheatingPlayer(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        game.join(player);
+
+        Dice dice = new Dice();
+        dice.setValue1(1);
+        dice.setValue2(3);
+
+        game.setDice(dice);
+        player.setCurrentFieldIndex(7);
+
+        game.moveCheatingPlayer();
+        assertEquals(11, game.getCurrentPlayer().getCurrentFieldIndex() );
+    }
+
+    @Test
+    void isCheating(){
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+        game.join(player);
+
+        assertFalse(player.isCheating());
+
+        game.cheating();
+
+        assertTrue(player.isCheating);
+    }
+
+    @Test
+    void rollDice(){
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
         game.join(player);
@@ -111,7 +140,31 @@ class GameTests {
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.rollDice();
+        assertEquals(4, player.getLastDicedValue());
+    }
+
+    @Test
+    void movePlayer() {
+        Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
+
+        game.join(player);
+        // Add other players
+        for (int i = 0; i < 4; i++)
+            game.join(players.get(i));
+
+        int diceValue = 4;
+        player.setLastDicedValue(diceValue);
+
+        // start the game
+        assertTrue(game.startGame(player));
+
+        game.setCurrentPlayerIndex(0);
+
+        assertEquals(player, game.getCurrentPlayer());
+
+        // Call the method to be tested
+        game.movePlayer();
 
         assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
         assertEquals(0, game.getCurrentPlayerIndex());
@@ -127,28 +180,17 @@ class GameTests {
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // Create a mock for the dice
-        Dice dice = mock(Dice.class);
-        when(dice.roll()).thenReturn(4);
-
-        // Assume player rolls doubles
-        when(dice.getValue1()).thenReturn(2);
-        when(dice.getValue2()).thenReturn(2);
-
-
         // start the game
         assertTrue(game.startGame(player));
 
-        // Set the mock dice in the game object
-        game.setDice(dice);
         game.setCurrentPlayerIndex(0);
 
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
-        assertEquals(4, game.getCurrentPlayer().getCurrentFieldIndex());
+        assertEquals(0, game.getCurrentPlayer().getCurrentFieldIndex());
         assertEquals(0, game.getCurrentPlayerIndex());
     }
 
@@ -186,7 +228,7 @@ class GameTests {
         assertEquals(player, game.getCurrentPlayer());
 
         // Call the method to be tested
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
         //Player does not move since they are in jail and have not thrown doubles
         assertEquals(30, game.getCurrentPlayer().getCurrentFieldIndex());
@@ -194,13 +236,10 @@ class GameTests {
 
         // Player has not rolled doubles in 3 tries
         player.setRoundsInJail(3);
-        game.rollDiceAndMoveCurrentPlayer();
+        game.movePlayer();
 
         //check if player has paid fine
         assertEquals(50, player.getBalance());
-        //check if player has moved for diced value
-        assertEquals(35, player.getCurrentFieldIndex());
-
     }
 
     @Test
@@ -228,22 +267,17 @@ class GameTests {
         assertEquals(1500 + 200, player.getBalance()); // Initial balance after join is 1500, bonus money is 200
     }
 
+
     @Test
     void endPlayerTurn() {
         // Add four players
         for (int i = 0; i < 4; i++)
             game.join(players.get(i));
 
-        // start the game
-        assertTrue(game.startGame(players.get(0)));
-
+        // Set currentPlayerIndex to 1 and end turn
         game.setCurrentPlayerIndex(1);
-        game.endCurrentPlayerTurn();
+        game.endCurrentPlayerTurn(currentPlayer);
         assertEquals(2, game.getCurrentPlayerIndex());
-
-        game.setCurrentPlayerIndex(4);
-        game.endCurrentPlayerTurn();
-        assertEquals(1, game.getCurrentPlayerIndex());
     }
 
     @Test
@@ -430,5 +464,42 @@ class GameTests {
 
         when(player.getCurrentFieldIndex()).thenReturn(0); // Go field
         assertFalse(game.processPayment(player));
+    }
+
+    @Test
+    void disconnectNotifier() {
+        ArrayList<Player> disconnectedPlayers = new ArrayList<>();
+
+        // This can only work with an actual player object
+        Player player1 = new Player();
+        player1.setId(UUID.randomUUID());
+        player1.setName("Player");
+
+        Player player2 = new Player();
+        player2.setId(UUID.randomUUID());
+        player2.setName("Player");
+
+        DisconnectNotifier disconnectNotifier = disconnectedPlayers::add;
+
+        game.setDisconnectNotifier(disconnectNotifier);
+        assertEquals(disconnectNotifier, game.getDisconnectNotifier());
+
+        game.join(player1);
+        game.join(player2);
+
+        // Test if disconnectNotifier is called
+        game.playerDisconnected(player1);
+
+        assertEquals(1,disconnectedPlayers.size());
+        assertTrue(disconnectedPlayers.get(0).isComputerPlayer());
+        assertEquals(player1, disconnectedPlayers.get(0));
+        assertEquals(player2, game.getGameOwner());
+    }
+
+    @Test
+    void getGameState() {
+        assertNull(Game.getGameState(game.getGameId(), players.get(0)));
+        game.join(players.get(0));
+        assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
     }
 }

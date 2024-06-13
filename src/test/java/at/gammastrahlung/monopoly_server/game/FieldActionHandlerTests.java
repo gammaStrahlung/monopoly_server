@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.EventCard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.FieldType;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,8 @@ class FieldActionHandlerTests {
     Player mockPlayer;
     Game game;
     FieldActionHandler fieldActionHandler;
+    Field mockField;
+    GameLogger gameLogger;
 
     @BeforeEach
     void initialize(){
@@ -30,21 +33,44 @@ class FieldActionHandlerTests {
         // Create an instance of FieldActionHandler
         fieldActionHandler = new FieldActionHandler();
         game = mock(Game.class);
+        mockField = mock(Field.class);
+
+        gameLogger = mock(GameLogger.class);
+
+        // Configure the game mock to return the mock GameLogger
+        when(game.getLogger()).thenReturn(gameLogger);
     }
 
     @Test
-    void goToJailCase(){
-        fieldActionHandler.handleFieldAction(FieldType.GO_TO_JAIL, mockPlayer, game);
+    void goToJailCase() {
+        // Set up the field to return GO_TO_JAIL type
+        when(mockField.getType()).thenReturn(FieldType.GO_TO_JAIL);
 
+        // Call the method with the mock field
+        fieldActionHandler.handleFieldAction(mockField, mockPlayer, game);
+
+        // Verify the goToJail method was called on the player
         verify(mockPlayer).goToJail();
+
+        // Verify the player's field index is set to 10 (Jail index)
+        verify(mockPlayer).setCurrentFieldIndex(10);
+
+        // Verify a log message is generated
+        verify(game.getLogger()).logMessage(contains("landed on the 'Go to Jail' field and is sent to Jail"));
     }
+
 
     @Test
     void freeParkingCase() {
-        fieldActionHandler.handleFieldAction(FieldType.FREE_PARKING, mockPlayer, game);
+        // Set up the field to return GO_TO_JAIL type
+        when(mockField.getType()).thenReturn(FieldType.FREE_PARKING);
 
-        // Verify that nothing has changed
-        verifyNoInteractions(mockPlayer);
+        // Call the method with the mock field
+        fieldActionHandler.handleFieldAction(mockField, mockPlayer, game);
+
+        // Verify a log message is generated
+        verify(game.getLogger()).logMessage(contains("No action needed."));
+
     }
 
     @Test
@@ -63,8 +89,11 @@ class FieldActionHandlerTests {
         // Set up the game with the mocked community chest deck
         when(game.getGameBoard().getCommunityChestDeck()).thenReturn(deck);
 
+        // Set up the field to return GO_TO_JAIL type
+        when(mockField.getType()).thenReturn(FieldType.COMMUNITY_CHEST);
+
         // Call the method to handle the community chest action
-        spyHandler.handleFieldAction(FieldType.COMMUNITY_CHEST, mockPlayer, game);
+        spyHandler.handleFieldAction(mockField, mockPlayer, game);
 
         // Verify that drawCard was called with the community chest deck
         verify(spyHandler).drawCard(deck);
@@ -86,8 +115,11 @@ class FieldActionHandlerTests {
         when(game.getGameBoard()).thenReturn(gameBoard);
         when(gameBoard.getChanceDeck()).thenReturn(deck);
 
+        // Set up the field to return CHANCE
+        when(mockField.getType()).thenReturn(FieldType.CHANCE);
+
         // Call the method to handle the chance action
-        spyHandler.handleFieldAction(FieldType.CHANCE, mockPlayer, game);
+        spyHandler.handleFieldAction(mockField, mockPlayer, game);
 
         // Verify that drawCard was called with the chance deck
         verify(spyHandler).drawCard(deck);
@@ -135,11 +167,13 @@ class FieldActionHandlerTests {
         // Mock the player
         Player currentPlayer = mock(Player.class);
 
+
+        when(mockField.getType()).thenReturn(FieldType.INCOME_TAX);
         // Call the method to handle the income tax action
-        spyHandler.handleFieldAction(FieldType.INCOME_TAX, currentPlayer, game);
+        spyHandler.handleFieldAction(mockField, currentPlayer, game);
 
         // Verify that payTax was called with the correct parameters
-        verify(spyHandler).payTax(currentPlayer, FieldType.INCOME_TAX);
+        verify(spyHandler).payTax(currentPlayer, mockField.getType(), game);
     }
 
     @Test
@@ -150,11 +184,12 @@ class FieldActionHandlerTests {
         // Mock the player
         Player currentPlayer = mock(Player.class);
 
+        when(mockField.getType()).thenReturn(FieldType.LUXURY_TAX);
         // Call the method to handle the luxury tax action
-        spyHandler.handleFieldAction(FieldType.LUXURY_TAX, currentPlayer, game);
+        spyHandler.handleFieldAction(mockField, currentPlayer, game);
 
         // Verify that payTax was called with the correct parameters
-        verify(spyHandler).payTax(currentPlayer, FieldType.LUXURY_TAX);
+        verify(spyHandler).payTax(currentPlayer, mockField.getType(), game);
     }
 
 
@@ -162,14 +197,17 @@ class FieldActionHandlerTests {
     void payTax() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 500);
 
-        fieldActionHandler.payTax(player, FieldType.INCOME_TAX);
+        when(mockField.getType()).thenReturn(FieldType.INCOME_TAX);
+        fieldActionHandler.payTax(player, mockField.getType(), game);
         assertEquals(300, player.getBalance());
 
-        fieldActionHandler.payTax(player, FieldType.LUXURY_TAX);
+        when(mockField.getType()).thenReturn(FieldType.LUXURY_TAX);
+        fieldActionHandler.payTax(player, mockField.getType(), game);
         assertEquals(200, player.getBalance());
 
+        when(mockField.getType()).thenReturn(FieldType.INCOME_TAX);
         player.setBalance(10);
-        fieldActionHandler.payTax(player, FieldType.INCOME_TAX);
+        fieldActionHandler.payTax(player, mockField.getType(), game);
 
         // assert no change since the logic for else branch is not yet impl
         assertEquals(10, player.getBalance());
