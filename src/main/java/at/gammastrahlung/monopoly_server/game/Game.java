@@ -59,8 +59,8 @@ public class Game {
 
     @Getter
     private int currentPlayerIndex = 0;
-
-
+@Getter
+    private static List<Player> playerListForId = new ArrayList<>();
     // Contains all players connected to the game
     @Expose
     private final List<Player> players = new ArrayList<>();
@@ -327,6 +327,7 @@ public class Game {
             // Add player to list of players.
             player.currentGame = this;
             players.add(player);
+            playerListForId.add(player);
 
             // First joining player is the gameOwner
             if (gameOwner == null)
@@ -500,8 +501,8 @@ public class Game {
     }
 
     public Player getPlayerById(UUID playerId) {
-        // Assuming you have a list of players
-        for (Player player : players) {
+
+        for (Player player : playerListForId) {
             if (player.getId().equals(playerId)) {
                 return player;
             }
