@@ -48,6 +48,8 @@ public class Auction {
             highestBid = bid;
         }
     }
+    // Empty the list of bids
+    bids.clear();
 
     return highestBid;
 }
