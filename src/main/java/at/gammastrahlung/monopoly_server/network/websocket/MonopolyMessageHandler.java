@@ -3,6 +3,7 @@ package at.gammastrahlung.monopoly_server.network.websocket;
 import at.gammastrahlung.monopoly_server.game.*;
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
 import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
@@ -69,6 +70,7 @@ public class MonopolyMessageHandler {
                 case "bid" -> sendBid(clientMessage);
                 case "sendstartAuction" ->
                     startAuction();
+                case "buyPropertythroughDialog" -> buyPropertythroughDialog(clientMessage);
 
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
@@ -83,7 +85,14 @@ public class MonopolyMessageHandler {
 
     }
 
+    private static ServerMessage buyPropertythroughDialog(ClientMessage clientMessage) {
 
+        Player player = clientMessage.getPlayer();
+        Auction auction = new Auction();
+        auction.buyCurrentField(player);
+       return ServerMessage.builder().messagePath("buyPropertythroughDialog").type(ServerMessage.MessageType.INFO).build();
+
+    }
 
 
     private static ServerMessage sendBid(ClientMessage clientMessage) {

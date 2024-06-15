@@ -15,6 +15,8 @@ public class Auction {
     private Game game;
     private GameBoard gameBoard;
     private int expectedBids;
+    private static int currentFieldIndexforBuying;
+
 
 
     public Auction() {
@@ -47,6 +49,14 @@ public class Auction {
         }
         // Empty the list of bids
         bids.clear();
+       Player currentPlayer = game.getPlayerById(highestBid.getPlayerId());
+        Field currentField = gameBoard.getFieldByIndex(currentFieldIndexforBuying);
+        Property currentProperty = (Property) currentField;
+        Player bank = gameBoard.getBank();
+        if( currentProperty.getOwner().equals(bank)) {
+            currentProperty.buyAndSellProperty(currentPlayer);
+        }
+
 
         return highestBid;
     }
@@ -57,7 +67,7 @@ public class Auction {
      * @param currentFieldIndex the index of the current field
      */
     public boolean checkCurrentField(int currentFieldIndex) {
-
+        currentFieldIndexforBuying = currentFieldIndex;
         Field currentField = gameBoard.getFieldByIndex(currentFieldIndex);
         Player bank = gameBoard.getBank();
         if (currentField instanceof Property currentProperty) {
@@ -65,5 +75,15 @@ public class Auction {
         }
 
         return false;
+    }
+
+    public void buyCurrentField(Player player) {
+
+        Field currentField = gameBoard.getFieldByIndex(currentFieldIndexforBuying);
+        Property currentProperty = (Property) currentField;
+        Player bank = gameBoard.getBank();
+        if(currentProperty.getOwner().equals(bank)) {
+            currentProperty.buyAndSellProperty(player);
+        }
     }
 }
