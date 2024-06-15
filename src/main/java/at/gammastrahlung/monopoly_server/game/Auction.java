@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Auction {
     private static List<Bid> bids = new CopyOnWriteArrayList<>();
 
-    private static Game game= MonopolyMessageHandler.currentGame;;
+    private static Game game= MonopolyMessageHandler.currentGame;
     private GameBoard gameBoard;
     private int expectedBids;
     private static int currentFieldIndexforBuying;
@@ -50,10 +50,16 @@ public class Auction {
         }
         // Empty the list of bids
         bids.clear();
+        if (highestBid != null) {
+
+
        Player currentPlayer = game.getPlayerById(highestBid.getPlayerId());
        List <Player> playerPropertyOwner = game.getPlayerListForId();
         Field currentField = gameBoard.getFieldByIndex(currentFieldIndexforBuying);
-        Property currentProperty = (Property) currentField;
+            if (currentField instanceof Property) {
+                Property currentProperty = (Property) currentField;
+
+
 
 
         if(!playerPropertyOwner.contains(currentProperty.getOwner())) {
@@ -61,8 +67,8 @@ public class Auction {
             currentProperty.setBidActivated(true);
             currentProperty.buyAndSellProperty(currentPlayer);
         }
-
-
+        }
+        }
         return highestBid;
     }
 
