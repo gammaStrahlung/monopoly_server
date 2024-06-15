@@ -525,6 +525,8 @@ public class Game {
         return null; // Return null if no player with the given ID is found
     }
 
-
+    public static List<Player> getPlayerListForId() {
+        return playerListForId;
+    }
 
 }

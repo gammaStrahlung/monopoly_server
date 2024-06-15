@@ -2,8 +2,11 @@ package at.gammastrahlung.monopoly_server.game.gameboard;
 
 import at.gammastrahlung.monopoly_server.game.Player;
 import com.google.gson.annotations.Expose;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
 import java.util.Map;
 
 
@@ -11,7 +14,8 @@ import java.util.Map;
 @Getter
 @Setter
 @SuperBuilder
-public class Property extends Field{
+public class Property extends Field {
+    private static GameBoard gameBoard;
     @Expose
     private int price;
     @Expose
@@ -28,25 +32,36 @@ public class Property extends Field{
     private int hotelCost;
     @Expose
     private int houseCount;
+    @Setter
+    private int bidValue;
+    @Setter
+    private boolean bidActivated;
 
-    public void buyAndSellProperty(Player buyer){
-        owner.addBalance(price);
-        buyer.subtractBalance(price);
-        this.owner = buyer;
-    }
-    private static GameBoard gameBoard;
     public static void setGameBoard(GameBoard gb) {
         Property.gameBoard = gb;
     }
 
+    public void buyAndSellProperty(Player buyer) {
+        if (bidActivated) {
+            owner.addBalance(bidValue);
+            buyer.subtractBalance(bidValue);
+            this.owner = buyer;
+            bidActivated = false;
+        } else {
+            owner.addBalance(price);
+            buyer.subtractBalance(price);
+            this.owner = buyer;
+        }
+    }
+
     public boolean buildHouse() {
-            if (houseCount < 5 && buildable()) {
-                if (houseCount == 4 && buildable()){
-                    this.owner.subtractBalance(hotelCost);
-                } else this.owner.subtractBalance(houseCost);
-                this.houseCount++;
-                return true;
-            } else return false;
+        if (houseCount < 5 && buildable()) {
+            if (houseCount == 4 && buildable()) {
+                this.owner.subtractBalance(hotelCost);
+            } else this.owner.subtractBalance(houseCost);
+            this.houseCount++;
+            return true;
+        } else return false;
 
     }
 

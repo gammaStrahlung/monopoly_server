@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MonopolyMessageHandler {
-
+    public static Game currentGame;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Field.class, new FieldSerializer()).excludeFieldsWithoutExposeAnnotation().create();
 
     private MonopolyMessageHandler() {
@@ -145,6 +145,8 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
 
         // Create a new game
         Game game = new Game();
+        // Store the game in the static variable
+        MonopolyMessageHandler.currentGame = game;
 
         // Create the logger and pass the game
         GameLogger gameLogger = new WebSocketGameLogger(game);
