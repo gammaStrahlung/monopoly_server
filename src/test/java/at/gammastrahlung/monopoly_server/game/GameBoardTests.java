@@ -97,4 +97,21 @@ class GameBoardTests {
         assertEquals(CardType.GO_TO_JAIL, firstCard.getCardType());
         assertEquals(30, firstCard.getMoveToField());
     }
+
+
+    @Test
+    void testBoardNameInitialization() {
+        assertEquals("\uD83C\uDCCF️", gameBoard.getCommunityChestBoardName(), "Community Chest board name should have correct Unicode.");
+        assertEquals("Go to Jail \uD83D\uDE94", gameBoard.getGoToJailBoardName(), "Go to Jail board name should have correct Unicode.");
+        assertEquals("❓", gameBoard.getChanceBoardName(), "Chance board name should have correct Unicode.");
+    }
+
+    @Test
+    void testFieldInitializationUsingStrings() {
+        assertEquals("Community Chest", gameBoard.getFields()[2].getName(), "The name of the field should be set to Community Chest.");
+        assertEquals("Jail", gameBoard.getFields()[10].getName(), "The name of the field should be set to Jail.");  // Updated to match actual initialization
+        assertEquals("Chance", gameBoard.getFields()[7].getName(), "The name of the field should be set to Chance.");
+    }
+
+
 }

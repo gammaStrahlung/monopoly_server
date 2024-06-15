@@ -16,6 +16,26 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.Stream;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.Test;
+
+import at.gammastrahlung.monopoly_server.game.Player;
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
+import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
+
+import java.util.UUID;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
+
+import java.util.stream.Stream;
+
 class PropertyTest {
     @Test
     void testBuyAndSellProperty() {
@@ -101,6 +121,26 @@ class PropertyTest {
 
         assertEquals(expectedOutcome, propertyUnderTest.buildable(),
                 "Expected buildable() to return " + expectedOutcome);
+    }
+
+
+
+    @Test
+    void testPropertyNotBuildableIfNotFullSetOwned() {
+        GameBoard mockGameBoard = mock(GameBoard.class);
+        Property.setGameBoard(mockGameBoard);
+        Player owner = new Player(UUID.randomUUID(), "Owner", null, 1500);
+        Property property = new Property();
+        property.setOwner(owner);
+        property.setColor(PropertyColor.RED);
+
+        Property otherProperty = new Property();
+        otherProperty.setColor(PropertyColor.RED);
+        otherProperty.setOwner(new Player(UUID.randomUUID(), "OtherOwner", null, 1500));
+
+        when(mockGameBoard.getFields()).thenReturn(new Field[] {property, otherProperty});
+
+        assertFalse(property.buildable(), "Property should not be buildable if not all properties of the same color are owned.");
     }
 
 

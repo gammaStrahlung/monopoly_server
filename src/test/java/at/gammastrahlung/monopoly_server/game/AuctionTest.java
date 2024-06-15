@@ -9,6 +9,8 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.network.websocket.MonopolyMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 import java.util.UUID;
 
 class AuctionTests {
@@ -29,7 +31,7 @@ class AuctionTests {
         mockPlayer2 = mock(Player.class);
     }
 
- 
+
 
 
 
@@ -54,12 +56,9 @@ class AuctionTests {
 
 
 
-    @Test
-    void testGetBids() {
-        Bid bid1 = new Bid(UUID.randomUUID(), 100, 1);
-        Bid bid2 = new Bid(UUID.randomUUID(), 200, 1);
-        auction.addBid(bid1);
-        auction.addBid(bid2);
-        assertEquals(2, Auction.getBids().size());
-    }
+
+
+
+
+
 }

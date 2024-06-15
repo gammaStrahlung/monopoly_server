@@ -502,4 +502,69 @@ class GameTests {
         game.join(players.get(0));
         assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
     }
+
+    @Test
+    void playerDisconnectsAndReconnects() {
+        Player player = new Player(UUID.randomUUID(), "Disconnected Player", null, 1000);
+        game.join(player);
+        assertTrue(game.getPlayers().contains(player));
+        player.setComputerPlayer(true);
+        game.playerDisconnected(player);
+        assertTrue(player.isComputerPlayer());
+        assertFalse(game.getPlayers().contains(player));
+
+        // Simulating reconnection
+        player.setComputerPlayer(false);
+        game.join(player);
+        assertFalse(player.isComputerPlayer());
+        assertTrue(game.getPlayers().contains(player));
+    }
+
+
+
+    @Test
+    void movePlayerPassesStartTwice() {
+        Player player = players.get(1);
+        game.join(player);
+        game.startGame(player);
+        player.setCurrentFieldIndex(39); // Player is at last field
+        game.rollDice(); // Assume dice roll results in movement to a field > 0
+        assertTrue(player.getBalance() > 1500); // Check if player received bonus money for passing start
+        player.setCurrentFieldIndex(39); // Reset to last field
+        game.rollDice();
+        assertTrue(player.getBalance() > 1700); // Check if player received bonus money again
+    }
+
+    @Test
+    void payRentToOtherPlayer() {
+        Player payer = players.get(2);
+        Player owner = players.get(3);
+        Property property = new Property();
+        property.setOwner(owner);
+        property.setHouseCount(0);
+        Map<Object, Integer> rentPrices = new HashMap<>();
+        rentPrices.put(0, 100);
+        property.setRentPrices(rentPrices);
+        game.getGameBoard().getFields()[10] = property; // Assume property is at index 10
+
+        payer.setCurrentFieldIndex(10); // Move payer to the property field
+        int originalBalancePayer = payer.getBalance();
+        int originalBalanceOwner = owner.getBalance();
+
+        game.processPayment(payer);
+        assertEquals(originalBalancePayer - 100, payer.getBalance());
+        assertEquals(originalBalanceOwner + 100, owner.getBalance());
+    }
+
+
+
+
+
+    @Test
+    void testEndGameResetsGame() {
+        game.endGame(players.get(0)); // Assuming the player calling is the game owner
+        assertEquals(Game.GameState.ENDED, game.getState());
+        assertEquals(0, game.getPlayers().size());
+        assertNull(game.getGameOwner());
+    }
 }
