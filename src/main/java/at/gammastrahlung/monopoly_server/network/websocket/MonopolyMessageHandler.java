@@ -67,6 +67,8 @@ public class MonopolyMessageHandler {
                 case "checkCurrentField" -> checkCurrentField(clientMessage);
                 case "startAuction" ->  startAuction();
                 case "bid" -> sendBid(clientMessage);
+                case "sendstartAuction" ->
+                    startAuction();
 
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
@@ -85,23 +87,21 @@ public class MonopolyMessageHandler {
 
 
     private static ServerMessage sendBid(ClientMessage clientMessage) {
-        // Instanz des Auktions-Systems
+
         Auction auction = new Auction();
-        Game game = new Game();
-        // Auslesen der Nachricht, welche das JSON des Gebots enthält
+
         String message = clientMessage.getMessage();
-        Gson gson = new Gson(); // Gson Instanz zur Verarbeitung von JSON
+        Gson gson = new Gson();
         Bid bid;
 
         bid = gson.fromJson(message, Bid.class);
 
-        // Hier fügen wir das Gebot der Auktion hinzu
         auction.addBid(new Bid(bid.getPlayerId(), bid.getAmount(), bid.getFieldIndex()));
 if (auction.getBids().size() < auction.getExpectedBids()) {
         try {
 
 
-            // Erstellen einer Erfolgsnachricht mit dem bid als JSON-String
+
             String jsonData = gson.toJson(bid);
             return ServerMessage.builder()
                     .messagePath("bid")
@@ -109,7 +109,7 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
                     .jsonData(jsonData)
                     .build();
         } catch (JsonSyntaxException e) {
-            // Fehlerbehandlung, falls das JSON nicht korrekt geparsed werden kann
+
             System.out.println("Fehler beim Parsen des JSON aus der Nachricht: " + message);
             return ServerMessage.builder()
                     .messagePath("bid")
@@ -298,6 +298,8 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
     private static ServerMessage checkCurrentField(ClientMessage clientMessage) {
         Auction auction = new Auction();
         String message = clientMessage.getMessage();
+        Player playertosendPurchase = clientMessage.getPlayer();
+        WebSocketSender.setPlayersforAuction(playertosendPurchase);
         int currentFieldIndex;
 
         try {

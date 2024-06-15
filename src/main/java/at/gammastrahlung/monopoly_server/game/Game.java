@@ -337,6 +337,12 @@ public class Game {
             // Player is re-joining -> update old player object
             players.get(players.indexOf(player)).update(player);
             logger.logMessage(player.getName() + " has reconnected.");
+
+            // Check if playerListForId already contains the player
+            if (!playerListForId.contains(player)) {
+                // If not, add the player to the list
+                playerListForId.add(player);
+            }
         }
 
         return true;
@@ -365,13 +371,22 @@ public class Game {
         // Player will be replaced until reconnect
         player.setComputerPlayer(true);
 
+        // Remove player from playerListForId if they are present
+        playerListForId.removeIf(p -> p.getId().equals(player.getId()));
+
+
         try {
             // Wait 10 seconds after disconnect
             Thread.sleep(10000);
 
             // Player has reconnected in the meantime
-            if (!player.isComputerPlayer())
+            if (!player.isComputerPlayer()) {
+                // Add player back to playerListForId if they are not present
+                if (!playerListForId.contains(player)) {
+                    playerListForId.add(player);
+                }
                 return;
+            }
 
             logger.logMessage(player.getName() + " has disconnected, they will be replaced until they reconnect.");
 
