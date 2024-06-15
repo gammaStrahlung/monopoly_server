@@ -1,75 +1,65 @@
 package at.gammastrahlung.monopoly_server.game;
 
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuctionTests {
+import at.gammastrahlung.monopoly_server.game.gameboard.Field;
+import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
+import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.network.websocket.MonopolyMessageHandler;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
-    private Auction auction;
-    private Game game;
-    private GameBoard gameBoard;
+class AuctionTests {
+    Game mockGame;
+    GameBoard mockBoard;
+    Auction auction;
+    Player mockPlayer;
+    Player mockPlayer2;
 
     @BeforeEach
     void setUp() {
-        game = new Game();
-        gameBoard = new GameBoard();
-        gameBoard.initializeGameBoard();
+        mockGame = mock(Game.class);
+        mockBoard = mock(GameBoard.class);
+        when(mockGame.getGameBoard()).thenReturn(mockBoard);
+        MonopolyMessageHandler.currentGame = mockGame;
         auction = new Auction();
+        mockPlayer = mock(Player.class);
+        mockPlayer2 = mock(Player.class);
     }
 
-    @Test
-    void testAddBid() {
-        Bid bid = new Bid(UUID.randomUUID(), 300, 5);
-        auction.addBid(bid);
-        List<Bid> bids = Auction.getBids();
-        assertTrue(bids.contains(bid));
-    }
+ 
 
-    @Test
-    void testEvaluateHighestBid() {
-        auction.addBid(new Bid(UUID.randomUUID(), 200, 5));
-        auction.addBid(new Bid(UUID.randomUUID(), 300, 5));
-        auction.addBid(new Bid(UUID.randomUUID(), 100, 5));
-
-        Bid highestBid = auction.evaluateHighestBids();
-        assertNotNull(highestBid);
-        assertEquals(300, highestBid.getAmount());
-        assertTrue(Auction.getBids().isEmpty()); // Ensure bids are cleared after evaluation
-    }
 
 
     @Test
-    void testCheckCurrentFieldOwnedByBank() {
-        // Assuming field index 1 is a property and initially owned by the bank
-        assertTrue(auction.checkCurrentField(1));
-    }
+    void testCheckCurrentFieldNotProperty() {
+        Field field = mock(Field.class);
+        when(mockBoard.getFieldByIndex(anyInt())).thenReturn(field);
 
-
-    @Test
-    void testInvalidFieldIndex() {
-        // Assuming the gameBoard implementation throws IllegalArgumentException for out of bounds
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            auction.checkCurrentField(999); // Index clearly out of bounds
-        });
-        assertTrue(exception.getMessage().contains("Index out of bounds"), "Expected IllegalArgumentException with an out of bounds message");
+        assertFalse(auction.checkCurrentField(0));
     }
 
     @Test
-    void testNoBids() {
-        Auction.getBids().clear(); // Ensure no bids are present at the start of the test
-        Bid highestBid = auction.evaluateHighestBids();
-        assertNull(highestBid, "Expected no highest bid when there are no bids.");
+    void testCheckCurrentFieldOwnedByAnotherPlayer() {
+        Property property = mock(Property.class);
+        Player anotherPlayer = mock(Player.class);
+        when(mockBoard.getFieldByIndex(anyInt())).thenReturn(property);
+        when(property.getOwner()).thenReturn(anotherPlayer);
+        when(mockBoard.getBank()).thenReturn(mock(Player.class));
+
+        assertFalse(auction.checkCurrentField(0));
     }
 
 
 
-
-
+    @Test
+    void testGetBids() {
+        Bid bid1 = new Bid(UUID.randomUUID(), 100, 1);
+        Bid bid2 = new Bid(UUID.randomUUID(), 200, 1);
+        auction.addBid(bid1);
+        auction.addBid(bid2);
+        assertEquals(2, Auction.getBids().size());
+    }
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
-class BidTests {
+class BidTest {
 
     private Bid bid;
     private UUID playerId;
