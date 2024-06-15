@@ -5,14 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.mockito.Mockito.*;
-
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.*;
 
 @SpringBootTest
 class GameTests {
@@ -20,10 +17,15 @@ class GameTests {
     private Game game;
     private ArrayList<Player> players;
     private Player currentPlayer;
+    private GameBoard gameBoard;
 
     @BeforeEach
     void initialize() {
         game = new Game();
+
+        gameBoard = mock(GameBoard.class);
+        gameBoard.initializeGameBoard();
+
 
         // Create Mock players
         players = new ArrayList<>();
@@ -90,7 +92,7 @@ class GameTests {
     }
 
     @Test
-    void moveCheatingPlayer(){
+    void moveCheatingPlayer() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         game.join(player);
 
@@ -102,11 +104,11 @@ class GameTests {
         player.setCurrentFieldIndex(7);
 
         game.moveCheatingPlayer();
-        assertEquals(11, game.getCurrentPlayer().getCurrentFieldIndex() );
+        assertEquals(11, game.getCurrentPlayer().getCurrentFieldIndex());
     }
 
     @Test
-    void isCheating(){
+    void isCheating() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
         game.join(player);
 
@@ -118,7 +120,7 @@ class GameTests {
     }
 
     @Test
-    void rollDice(){
+    void rollDice() {
         Player player = new Player(UUID.randomUUID(), "Test Player", null, 100);
 
         game.join(player);
@@ -490,7 +492,7 @@ class GameTests {
         // Test if disconnectNotifier is called
         game.playerDisconnected(player1);
 
-        assertEquals(1,disconnectedPlayers.size());
+        assertEquals(1, disconnectedPlayers.size());
         assertTrue(disconnectedPlayers.get(0).isComputerPlayer());
         assertEquals(player1, disconnectedPlayers.get(0));
         assertEquals(player2, game.getGameOwner());
@@ -503,13 +505,19 @@ class GameTests {
         assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
     }
 
+    @Test
+    void getFieldByIndex_ValidIndex_ReturnsCorrectField() {
+        // Given
+        int index = 10; // Index of the "Jail" field in the setup
 
-
-
-
-
-
-
+        Field expectedField = mock(Field.class);
+        when(gameBoard.getFieldByIndex(index)).thenReturn(expectedField);
+// When
+        Field result = gameBoard.getFieldByIndex(index);
+        // Then
+        assertNotNull(result);
+        assertEquals(expectedField, result, "The field returned should be the 'Jail' field at index 10.");
+    }
 
 
 
