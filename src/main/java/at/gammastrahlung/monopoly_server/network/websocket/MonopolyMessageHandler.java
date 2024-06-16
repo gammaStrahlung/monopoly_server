@@ -275,8 +275,8 @@ public class MonopolyMessageHandler {
 
         return ServerMessage.builder()
                 .messagePath("cheating")
+                .jsonData(gson.toJson(player))
                 .type(ServerMessage.MessageType.INFO)
-                .game(game)
                 .build();
     }
 
