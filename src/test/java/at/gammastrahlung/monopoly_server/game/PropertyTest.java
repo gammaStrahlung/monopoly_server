@@ -103,5 +103,22 @@ class PropertyTest {
                 "Expected buildable() to return " + expectedOutcome);
     }
 
+    @Test
+    void testGetPropertyValue() {
+        Property property = new Property();
+        property.setPrice(100);
+        property.setHouseCost(5);
+        property.setHotelCost(10);
 
+        // No houses -> only price
+        assertEquals(100, property.getPropertyValue());
+
+        // two houses -> price + 2 * houseCost
+        property.setHouseCount(2);
+        assertEquals(110, property.getPropertyValue());
+
+        // 4 houses + 1 hotel -> price + 4 * houseCost + hotelCost
+        property.setHouseCount(5);
+        assertEquals(130, property.getPropertyValue());
+    }
 }

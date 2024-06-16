@@ -1,7 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
-import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.websocket.WebSocketGameLogger;
 import com.google.gson.annotations.Expose;
 
@@ -76,6 +75,20 @@ public class Game {
 
     private boolean isFirstRound = true;
     private int turnNumber = 0;
+
+    // The amount of rounds until the game ends
+    @Getter
+    @Setter
+    @Expose
+    private int roundAmount = 10;
+
+    @Getter
+    @Expose
+    private int currentRound = 1;
+
+    @Getter
+    @Expose
+    private Player winningPlayer;
 
     /**
      * Creates a new game and sets the gameId
@@ -245,6 +258,14 @@ public class Game {
     public void endCurrentPlayerTurn(Player currentPlayer){
         if(turnNumber > players.size()){
             isFirstRound = false;
+            turnNumber = 0;
+
+            // Check how many rounds have been played
+            currentRound++;
+            if (currentRound > roundAmount) {
+                selectWinningPlayer();
+                return;
+            }
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
@@ -507,5 +528,44 @@ public class Game {
         // Implement logic for insufficient funds here
         // For example: Sell houses, take out mortgage, or declare bankruptcy
         return false;
+    }
+
+    /**
+     * Selects the winning player based on money and owned fields and ends the game.
+     * This sets the winningPlayer field.
+     * A draw is only handled by the order of players in the players list, the first player to have the most value is
+     * selected, a player after that with the same value (which is unlikely) does not win.
+     */
+    public void selectWinningPlayer() {
+        int maxPlayerValue = 0;
+        Player winner = null;
+
+        for (Player player : players) {
+            int currentPlayerValue = 0;
+
+            currentPlayerValue += player.getBalance();
+
+            // Add the value of all owned fields
+            for (Field field : gameBoard.getFields()) {
+                if (field instanceof Property property && property.getOwner().equals(player)) {
+                    currentPlayerValue += property.getPropertyValue();
+                } else if (field instanceof Railroad railroad && railroad.getOwner().equals(player)) {
+                    currentPlayerValue += railroad.getPrice();
+                } else if (field instanceof Utility utility && utility.getOwner().equals(player)) {
+                    currentPlayerValue += utility.getPrice();
+                }
+            }
+
+            if (currentPlayerValue > maxPlayerValue) {
+                winner = player;
+                maxPlayerValue = currentPlayerValue;
+            }
+        }
+
+        // Set the winning player
+        winningPlayer = winner;
+
+        // End the game
+        endGame(gameOwner);
     }
 }

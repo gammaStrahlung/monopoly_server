@@ -509,4 +509,53 @@ class GameTests {
         game.join(players.get(0));
         assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
     }
+
+    @Test
+    void winningPlayer() {
+        Game g = new Game();
+        // Winning player is null on create
+        assertNull(g.getWinningPlayer());
+    }
+
+    @Test
+    void roundAmount() {
+        Game g = new Game();
+
+        g.setRoundAmount(5);
+        assertEquals(5, g.getRoundAmount());
+    }
+
+    @Test
+    void currentRound() {
+        Game g = new Game();
+
+        assertEquals(1, g.getCurrentRound());
+    }
+
+    @Test
+    void selectWinningPlayer() {
+        // Initialization
+        Game g = new Game();
+
+        Player p1 = new Player(UUID.randomUUID(), "Player 1", g, 5000);
+        Player p2 = new Player(UUID.randomUUID(), "Player 2", g, 5000);
+
+        g.join(p1);
+        g.join(p2);
+
+        // Player with higher balance is winner
+        p1.addBalance(10);
+
+        Property p = (Property) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Property).toList().get(0);
+        Utility u = (Utility) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Utility).toList().get(0);
+        Railroad r = (Railroad) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Railroad).toList().get(0);
+
+        p.setOwner(p1);
+        u.setOwner(p2);
+        r.setOwner(p2);
+
+        g.selectWinningPlayer();
+        assertEquals(p2, g.getWinningPlayer());
+        assertEquals(Game.GameState.ENDED, g.getState());
+    }
 }

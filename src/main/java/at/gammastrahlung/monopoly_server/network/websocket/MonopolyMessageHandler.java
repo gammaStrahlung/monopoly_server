@@ -264,6 +264,10 @@ public class MonopolyMessageHandler {
         Player currentPlayer = game.getCurrentPlayer();
         game.endCurrentPlayerTurn(currentPlayer);
 
+        if (game.getState() == Game.GameState.ENDED) {
+            return generateUpdateMessage(ServerMessage.MessageType.INFO, game);
+        }
+
         return initiateRound(player);
     }
 
