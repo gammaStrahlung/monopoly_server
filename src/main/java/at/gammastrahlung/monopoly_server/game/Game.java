@@ -80,7 +80,7 @@ public class Game {
     @Getter
     @Setter
     @Expose
-    private int roundAmount = 5;
+    private int roundAmount = 10;
 
     @Getter
     @Expose
@@ -265,6 +265,7 @@ public class Game {
             currentRound++;
             if (currentRound > roundAmount) {
                 selectWinningPlayer();
+                return;
             }
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
