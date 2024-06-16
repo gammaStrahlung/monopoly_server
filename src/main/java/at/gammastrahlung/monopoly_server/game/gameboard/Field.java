@@ -16,5 +16,7 @@ public class Field {
     @Expose
     private String name;
     @Expose
+    private String boardName;
+    @Expose
     private FieldType type;
 }
