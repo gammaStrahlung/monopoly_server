@@ -249,9 +249,9 @@ public class Game {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
 
-        // cheating player has one round until its isCheating status is reset
+        // cheating player has certain rounds until its isCheating status is reset
         currentPlayer.setTurns(currentPlayer.getTurns() + 1);
-        if(currentPlayer.getTurns() == 1){
+        if(currentPlayer.getTurns() == 2){
             currentPlayer.setCheating(false);
             currentPlayer.setTurns(0);
         }
