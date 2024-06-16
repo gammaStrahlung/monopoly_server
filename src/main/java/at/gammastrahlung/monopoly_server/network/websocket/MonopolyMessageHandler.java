@@ -15,7 +15,8 @@ import java.util.ArrayList;
 
 public class MonopolyMessageHandler {
 
-    private MonopolyMessageHandler() {}
+    private MonopolyMessageHandler() {
+    }
 
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -69,13 +70,15 @@ public class MonopolyMessageHandler {
                 case "initiate_round" -> initiateRound(clientMessage.getPlayer());
                 case "end_current_player_turn" -> endCurrentPlayerTurn(clientMessage.getPlayer());
                 case "move_avatar" -> movePlayer(clientMessage, clientMessage.getPlayer());
-                case "move_avatar_cheating" ->
-                        moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
+                case "move_avatar_cheating" -> moveCheatingPlayer(clientMessage, clientMessage.getPlayer());
                 case "cheating" -> cheating(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
                 case "game_state" -> {
                     clientMessage.getPlayer().setWebSocketSession(session);
                     yield gameState(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
                 }
+                case "report_cheat" -> reportCheat(clientMessage);
+                case "report_penalty" -> reportPenalty(clientMessage);
+                case "report_award" -> reportAward(clientMessage);
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -264,29 +267,26 @@ public class MonopolyMessageHandler {
         return initiateRound(player);
     }
 
-    private static ServerMessage cheating(int totalValue, WebSocketPlayer player){
+    private static ServerMessage cheating(int totalValue, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
         Dice dice = player.getCurrentGame().getDice();
 
-        dice.setValue1(totalValue/2);
-        dice.setValue2(totalValue - totalValue/2);
+        dice.setValue1(totalValue / 2);
+        dice.setValue2(totalValue - totalValue / 2);
 
         game.cheating();
 
-        return ServerMessage.builder()
-                .messagePath("cheating")
-                .jsonData(gson.toJson(player))
-                .type(ServerMessage.MessageType.INFO)
-                .build();
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
     }
 
     /**
      * Handles move avatar differently if player wants to cheat
+     *
      * @param message Server message
-     * @param player current player
+     * @param player  current player
      * @return generate a update message
      */
-    private static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player){
+    private static ServerMessage moveCheatingPlayer(ClientMessage message, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
         game.moveCheatingPlayer();
 
@@ -301,5 +301,31 @@ public class MonopolyMessageHandler {
                 .type(ServerMessage.MessageType.INFO)
                 .jsonData(gson.toJson(gameState))
                 .build();
+    }
+
+    private static ServerMessage reportCheat(ClientMessage message) {
+        int index = Integer.parseInt(message.getMessage());
+
+        Game game = message.getPlayer().getCurrentGame();
+        Player accusedPlayer = game.getPlayers().get(index);
+
+        accusedPlayer.setCheating(false);
+        accusedPlayer.subtractBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, accusedPlayer);
+    }
+
+    private static ServerMessage reportPenalty(ClientMessage message) {
+        Player player = message.getPlayer();
+        player.subtractBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
+    }
+
+    private static ServerMessage reportAward(ClientMessage message) {
+        Player player = message.getPlayer();
+        player.addBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
     }
 }
