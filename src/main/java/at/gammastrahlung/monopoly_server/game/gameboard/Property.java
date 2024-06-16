@@ -69,7 +69,7 @@ public class Property extends Field{
         if (houseCount < 4) {
             return price + houseCount * houseCost;
         } else if (houseCount == 5) {
-            return price + houseCount * 4 * hotelCost;
+            return price + houseCount * 4 + hotelCost;
         } else {
             return price;
         }
