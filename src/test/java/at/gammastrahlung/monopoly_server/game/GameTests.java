@@ -115,6 +115,11 @@ class GameTests {
         game.cheating();
 
         assertTrue(player.isCheating);
+        player.setTurns(1);
+
+        game.endCurrentPlayerTurn(player);
+        assertFalse(player.isCheating);
+        assertEquals(0, player.getTurns());
     }
 
     @Test
@@ -277,6 +282,8 @@ class GameTests {
         // Set currentPlayerIndex to 1 and end turn
         game.setCurrentPlayerIndex(1);
         game.endCurrentPlayerTurn(currentPlayer);
+
+        assertEquals(0, currentPlayer.getTurns());
         assertEquals(2, game.getCurrentPlayerIndex());
     }
 
