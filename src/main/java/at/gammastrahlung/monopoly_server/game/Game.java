@@ -1,6 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
+import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.websocket.WebSocketGameLogger;
 import com.google.gson.annotations.Expose;
 
@@ -124,7 +125,7 @@ public class Game {
         }
     }
 
-    public void rollDice(){
+    public void rollDice() {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
@@ -134,21 +135,21 @@ public class Game {
             movePlayer();
     }
 
-    public void movePlayer(){
+    public void movePlayer() {
         turnNumber++;
         Player currentPlayer = getCurrentPlayer();
 
         int diceValue = currentPlayer.getLastDicedValue();
 
 
-        if(!currentPlayer.isInJail){
+        if (!currentPlayer.isInJail) {
             this.getLogger().logMessage(currentPlayer.getName() + ROLLED + diceValue + ".");
         }
 
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
-        if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard){
+        if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard) {
             this.getLogger().logMessage(currentPlayer.getName() + " released from Jail because of their 'Get Out Of Jail Free Card'.");
         }
 
@@ -173,12 +174,12 @@ public class Game {
             endCurrentPlayerTurn(currentPlayer);
     }
 
-    public void cheating(){
+    public void cheating() {
         Player currentPlayer = getCurrentPlayer();
         currentPlayer.setCheating(true);
     }
 
-    public void moveCheatingPlayer(){
+    public void moveCheatingPlayer() {
         Player currentPlayer = getCurrentPlayer();
         Dice dice = currentPlayer.getCurrentGame().getDice();
 
@@ -215,11 +216,10 @@ public class Game {
     }
 
     private void playerInJailNoDoubles(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
-        if(currentPlayer.getRoundsInJail() < 3){
+        if (currentPlayer.getRoundsInJail() < 3) {
             currentPlayer.incrementRoundsInJail();
-            this.getLogger().logMessage("Rounds spent in Jail: " + currentPlayer.getRoundsInJail() + ". Maximal stay in Jail is 3 rounds." );
-        }
-        else {
+            this.getLogger().logMessage("Rounds spent in Jail: " + currentPlayer.getRoundsInJail() + ". Maximal stay in Jail is 3 rounds.");
+        } else {
             // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
             currentPlayer.pay(GET_OUT_OF_JAIL_FINE);
             currentPlayer.releaseFromJail();
@@ -228,14 +228,14 @@ public class Game {
             // Check if player is entitled to bonus salary
             awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
 
-            this.getLogger().logMessage(currentPlayer.getName() + " is released from Jail after paying the 'Get out of Jail Fine' of " + GET_OUT_OF_JAIL_FINE + "$." );
+            this.getLogger().logMessage(currentPlayer.getName() + " is released from Jail after paying the 'Get out of Jail Fine' of " + GET_OUT_OF_JAIL_FINE + "$.");
 
             // Handle available actions according to the field the player lands on
             handleFieldAction(currentPlayer.getCurrentFieldIndex());
         }
     }
 
-    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
+    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer) {
         if ((nextFieldIndex < currentFieldIndex && nextFieldIndex != 0) || (!isFirstRound && currentFieldIndex == 0 && nextFieldIndex > 0)) {
             currentPlayer.addBalance(BONUS_MONEY);
             this.getLogger().logMessage(currentPlayer.getName() + " has been awarded " + BONUS_MONEY + "$ of bonus money for passing GO");
@@ -249,6 +249,12 @@ public class Game {
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
 
+        // cheating player has certain rounds until its isCheating status is reset
+        currentPlayer.setTurns(currentPlayer.getTurns() + 1);
+        if(currentPlayer.getTurns() == 2){
+            currentPlayer.setCheating(false);
+            currentPlayer.setTurns(0);
+        }
         // Automatically roll dice if player is computer player
         if (getCurrentPlayer().isComputerPlayer())
             rollDice();
@@ -343,6 +349,7 @@ public class Game {
 
     /**
      * Returns the GameState of the game with the given ID
+     *
      * @param gameId The id of the game
      * @return the gameState of the game or null if game does not exist
      */
@@ -358,6 +365,7 @@ public class Game {
 
     /**
      * Handles when a player disconnects
+     *
      * @param player The player that disconnected
      */
     public void playerDisconnected(Player player) {
@@ -394,12 +402,13 @@ public class Game {
         }
     }
 
-     private void initializeGameBoard() {
+    private void initializeGameBoard() {
         // Initialize the game board
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
     }
+
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(players);
     }
@@ -424,6 +433,7 @@ public class Game {
 
     /**
      * Processes a payment for the given field
+     *
      * @param player the player that has to pay
      * @return If the player paid or not
      */
