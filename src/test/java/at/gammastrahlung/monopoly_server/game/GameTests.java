@@ -3,7 +3,6 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
@@ -531,5 +530,32 @@ class GameTests {
         Game g = new Game();
 
         assertEquals(1, g.getCurrentRound());
+    }
+
+    @Test
+    void selectWinningPlayer() {
+        // Initialization
+        Game g = new Game();
+
+        Player p1 = new Player(UUID.randomUUID(), "Player 1", g, 5000);
+        Player p2 = new Player(UUID.randomUUID(), "Player 2", g, 5000);
+
+        g.join(p1);
+        g.join(p2);
+
+        // Player with higher balance is winner
+        p1.addBalance(10);
+
+        Property p = (Property) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Property).toList().get(0);
+        Utility u = (Utility) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Utility).toList().get(0);
+        Railroad r = (Railroad) Arrays.stream(g.getGameBoard().getFields()).filter(field -> field instanceof Railroad).toList().get(0);
+
+        p.setOwner(p1);
+        u.setOwner(p2);
+        r.setOwner(p2);
+
+        g.selectWinningPlayer();
+        assertEquals(p2, g.getWinningPlayer());
+        assertEquals(Game.GameState.ENDED, g.getState());
     }
 }

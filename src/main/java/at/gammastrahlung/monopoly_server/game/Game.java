@@ -1,7 +1,6 @@
 package at.gammastrahlung.monopoly_server.game;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
-import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.websocket.WebSocketGameLogger;
 import com.google.gson.annotations.Expose;
 
@@ -537,7 +536,7 @@ public class Game {
      * A draw is only handled by the order of players in the players list, the first player to have the most value is
      * selected, a player after that with the same value (which is unlikely) does not win.
      */
-    private void selectWinningPlayer() {
+    public void selectWinningPlayer() {
         int maxPlayerValue = 0;
         Player winner = null;
 
