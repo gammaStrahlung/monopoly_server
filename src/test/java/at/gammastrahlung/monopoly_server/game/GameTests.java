@@ -3,6 +3,7 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
@@ -508,5 +509,27 @@ class GameTests {
         assertNull(Game.getGameState(game.getGameId(), players.get(0)));
         game.join(players.get(0));
         assertEquals(Game.GameState.STARTED, Game.getGameState(game.getGameId(), players.get(0)));
+    }
+
+    @Test
+    void winningPlayer() {
+        Game g = new Game();
+        // Winning player is null on create
+        assertNull(g.getWinningPlayer());
+    }
+
+    @Test
+    void roundAmount() {
+        Game g = new Game();
+
+        g.setRoundAmount(5);
+        assertEquals(5, g.getRoundAmount());
+    }
+
+    @Test
+    void currentRound() {
+        Game g = new Game();
+
+        assertEquals(1, g.getCurrentRound());
     }
 }
