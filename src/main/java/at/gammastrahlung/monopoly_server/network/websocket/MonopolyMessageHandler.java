@@ -76,6 +76,7 @@ public class MonopolyMessageHandler {
                     clientMessage.getPlayer().setWebSocketSession(session);
                     yield gameState(Integer.parseInt(clientMessage.getMessage()), clientMessage.getPlayer());
                 }
+                case "build_property" -> buildProperty(clientMessage.getPlayer(), Integer.parseInt(clientMessage.getMessage()));
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -302,4 +303,28 @@ public class MonopolyMessageHandler {
                 .jsonData(gson.toJson(gameState))
                 .build();
     }
+
+
+    public static ServerMessage buildProperty(WebSocketPlayer player, int fieldId) {
+
+        if (player.getCurrentGame() == null)
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+
+        Property property = ((Property) player.getCurrentGame().getGameBoard().getFields()[fieldId]);
+
+        if (property.buildHouse()) {
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, property);
+        } else {
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
+    }
+
 }
