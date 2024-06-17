@@ -21,6 +21,10 @@ public class Railroad extends Field {
     private int price;
     @Expose
     private final Map<String, Integer> rentPrices = initRentPrices();
+    @Setter
+    private int bidValue;
+    @Setter
+    private boolean bidActivated;
 
     private static Map<String, Integer> initRentPrices() {
         Map<String, Integer> prices = new HashMap<>();
@@ -33,9 +37,17 @@ public class Railroad extends Field {
 
 
 
-    public void buyAndSellRailroad(Player buyer){
-        owner.addBalance(price);
-        buyer.subtractBalance(price);
-        this.owner = buyer;
+    public void buyAndSellRailroad(Player buyer) {
+        if (bidActivated) {
+            owner.addBalance(bidValue);
+            buyer.subtractBalance(bidValue);
+            this.owner = buyer;
+            bidActivated = false;
+        } else {
+            owner.addBalance(price);
+            buyer.subtractBalance(price);
+            this.owner = buyer;
+        }
     }
 }
+

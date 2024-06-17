@@ -19,10 +19,23 @@ public class Utility extends Field{
     private int price;
     @Expose
     private int mortgage;
+    @Setter
+    private int bidValue;
+    @Setter
+    private boolean bidActivated;
 
-    public void buyAndSellUtility(Player buyer){
-        owner.addBalance(price);
-        buyer.subtractBalance(price);
-        this.owner = buyer;
+    public void buyAndSellUtility(Player buyer) {
+        if (bidActivated) {
+            owner.addBalance(bidValue);
+            buyer.subtractBalance(bidValue);
+            this.owner = buyer;
+            bidActivated = false;
+        } else {
+            owner.addBalance(price);
+            buyer.subtractBalance(price);
+            this.owner = buyer;
+        }
     }
+
+
 }
