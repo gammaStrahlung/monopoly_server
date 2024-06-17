@@ -1,5 +1,7 @@
 package at.gammastrahlung.monopoly_server.game;
 
+import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,14 +13,13 @@ import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.Stream;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,21 @@ import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.Stream;
 
 class PropertyTest {
+    private Property property;
+    private Player player;
+    private GameBoard gameBoard;
+
+    @BeforeEach
+    public void setUp() {
+        player = new Player(UUID.randomUUID(),"Player", new Game(), 1000);
+        property = Property.builder()
+                .price(200)
+                .owner(player)
+                .build();
+        gameBoard = new GameBoard();
+        gameBoard.initializeGameBoard();
+        Property.setGameBoard(gameBoard);
+    }
     @Test
     void testBuyAndSellProperty() {
         Game currentGame = new Game();
@@ -142,6 +158,59 @@ class PropertyTest {
 
         assertFalse(property.buildable(), "Property should not be buildable if not all properties of the same color are owned.");
     }
+
+    ///-----------------AuctionTest-----------------///
+    @Test
+    void testDefaultConstructor() {
+        Property property = new Property();
+        assertNull(property.getOwner());
+        assertEquals(0, property.getPrice());
+    }
+
+    @Test
+    void testSuperBuilderInitialization() {
+        assertEquals(player, property.getOwner());
+        assertEquals(200, property.getPrice());
+    }
+
+    @Test
+    void testGettersAndSetters() {
+        property.setPrice(300);
+        assertEquals(300, property.getPrice());
+    }
+
+    @Test
+    void testBuildableTrue() {
+        Property otherProperty = Property.builder()
+                .color(PropertyColor.RED)
+                .owner(player)
+                .build();
+        gameBoard.setFields(new Field[] {property, otherProperty});
+        assertTrue(property.buildable());
+    }
+
+    @Test
+    void testBuyAndSellPropertyWithBidActivated() {
+        Player newOwner = new Player(UUID.randomUUID(), "NewOwner", new Game(), 1000);
+        property.setBidActivated(true);
+        property.setBidValue(250);
+        property.buyAndSellProperty(newOwner);
+        assertEquals(newOwner, property.getOwner());
+        assertEquals(750, newOwner.getBalance());
+        assertEquals(1250, player.getBalance());
+    }
+
+    @Test
+    void testBuyAndSellPropertyWithoutBidActivated() {
+        Player newOwner = new Player(UUID.randomUUID(), "NewOwner", new Game(), 1000);
+        property.setBidActivated(false);
+        property.buyAndSellProperty(newOwner);
+        assertEquals(newOwner, property.getOwner());
+        assertEquals(800, newOwner.getBalance());
+        assertEquals(1200, player.getBalance());
+    }
+
+
 
 
 }

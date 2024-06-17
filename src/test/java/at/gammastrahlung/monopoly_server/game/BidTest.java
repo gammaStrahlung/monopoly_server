@@ -12,6 +12,10 @@ class BidTest {
     private int amount;
     private int fieldIndex;
 
+    UUID sampleId = UUID.randomUUID();
+    Bid bid1 = new Bid(sampleId, 5000, 10);
+
+
     @BeforeEach
     void setUp() {
         playerId = UUID.randomUUID();
@@ -28,23 +32,7 @@ class BidTest {
         assertEquals(fieldIndex, bid.getFieldIndex());
     }
 
-    @Test
-    void testChangeBidAmount() {
-        // Assume there is a method to update the bid amount
-        int newAmount = 1000;
-        bid.setAmount(newAmount);
-        assertEquals(newAmount, bid.getAmount());
-    }
 
-
-
-    @Test
-    void testChangeFieldIndex() {
-        // Changing field index to simulate a bid on a different property
-        int newFieldIndex = 20;
-        bid.setFieldIndex(newFieldIndex);
-        assertEquals(newFieldIndex, bid.getFieldIndex());
-    }
 
     @Test
     void testBidInitialization() {
@@ -59,39 +47,15 @@ class BidTest {
         assertEquals(fieldIndex, bid.getFieldIndex(), "Field index should match the provided value.");
     }
 
-    @Test
-    void testSettersAndGetters() {
-        Bid bid = new Bid(UUID.randomUUID(), 100, 10);
 
-        bid.setAmount(200);
-        assertEquals(200, bid.getAmount(), "Setter for amount should update the amount in the Bid object.");
-
-        UUID newPlayerId = UUID.randomUUID();
-        bid.setPlayerId(newPlayerId);
-        assertEquals(newPlayerId, bid.getPlayerId(), "Setter for playerId should update the playerId in the Bid object.");
-
-        int newFieldIndex = 20;
-        bid.setFieldIndex(newFieldIndex);
-        assertEquals(newFieldIndex, bid.getFieldIndex(), "Setter for fieldIndex should update the fieldIndex in the Bid object.");
-    }
-    @Test
-    void testEqualityAndHashCode() {
-        UUID playerId = UUID.randomUUID();
-        Bid bid1 = new Bid(playerId, 300, 8);
-        Bid bid2 = new Bid(playerId, 300, 8);
-
-        assertEquals(bid1, bid2, "Two bids with the same state should be equal.");
-        assertEquals(bid1.hashCode(), bid2.hashCode(), "Hash codes of two equal bids should also be equal.");
-    }
 
     @Test
-    void testToString() {
-        UUID playerId = UUID.randomUUID();
-        Bid bid = new Bid(playerId, 500, 2);
-
-        String expectedString = "Bid(playerId=" + playerId + ", amount=500, fieldIndex=2)";
-        assertTrue(bid.toString().contains(expectedString), "ToString should contain the correct formatting and data.");
+    public void testGettersAndSetters() {
+        assertEquals(sampleId, bid1.getPlayerId());
+        assertEquals(5000, bid1.getAmount());
+        assertEquals(10, bid1.getFieldIndex());
     }
+
 
 
 

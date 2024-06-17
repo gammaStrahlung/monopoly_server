@@ -113,5 +113,30 @@ class GameBoardTests {
         assertEquals("Chance", gameBoard.getFields()[7].getName(), "The name of the field should be set to Chance.");
     }
 
+    @Test
+    void testGetFieldByValidIndex() {
+        Field field = gameBoard.getFieldByIndex(0);
+        assertNotNull(field);
+        assertEquals(0, field.getFieldId());
+    }
+
+    @Test
+    void testGetFieldByNegativeIndex() {
+        assertThrows(IllegalArgumentException.class, () -> gameBoard.getFieldByIndex(-1));
+    }
+
+    @Test
+    void testGetFieldByIndexOutOfBounds() {
+        assertThrows(IllegalArgumentException.class, () -> gameBoard.getFieldByIndex(gameBoard.getGameBoardSize()));
+    }
+
+    @Test
+    void testGetFieldByBoundaryIndex() {
+        Field field = gameBoard.getFieldByIndex(gameBoard.getGameBoardSize() - 1);
+        assertNotNull(field);
+        assertEquals(gameBoard.getGameBoardSize() - 1, field.getFieldId());
+    }
+
+
 
 }
