@@ -4,18 +4,24 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import at.gammastrahlung.monopoly_server.network.websocket.MonopolyMessageHandler;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 public class Auction {
-    private static List<Bid> bids = new CopyOnWriteArrayList<>();
 
+    private static List<Bid> bids = new ArrayList<>();
+    @Setter
     private static Game game= MonopolyMessageHandler.currentGame;
+
     private GameBoard gameBoard;
     private int expectedBids;
+    @Getter
     private static int currentFieldIndexforBuying;
 
 
@@ -98,7 +104,8 @@ public class Auction {
     }
 
     public void buyCurrentField(Player player) {
-        Field currentField = gameBoard.getFieldByIndex(currentFieldIndexforBuying);
+        int currentFieldId = currentFieldIndexforBuying;
+        Field currentField = gameBoard.getFieldByIndex(currentFieldId);
         List<Player> playerPropertyOwner = game.getPlayerListForId();
 
         if (currentField instanceof Property currentProperty) {

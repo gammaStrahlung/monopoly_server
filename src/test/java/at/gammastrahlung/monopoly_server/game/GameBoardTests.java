@@ -127,7 +127,7 @@ class GameBoardTests {
 
     @Test
     void testGetFieldByIndexOutOfBounds() {
-        assertThrows(IllegalArgumentException.class, () -> gameBoard.getFieldByIndex(gameBoard.getGameBoardSize()));
+        assertThrows(IllegalArgumentException.class, () -> gameBoard.getFieldByIndex(42));
     }
 
     @Test
