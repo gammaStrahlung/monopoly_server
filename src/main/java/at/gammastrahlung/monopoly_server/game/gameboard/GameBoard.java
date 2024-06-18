@@ -133,6 +133,7 @@ public class GameBoard {
                 .boardName("Rd. \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
+                .price(50)
                 .build();
 
         Map<Object, Integer> rentPrices3 = new HashMap<>();
@@ -285,6 +286,7 @@ public class GameBoard {
                 .boardName("PA \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
+                .price(200)
                 .build();
 
         Map<Object, Integer> rentPrices7 = new HashMap<>();
@@ -432,6 +434,7 @@ public class GameBoard {
         fields[25] = Railroad.builder()
                 .fieldId(25)
                 .name("B. & O. Railroad")
+                .price(200)
                 .boardName("B&O \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
@@ -587,6 +590,7 @@ public class GameBoard {
                 .boardName("Short \uD83D\uDE82")
                 .type(FieldType.RAILROAD)
                 .owner(bank)
+                .price(200)
                 .build();
 
         fields[36] = Field.builder()

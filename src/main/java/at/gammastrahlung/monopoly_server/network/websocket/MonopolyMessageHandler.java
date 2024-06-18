@@ -105,7 +105,7 @@ public class MonopolyMessageHandler {
 
         bid = gson.fromJson(message, Bid.class);
 
-        auction.addBid(new Bid(bid.getPlayerId(), bid.getAmount(), bid.getFieldIndex()));
+        auction.addBid(new Bid(bid.getPlayerId(), bid.getAmount(), bid.getFieldIndex(), bid.getPlayerForBid()));
 if (auction.getBids().size() < auction.getExpectedBids()) {
         try {
 
