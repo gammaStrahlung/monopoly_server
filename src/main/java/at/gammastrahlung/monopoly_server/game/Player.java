@@ -69,6 +69,8 @@ public class Player {
      */
     protected Game currentGame;
 
+    protected int turns;
+
     public Player(UUID id, String name, Game currentGame, int startingBalance) {
         this.id = id;
         this.name = name;
@@ -80,6 +82,7 @@ public class Player {
         this.hasGetOutOfJailFreeCard = false;
         this.isCheating = false;
         this.lastDicedValue = 0;
+        this.turns = 0;
     }
 
     // increases player balance

@@ -60,6 +60,7 @@ public class Game {
     @Getter
     private int currentPlayerIndex = 0;
 @Getter
+@Getter
     private static List<Player> playerListForId = new ArrayList<>();
     // Contains all players connected to the game
     @Expose
@@ -75,6 +76,20 @@ public class Game {
 
     private boolean isFirstRound = true;
     private int turnNumber = 0;
+
+    // The amount of rounds until the game ends
+    @Getter
+    @Setter
+    @Expose
+    private int roundAmount = 10;
+
+    @Getter
+    @Expose
+    private int currentRound = 1;
+
+    @Getter
+    @Expose
+    private Player winningPlayer;
 
     /**
      * Creates a new game and sets the gameId
@@ -124,7 +139,7 @@ public class Game {
         }
     }
 
-    public void rollDice(){
+    public void rollDice() {
         Player currentPlayer = getCurrentPlayer();
         int diceValue = dice.roll();
         currentPlayer.setLastDicedValue(diceValue);
@@ -134,21 +149,21 @@ public class Game {
             movePlayer();
     }
 
-    public void movePlayer(){
+    public void movePlayer() {
         turnNumber++;
         Player currentPlayer = getCurrentPlayer();
 
         int diceValue = currentPlayer.getLastDicedValue();
 
 
-        if(!currentPlayer.isInJail){
+        if (!currentPlayer.isInJail) {
             this.getLogger().logMessage(currentPlayer.getName() + ROLLED + diceValue + ".");
         }
 
         int currentFieldIndex = currentPlayer.getCurrentFieldIndex();
         int nextFieldIndex = (currentFieldIndex + diceValue) % 40;
 
-        if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard){
+        if (currentPlayer.isInJail() && currentPlayer.hasGetOutOfJailFreeCard) {
             this.getLogger().logMessage(currentPlayer.getName() + " released from Jail because of their 'Get Out Of Jail Free Card'.");
         }
 
@@ -173,12 +188,12 @@ public class Game {
             endCurrentPlayerTurn(currentPlayer);
     }
 
-    public void cheating(){
+    public void cheating() {
         Player currentPlayer = getCurrentPlayer();
         currentPlayer.setCheating(true);
     }
 
-    public void moveCheatingPlayer(){
+    public void moveCheatingPlayer() {
         Player currentPlayer = getCurrentPlayer();
         Dice dice = currentPlayer.getCurrentGame().getDice();
 
@@ -215,11 +230,10 @@ public class Game {
     }
 
     private void playerInJailNoDoubles(Player currentPlayer, int currentFieldIndex, int diceValue, int nextFieldIndex) {
-        if(currentPlayer.getRoundsInJail() < 3){
+        if (currentPlayer.getRoundsInJail() < 3) {
             currentPlayer.incrementRoundsInJail();
-            this.getLogger().logMessage("Rounds spent in Jail: " + currentPlayer.getRoundsInJail() + ". Maximal stay in Jail is 3 rounds." );
-        }
-        else {
+            this.getLogger().logMessage("Rounds spent in Jail: " + currentPlayer.getRoundsInJail() + ". Maximal stay in Jail is 3 rounds.");
+        } else {
             // max stay in prison is 3 rounds, if they don't dice doubles on the third try, they have to pay
             currentPlayer.pay(GET_OUT_OF_JAIL_FINE);
             currentPlayer.releaseFromJail();
@@ -228,14 +242,14 @@ public class Game {
             // Check if player is entitled to bonus salary
             awardBonusMoney(currentFieldIndex, nextFieldIndex, currentPlayer);
 
-            this.getLogger().logMessage(currentPlayer.getName() + " is released from Jail after paying the 'Get out of Jail Fine' of " + GET_OUT_OF_JAIL_FINE + "$." );
+            this.getLogger().logMessage(currentPlayer.getName() + " is released from Jail after paying the 'Get out of Jail Fine' of " + GET_OUT_OF_JAIL_FINE + "$.");
 
             // Handle available actions according to the field the player lands on
             handleFieldAction(currentPlayer.getCurrentFieldIndex());
         }
     }
 
-    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer){
+    public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer) {
         if ((nextFieldIndex < currentFieldIndex && nextFieldIndex != 0) || (!isFirstRound && currentFieldIndex == 0 && nextFieldIndex > 0)) {
             currentPlayer.addBalance(BONUS_MONEY);
             this.getLogger().logMessage(currentPlayer.getName() + " has been awarded " + BONUS_MONEY + "$ of bonus money for passing GO");
@@ -245,10 +259,24 @@ public class Game {
     public void endCurrentPlayerTurn(Player currentPlayer){
         if(turnNumber > players.size()){
             isFirstRound = false;
+            turnNumber = 0;
+
+            // Check how many rounds have been played
+            currentRound++;
+            if (currentRound > roundAmount) {
+                selectWinningPlayer();
+                return;
+            }
         }
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % players.size();
         this.getLogger().logMessage(currentPlayer.getName() + " ended their turn.");
 
+        // cheating player has certain rounds until its isCheating status is reset
+        currentPlayer.setTurns(currentPlayer.getTurns() + 1);
+        if(currentPlayer.getTurns() == 2){
+            currentPlayer.setCheating(false);
+            currentPlayer.setTurns(0);
+        }
         // Automatically roll dice if player is computer player
         if (getCurrentPlayer().isComputerPlayer())
             rollDice();
@@ -350,6 +378,7 @@ public class Game {
 
     /**
      * Returns the GameState of the game with the given ID
+     *
      * @param gameId The id of the game
      * @return the gameState of the game or null if game does not exist
      */
@@ -365,6 +394,7 @@ public class Game {
 
     /**
      * Handles when a player disconnects
+     *
      * @param player The player that disconnected
      */
     public void playerDisconnected(Player player) {
@@ -410,12 +440,13 @@ public class Game {
         }
     }
 
-     private void initializeGameBoard() {
+    private void initializeGameBoard() {
         // Initialize the game board
         gameBoard.initializeGameBoard();
         gameBoard.initializeChanceDeck();
         gameBoard.initializeCommunityChestDeck();
     }
+
     public List<Player> getPlayers() {
         return Collections.unmodifiableList(players);
     }
@@ -440,6 +471,7 @@ public class Game {
 
     /**
      * Processes a payment for the given field
+     *
      * @param player the player that has to pay
      * @return If the player paid or not
      */
@@ -515,6 +547,45 @@ public class Game {
         return false;
     }
 
+    /**
+     * Selects the winning player based on money and owned fields and ends the game.
+     * This sets the winningPlayer field.
+     * A draw is only handled by the order of players in the players list, the first player to have the most value is
+     * selected, a player after that with the same value (which is unlikely) does not win.
+     */
+    public void selectWinningPlayer() {
+        int maxPlayerValue = 0;
+        Player winner = null;
+
+        for (Player player : players) {
+            int currentPlayerValue = 0;
+
+            currentPlayerValue += player.getBalance();
+
+            // Add the value of all owned fields
+            for (Field field : gameBoard.getFields()) {
+                if (field instanceof Property property && property.getOwner().equals(player)) {
+                    currentPlayerValue += property.getPropertyValue();
+                } else if (field instanceof Railroad railroad && railroad.getOwner().equals(player)) {
+                    currentPlayerValue += railroad.getPrice();
+                } else if (field instanceof Utility utility && utility.getOwner().equals(player)) {
+                    currentPlayerValue += utility.getPrice();
+                }
+            }
+
+            if (currentPlayerValue > maxPlayerValue) {
+                winner = player;
+                maxPlayerValue = currentPlayerValue;
+            }
+        }
+
+        // Set the winning player
+        winningPlayer = winner;
+
+        // End the game
+        endGame(gameOwner);
+    }
+
     public Player getPlayerById(UUID playerId) {
 
         for (Player player : playerListForId) {
@@ -523,10 +594,6 @@ public class Game {
             }
         }
         return null; // Return null if no player with the given ID is found
-    }
-
-    public static List<Player> getPlayerListForId() {
-        return playerListForId;
     }
 
 }

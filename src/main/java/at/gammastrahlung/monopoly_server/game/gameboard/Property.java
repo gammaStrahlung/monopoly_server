@@ -65,7 +65,6 @@ public class Property extends Field {
 
     }
 
-
     public boolean buildable() {
         boolean buildable = true;
         for (Field field : gameBoard.getFields()) {
@@ -75,5 +74,19 @@ public class Property extends Field {
             }
         }
         return buildable;
+    }
+
+    /**
+     * Calculates the property value (includes price, amount of houses, if hotel was build)
+     * @return The property value
+     */
+    public int getPropertyValue() {
+        if (houseCount < 4) {
+            return price + houseCount * houseCost;
+        } else if (houseCount == 5) {
+            return price + houseCount * 4 + hotelCost;
+        } else {
+            return price;
+        }
     }
 }

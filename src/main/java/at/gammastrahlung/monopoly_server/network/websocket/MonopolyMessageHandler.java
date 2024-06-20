@@ -1,9 +1,7 @@
 package at.gammastrahlung.monopoly_server.network.websocket;
 
 import at.gammastrahlung.monopoly_server.game.*;
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
+import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import at.gammastrahlung.monopoly_server.network.dtos.ClientMessage;
 import at.gammastrahlung.monopoly_server.network.dtos.ServerMessage;
 import at.gammastrahlung.monopoly_server.network.json.FieldSerializer;
@@ -12,15 +10,21 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import java.util.ArrayList;
 
 public class MonopolyMessageHandler {
     public static Game currentGame;
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Field.class, new FieldSerializer()).excludeFieldsWithoutExposeAnnotation().create();
 
     private MonopolyMessageHandler() {
     }
+
+    private static final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Field.class, new FieldSerializer())
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
     public static void handleMessage(ClientMessage clientMessage, WebSocketSession session) {
         ServerMessage response;
@@ -29,11 +33,14 @@ public class MonopolyMessageHandler {
 
         // Set player to player from server if it exists
         WebSocketPlayer p = WebSocketPlayer.getPlayerByWebSocketSessionID(session.getId());
-        if (p != null) clientMessage.setPlayer(p);
+        if (p != null)
+            clientMessage.setPlayer(p);
 
         Game currentGame = clientMessage.getPlayer().getCurrentGame();
-        if (currentGame != null) receivers.addAll(currentGame.getPlayers());
-        else receivers.add(clientMessage.getPlayer());
+        if (currentGame != null)
+            receivers.addAll(currentGame.getPlayers());
+        else
+            receivers.add(clientMessage.getPlayer());
 
         // Call the different Message Handlers
         try {
@@ -48,7 +55,13 @@ public class MonopolyMessageHandler {
 
                     // Send player update if the join was successful
                     if (message.getType() == ServerMessage.MessageType.SUCCESS) {
-                        WebSocketSender.sendToPlayers(generateUpdateMessage(ServerMessage.MessageType.INFO, message.getPlayer()), message.getPlayer().getCurrentGame().getPlayers());
+                        WebSocketSender.sendToPlayers(
+                                generateUpdateMessage(
+                                        ServerMessage.MessageType.INFO,
+                                        message.getPlayer()
+                                ),
+                                message.getPlayer().getCurrentGame().getPlayers()
+                        );
                     }
 
                     yield message;
@@ -72,10 +85,17 @@ public class MonopolyMessageHandler {
                     startAuction();
                 case "buyPropertythroughDialog" -> buyPropertythroughDialog(clientMessage);
 
+                case "report_cheat" -> reportCheat(clientMessage);
+                case "report_penalty" -> reportPenalty(clientMessage);
+                case "report_award" -> reportAward(clientMessage);
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
-            response = ServerMessage.builder().messagePath(clientMessage.getMessagePath()).player(clientMessage.getPlayer()).type(ServerMessage.MessageType.ERROR).build();
+            response = ServerMessage.builder()
+                    .messagePath(clientMessage.getMessagePath())
+                    .player(clientMessage.getPlayer())
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
 
             WebSocketSender.sendToPlayer(session, response);
             return;
@@ -154,9 +174,14 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
 
         // Add disconnect notifier (updates game for other players)
         game.setDisconnectNotifier(player1 -> {
-            if (player1.getCurrentGame() == null) return;
+            if (player1.getCurrentGame() == null)
+                return;
 
-            ServerMessage message = ServerMessage.builder().messagePath("initiate_round").player(player).jsonData(gson.toJson(player1.getCurrentGame().getCurrentPlayer())).build();
+            ServerMessage message = ServerMessage.builder()
+                    .messagePath("initiate_round")
+                    .player(player)
+                    .jsonData(gson.toJson(player1.getCurrentGame().getCurrentPlayer()))
+                    .build();
 
             WebSocketSender.sendToPlayers(message, player1.getCurrentGame().getPlayers());
         });
@@ -164,7 +189,12 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
         // Player that creates the game should also join the game
         game.join(player);
 
-        return ServerMessage.builder().type(ServerMessage.MessageType.SUCCESS).messagePath("create").jsonData(gson.toJson(game)).player(player).build();
+        return ServerMessage.builder()
+                .type(ServerMessage.MessageType.SUCCESS)
+                .messagePath("create")
+                .jsonData(gson.toJson(game))
+                .player(player)
+                .build();
     }
 
     /**
@@ -181,12 +211,21 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
 
         // Joining the game was unsuccessful
         if (game == null) {
-            return ServerMessage.builder().type(ServerMessage.MessageType.ERROR).messagePath("join").player(player).build();
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.ERROR)
+                    .messagePath("join")
+                    .player(player)
+                    .build();
         } else {
             // Used when re-joining as the old player object gets reused
             WebSocketPlayer newPlayer = (WebSocketPlayer) game.getPlayers().stream().filter(player::equals).findFirst().orElseThrow();
 
-            return ServerMessage.builder().type(ServerMessage.MessageType.SUCCESS).messagePath("join").jsonData(gson.toJson(game)).player(newPlayer).build();
+            return ServerMessage.builder()
+                    .type(ServerMessage.MessageType.SUCCESS)
+                    .messagePath("join")
+                    .jsonData(gson.toJson(game))
+                    .player(newPlayer)
+                    .build();
         }
     }
 
@@ -201,15 +240,21 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
     public static ServerMessage startGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        if (game.startGame(player)) return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
-        else return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
+        if (game.startGame(player))
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
+        else
+            return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
     private static ServerMessage initiateRound(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
         Player currentPlayer = game.getCurrentPlayer();
 
-        ServerMessage message = ServerMessage.builder().messagePath("initiate_round").type(ServerMessage.MessageType.INFO).jsonData(gson.toJson(currentPlayer)).build();
+        ServerMessage message = ServerMessage.builder()
+                .messagePath("initiate_round")
+                .type(ServerMessage.MessageType.INFO)
+                .jsonData(gson.toJson(currentPlayer))
+                .build();
 
         WebSocketSender.sendToPlayers(message, game.getPlayers());
 
@@ -219,8 +264,10 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
     public static ServerMessage endGame(WebSocketPlayer player) {
         Game game = player.getCurrentGame();
 
-        if (game.endGame(player)) return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
-        else return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
+        if (game.endGame(player))
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getState());
+        else
+            return generateUpdateMessage(ServerMessage.MessageType.ERROR, game.getState());
     }
 
     /**
@@ -231,7 +278,10 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
      * @return ServerMessage wih the given type and a updateType matching the type of the updateObject
      */
     private static ServerMessage generateUpdateMessage(ServerMessage.MessageType messageType, Object updateObject) {
-        var message = ServerMessage.builder().type(messageType).messagePath("update").jsonData(gson.toJson(updateObject));
+        var message = ServerMessage.builder()
+                .type(messageType)
+                .messagePath("update")
+                .jsonData(gson.toJson(updateObject));
 
         if (updateObject instanceof Field) { // Field update
             message.updateType("field");
@@ -255,7 +305,11 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
 
         game.rollDice();
 
-        return ServerMessage.builder().messagePath("roll_dice").type(ServerMessage.MessageType.INFO).game(game).build();
+        return ServerMessage.builder()
+                .messagePath("roll_dice")
+                .type(ServerMessage.MessageType.INFO)
+                .game(game)
+                .build();
     }
 
     private static ServerMessage movePlayer(ClientMessage clientMessage, WebSocketPlayer player) {
@@ -271,19 +325,23 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
         Player currentPlayer = game.getCurrentPlayer();
         game.endCurrentPlayerTurn(currentPlayer);
 
+        if (game.getState() == Game.GameState.ENDED) {
+            return generateUpdateMessage(ServerMessage.MessageType.INFO, game);
+        }
+
         return initiateRound(player);
     }
 
-    private static ServerMessage cheating(int totalValue, WebSocketPlayer player) {
+    private static ServerMessage cheating(int totalValue, WebSocketPlayer player){
         Game game = player.getCurrentGame();
         Dice dice = player.getCurrentGame().getDice();
 
-        dice.setValue1(totalValue / 2);
-        dice.setValue2(totalValue - totalValue / 2);
+        dice.setValue1(totalValue/2);
+        dice.setValue2(totalValue - totalValue/2);
 
         game.cheating();
 
-        return ServerMessage.builder().messagePath("cheating").type(ServerMessage.MessageType.INFO).game(game).build();
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
     }
 
     /**
@@ -303,7 +361,11 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
     private static ServerMessage gameState(int gameId, WebSocketPlayer player) {
         Game.GameState gameState = Game.getGameState(gameId, player);
 
-        return ServerMessage.builder().messagePath("game_state").type(ServerMessage.MessageType.INFO).jsonData(gson.toJson(gameState)).build();
+        return ServerMessage.builder()
+                .messagePath("game_state")
+                .type(ServerMessage.MessageType.INFO)
+                .jsonData(gson.toJson(gameState))
+                .build();
     }
 
     private static ServerMessage checkCurrentField(ClientMessage clientMessage) {
@@ -327,6 +389,32 @@ if (auction.getBids().size() < auction.getExpectedBids()) {
             return ServerMessage.builder().messagePath("checkCurrentField").type(ServerMessage.MessageType.INFO).jsonData("false").build();
         }
 
+    }
+
+    private static ServerMessage reportCheat(ClientMessage message) {
+        int index = Integer.parseInt(message.getMessage());
+
+        Game game = message.getPlayer().getCurrentGame();
+        Player accusedPlayer = game.getPlayers().get(index);
+
+        accusedPlayer.setCheating(false);
+        accusedPlayer.subtractBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, accusedPlayer);
+    }
+
+    private static ServerMessage reportPenalty(ClientMessage message) {
+        Player player = message.getPlayer();
+        player.subtractBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
+    }
+
+    private static ServerMessage reportAward(ClientMessage message) {
+        Player player = message.getPlayer();
+        player.addBalance(200);
+
+        return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
     }
 
     private static ServerMessage startAuction() {
