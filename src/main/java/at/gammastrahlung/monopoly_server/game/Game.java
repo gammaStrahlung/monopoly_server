@@ -59,8 +59,8 @@ public class Game {
 
     @Getter
     private int currentPlayerIndex = 0;
-@Getter
-@Getter
+
+    @Getter
     private static List<Player> playerListForId = new ArrayList<>();
     // Contains all players connected to the game
     @Expose

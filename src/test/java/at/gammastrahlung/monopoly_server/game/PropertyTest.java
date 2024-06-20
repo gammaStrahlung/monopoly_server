@@ -1,6 +1,4 @@
 package at.gammastrahlung.monopoly_server.game;
-
-import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,23 +17,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import org.junit.jupiter.api.Test;
-
-import at.gammastrahlung.monopoly_server.game.Player;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
-import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
-
-import java.util.UUID;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.Arguments;
-
-import java.util.stream.Stream;
 
 class PropertyTest {
     private Property property;
