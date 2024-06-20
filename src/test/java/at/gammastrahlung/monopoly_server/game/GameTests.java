@@ -18,15 +18,10 @@ class GameTests {
     private Game game;
     private ArrayList<Player> players;
     private Player currentPlayer;
-    private GameBoard gameBoard;
 
     @BeforeEach
     void initialize() {
         game = new Game();
-
-        gameBoard = mock(GameBoard.class);
-        gameBoard.initializeGameBoard();
-
 
         // Create Mock players
         players = new ArrayList<>();
@@ -564,12 +559,16 @@ class GameTests {
 
     @Test
     void getFieldByIndex_ValidIndex_ReturnsCorrectField() {
+        GameBoard gameBoard = mock(GameBoard.class);
+        gameBoard.initializeGameBoard();
+
+
         // Given
         int index = 10; // Index of the "Jail" field in the setup
 
         Field expectedField = mock(Field.class);
         when(gameBoard.getFieldByIndex(index)).thenReturn(expectedField);
-// When
+        // When
         Field result = gameBoard.getFieldByIndex(index);
         // Then
         assertNotNull(result);
