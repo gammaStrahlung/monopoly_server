@@ -85,6 +85,8 @@ public class MonopolyMessageHandler {
                     startAuction();
                 case "buyPropertythroughDialog" -> buyPropertythroughDialog(clientMessage);
 
+
+                case "build_property" -> buildProperty(clientMessage.getPlayer(), Integer.parseInt(clientMessage.getMessage()));
                 case "report_cheat" -> reportCheat(clientMessage);
                 case "report_penalty" -> reportPenalty(clientMessage);
                 case "report_award" -> reportAward(clientMessage);
@@ -332,12 +334,12 @@ public class MonopolyMessageHandler {
         return initiateRound(player);
     }
 
-    private static ServerMessage cheating(int totalValue, WebSocketPlayer player){
+    private static ServerMessage cheating(int totalValue, WebSocketPlayer player) {
         Game game = player.getCurrentGame();
         Dice dice = player.getCurrentGame().getDice();
 
-        dice.setValue1(totalValue/2);
-        dice.setValue2(totalValue - totalValue/2);
+        dice.setValue1(totalValue / 2);
+        dice.setValue2(totalValue - totalValue / 2);
 
         game.cheating();
 
@@ -391,6 +393,28 @@ public class MonopolyMessageHandler {
 
     }
 
+
+    public static ServerMessage buildProperty(WebSocketPlayer player, int fieldId) {
+
+        if (player.getCurrentGame() == null)
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+
+        Property property = ((Property) player.getCurrentGame().getGameBoard().getFields()[fieldId]);
+
+        if (property.buildHouse()) {
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, property);
+        } else {
+            return ServerMessage.builder()
+                    .messagePath("build_property")
+                    .player(player)
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        }
+    }
     private static ServerMessage reportCheat(ClientMessage message) {
         int index = Integer.parseInt(message.getMessage());
 
