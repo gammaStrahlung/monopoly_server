@@ -28,6 +28,9 @@ public class Game {
     // Initial balance
     private static final int INITIAL_BALANCE = 1500;
 
+    // Round amount limit
+    private static final int MIN_ROUND_AMOUNT = 2;
+
     // Contains all games that are currently being played, that allows us to find a specific game
     private static final ConcurrentHashMap<Integer, Game> games = new ConcurrentHashMap<>();
 
@@ -78,7 +81,6 @@ public class Game {
 
     // The amount of rounds until the game ends
     @Getter
-    @Setter
     @Expose
     private int roundAmount = 10;
 
@@ -598,5 +600,12 @@ public class Game {
             // Not a field that can be owned
             return false;
         }
+    }
+
+    public void setRoundAmount(int roundAmount) {
+        if (roundAmount > MIN_ROUND_AMOUNT)
+            this.roundAmount = roundAmount;
+        else
+            throw new IllegalArgumentException("roundAmount has to be greater than " + MIN_ROUND_AMOUNT);
     }
 }
