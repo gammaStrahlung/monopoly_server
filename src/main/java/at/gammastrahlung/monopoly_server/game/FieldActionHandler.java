@@ -13,14 +13,16 @@ public class FieldActionHandler {
 
     private static final int INCOME_TAX_AMOUNT = 200;
     private static final int LUXURY_TAX_AMOUNT = 100;
+    private static final String LANDED_ON = " landed on the ";
     private final Logger logger = Logger.getLogger(FieldActionHandler.class.getName());
+
 
 
     public void handleFieldAction(Field field, Player currentPlayer, Game game) {// add other param if needed
         EventCard card;
         switch (field.getType()) {
             case GO, FREE_PARKING, JAIL:
-                String messageNoAction = currentPlayer.getName() + " landed on the " + field.getName() + " field. No action needed.";
+                String messageNoAction = currentPlayer.getName() + LANDED_ON + field.getName() + " field. No action needed.";
                 game.getLogger().logMessage(messageNoAction);
                 // Nothing should be done on the GO or FREE_PARKING or JAIL (just visiting) field
                 break;
@@ -28,13 +30,13 @@ public class FieldActionHandler {
                 goToJail(currentPlayer, game);
                 break;
             case COMMUNITY_CHEST:
-                String messageCommunity = currentPlayer.getName() + " landed on the " + field.getName() + " field.";
+                String messageCommunity = currentPlayer.getName() + LANDED_ON + field.getName() + " field.";
                 game.getLogger().logMessage(messageCommunity);
                 card = drawCard(game.getGameBoard().getCommunityChestDeck());
                 card.applyAction(currentPlayer, card, game);
                 break;
             case CHANCE:
-                String messageChance = currentPlayer.getName() + " landed on the " + field.getName() + " field.";
+                String messageChance = currentPlayer.getName() + LANDED_ON + field.getName() + " field.";
                 game.getLogger().logMessage(messageChance);
                 card = drawCard(game.getGameBoard().getChanceDeck());
                 card.applyAction(currentPlayer, card, game);
