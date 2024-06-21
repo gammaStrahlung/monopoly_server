@@ -251,7 +251,7 @@ public class Game {
     public void awardBonusMoney(int currentFieldIndex, int nextFieldIndex, Player currentPlayer) {
         if ((nextFieldIndex < currentFieldIndex && nextFieldIndex != 0) || (!isFirstRound && currentFieldIndex == 0 && nextFieldIndex > 0)) {
             currentPlayer.addBalance(BONUS_MONEY);
-            this.getLogger().logMessage(currentPlayer.getName() + " has been awarded " + BONUS_MONEY + "$ of bonus money for passing GO");
+            this.getLogger().logMessage(currentPlayer.getName() + " has been awarded " + BONUS_MONEY + "$ of bonus money for passing GO.");
         }
     }
 
