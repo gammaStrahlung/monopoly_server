@@ -45,7 +45,7 @@ public class MonopolyMessageHandler {
             response = switch (clientMessage.getMessagePath()) {
                 case "create" -> {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
-                    yield createGame(clientMessage.getPlayer());
+                    yield createGame(clientMessage);
                 }
                 case "join" -> {
                     clientMessage.getPlayer().setWebSocketSession(session); // Needed for player WebSocketSession tracking
@@ -102,13 +102,20 @@ public class MonopolyMessageHandler {
     /**
      * Called by the client to create a new game.
      *
-     * @param player The player creating the game
+     * @param message The message from the client
      * @return ServerMessage that contains the GameId, that can be used by other clients to join the game.
      */
-    public static ServerMessage createGame(WebSocketPlayer player) {
+    public static ServerMessage createGame(ClientMessage message) {
+        WebSocketPlayer player = message.getPlayer();
 
         // Create a new game
         Game game = new Game();
+
+        // Check if an amount of rounds has been specified
+        try {
+            int roundAmount = Integer.parseInt(message.getMessage());
+            game.setRoundAmount(roundAmount);
+        } catch (Exception ignored) {}
 
         // Create the logger and pass the game
         GameLogger gameLogger = new WebSocketGameLogger(game);
@@ -119,13 +126,13 @@ public class MonopolyMessageHandler {
             if (player1.getCurrentGame() == null)
                 return;
 
-            ServerMessage message = ServerMessage.builder()
+            ServerMessage response = ServerMessage.builder()
                     .messagePath("initiate_round")
                     .player(player)
                     .jsonData(gson.toJson(player1.getCurrentGame().getCurrentPlayer()))
                     .build();
 
-            WebSocketSender.sendToPlayers(message, player1.getCurrentGame().getPlayers());
+            WebSocketSender.sendToPlayers(response, player1.getCurrentGame().getPlayers());
         });
 
         // Player that creates the game should also join the game
