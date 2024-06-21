@@ -375,7 +375,7 @@ public class MonopolyMessageHandler {
                     .type(ServerMessage.MessageType.ERROR)
                     .build();
         } else {
-            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game.getGameBoard().getFields()[fieldId]);
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game);
         }
     }
 }
