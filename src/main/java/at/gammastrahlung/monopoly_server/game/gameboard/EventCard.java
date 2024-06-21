@@ -28,7 +28,7 @@ public class EventCard {
 
     public void applyAction(Player player, EventCard card, Game game) {
         // Log drawn card
-        String logMessage = player.getName() + " drew a card: " + description;
+        String logMessage = player.getName() + " drew a card: " + description + ".";
         game.getLogger().logMessage(logMessage);
 
         // Log the action effect
@@ -41,11 +41,12 @@ public class EventCard {
                 break;
             case PAY_MONEY_CARD:
                 player.pay(card.getPayOrGetMoney());
-                actionEffect = player.getName() + " pays " + card.payOrGetMoney + ".";
+                actionEffect = player.getName() + " pays " + card.payOrGetMoney + "$" +
+                        ".";
                 break;
             case GET_MONEY_CARD:
                 player.addBalance(card.getPayOrGetMoney());
-                actionEffect = player.getName() + " receives " + card.payOrGetMoney + ".";
+                actionEffect = player.getName() + " receives " + card.payOrGetMoney + "$.";
                 break;
             case MOVE_TO_FIELD:
                 player.setCurrentFieldIndex(card.getMoveToField());
@@ -65,7 +66,7 @@ public class EventCard {
             case STREET_REPAIRS:
                 int repairAmount = calculateStreetRepairs(player, game);
                 player.pay(repairAmount);
-                actionEffect = player.getName() + " pays " + repairAmount + " for street repairs.";
+                actionEffect = player.getName() + " pays " + repairAmount + "$ for street repairs.";
                 break;
             case GET_OUT_OF_JAIL:
                 player.setHasGetOutOfJailFreeCard(true);

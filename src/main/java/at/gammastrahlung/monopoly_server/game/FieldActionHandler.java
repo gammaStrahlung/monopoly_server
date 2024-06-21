@@ -28,10 +28,14 @@ public class FieldActionHandler {
                 goToJail(currentPlayer, game);
                 break;
             case COMMUNITY_CHEST:
+                String messageCommunity = currentPlayer.getName() + " landed on the " + field.getName() + " field.";
+                game.getLogger().logMessage(messageCommunity);
                 card = drawCard(game.getGameBoard().getCommunityChestDeck());
                 card.applyAction(currentPlayer, card, game);
                 break;
             case CHANCE:
+                String messageChance = currentPlayer.getName() + " landed on the " + field.getName() + " field.";
+                game.getLogger().logMessage(messageChance);
                 card = drawCard(game.getGameBoard().getChanceDeck());
                 card.applyAction(currentPlayer, card, game);
                 break;
@@ -58,7 +62,7 @@ public class FieldActionHandler {
 
         // Log the action
         String taxType = (fieldType == FieldType.INCOME_TAX) ? "Income Tax" : "Luxury Tax";
-        String message = currentPlayer.getName() + " landed on " + taxType + " and paid " + taxAmount + ".";
+        String message = currentPlayer.getName() + " landed on " + taxType + " and paid " + taxAmount + "$.";
         game.getLogger().logMessage(message);
     }
 
@@ -67,7 +71,8 @@ public class FieldActionHandler {
         currentPlayer.goToJail();
         currentPlayer.setCurrentFieldIndex(10);
         // Log the action
-        String message = currentPlayer.getName() + " landed on the 'Go to Jail' field and is sent to Jail. To get out roll doubles next round or use a 'Get Out Of Jail free card'";
+        String message = currentPlayer.getName() + " landed on the 'Go to Jail' field and is sent to Jail. " +
+                "To get out roll doubles next round or use a 'Get Out Of Jail free card'.";
         game.getLogger().logMessage(message);
     }
 
