@@ -3,22 +3,17 @@ package at.gammastrahlung.monopoly_server.game.gameboard;
 import at.gammastrahlung.monopoly_server.game.Player;
 import com.google.gson.annotations.Expose;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-
+@NoArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
-public class Utility extends OwnableField {
+public class OwnableField extends Field{
     @Expose
-    private int toPay;
+    protected int price;
     @Expose
-    private int mortgage;
-
-    public void buyAndSellUtility(Player buyer){
-        owner.addBalance(price);
-        buyer.subtractBalance(price);
-        this.owner = buyer;
-    }
+    protected Player owner;
 }
