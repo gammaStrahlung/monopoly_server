@@ -588,6 +588,7 @@ public class Game {
             if (ownableField.getPrice() <= player.getBalance()) {
                 ownableField.setOwner(player);
                 player.subtractBalance(ownableField.getPrice());
+                this.getLogger().logMessage(player + " has bought the field " + field.getName() + " for " + (ownableField.getPrice()));
                 return true;
             } else {
                 return false; // Balance to low
