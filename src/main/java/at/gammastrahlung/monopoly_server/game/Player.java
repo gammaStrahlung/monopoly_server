@@ -153,4 +153,9 @@ public class Player {
     public void incrementRoundsInJail() {
         this.roundsInJail++;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

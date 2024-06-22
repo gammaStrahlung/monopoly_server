@@ -568,4 +568,35 @@ public class Game {
         // End the game
         endGame(gameOwner);
     }
+
+    /**
+     * Buys the field with the specified id.
+     * Buying is possible, iff the field is of type Property, Utility or Railroad, the balance of the player is
+     * sufficient and the field is owned by the bank.
+     *
+     * @param fieldId the id of the
+     * @param player the player that wants to buy the field
+     * @return if the buy action was successful
+     */
+    public boolean buyField(int fieldId, Player player) {
+        Field field = gameBoard.getFields()[fieldId];
+
+        if (field instanceof OwnableField ownableField) {
+            if (!ownableField.getOwner().equals(gameBoard.getBank()))
+                return false; // Field is already owned
+
+            if (ownableField.getPrice() <= player.getBalance()) {
+                ownableField.setOwner(player);
+                player.subtractBalance(ownableField.getPrice());
+                this.getLogger().logMessage(player + " has bought the field " + field.getName() + " for " + (ownableField.getPrice()));
+                return true;
+            } else {
+                return false; // Balance to low
+            }
+
+        } else {
+            // Not a field that can be owned
+            return false;
+        }
+    }
 }

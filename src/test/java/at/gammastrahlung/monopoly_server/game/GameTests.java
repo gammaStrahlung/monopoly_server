@@ -558,4 +558,22 @@ class GameTests {
         assertEquals(p2, g.getWinningPlayer());
         assertEquals(Game.GameState.ENDED, g.getState());
     }
+
+    @Test
+    void buyField() {
+        // GO field is not buyable
+        assertFalse(game.buyField(0, players.get(0)));
+
+        // Field not owned and enough money
+        when(players.get(0).getBalance()).thenReturn(10000);
+        assertTrue(game.buyField(1, players.get(0)));
+
+        // Field already owned
+        when(players.get(1).getBalance()).thenReturn(10000);
+        assertFalse(game.buyField(1, players.get(1)));
+
+        // Field not owned and not enough money
+        when(players.get(1).getBalance()).thenReturn(10);
+        assertFalse(game.buyField(3, players.get(1)));
+    }
 }

@@ -11,11 +11,7 @@ import java.util.Map;
 @Getter
 @Setter
 @SuperBuilder
-public class Property extends Field{
-    @Expose
-    private int price;
-    @Expose
-    private Player owner;
+public class Property extends OwnableField {
     @Expose
     private PropertyColor color;
     @Expose

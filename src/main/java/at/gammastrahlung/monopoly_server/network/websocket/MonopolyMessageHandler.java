@@ -81,6 +81,7 @@ public class MonopolyMessageHandler {
                 case "report_cheat" -> reportCheat(clientMessage);
                 case "report_penalty" -> reportPenalty(clientMessage);
                 case "report_award" -> reportAward(clientMessage);
+                case "buy_field" -> buyField(clientMessage);
                 default -> throw new IllegalArgumentException("Invalid MessagePath");
             };
         } catch (Exception e) {
@@ -355,5 +356,26 @@ public class MonopolyMessageHandler {
         player.addBalance(200);
 
         return generateUpdateMessage(ServerMessage.MessageType.INFO, player);
+    }
+
+    /**
+     * Buys a field as the player included in the clientMessage
+     * @param message The message from the client
+     * @return field update message
+     */
+    private static ServerMessage buyField(ClientMessage message) {
+        int fieldId = Integer.parseInt(message.getMessage());
+
+        Game game = message.getPlayer().getCurrentGame();
+
+        if (game == null || !game.buyField(fieldId, message.getPlayer())) {
+            return ServerMessage.builder()
+                    .messagePath("buy_field")
+                    .player(message.getPlayer())
+                    .type(ServerMessage.MessageType.ERROR)
+                    .build();
+        } else {
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, game);
+        }
     }
 }

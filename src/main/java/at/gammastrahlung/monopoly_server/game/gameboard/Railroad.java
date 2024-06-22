@@ -14,11 +14,7 @@ import java.util.Map;
 @Getter
 @Setter
 @SuperBuilder
-public class Railroad extends Field {
-    @Expose
-    private Player owner;
-    @Expose
-    private int price;
+public class Railroad extends OwnableField {
     @Expose
     private final Map<String, Integer> rentPrices = initRentPrices();
 
