@@ -344,6 +344,9 @@ public class Game {
         // Check if player is new and does not re-join the game.
         // If the player re-joins the game, skip the join checks.
         if (!players.contains(player)) {
+            if (players.stream().anyMatch(player1 -> player1.getName().equals(player.getName())))
+                return false; // Disallow duplicate names
+
             // Set initial player balance
             player.setBalance(INITIAL_BALANCE);
 
