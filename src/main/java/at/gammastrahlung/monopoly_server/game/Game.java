@@ -499,7 +499,7 @@ public class Game {
         int houseCount = property.getHouseCount();
         Object rentKey = (houseCount == 5) ? gameBoard.getHotel() : houseCount;
         int rentAmount = property.getRentPrices().getOrDefault(rentKey, 0);
-        this.getLogger().logMessage(player + " has paid " + rentAmount + " to " + property.getOwner());
+        this.getLogger().logMessage(player + " has paid " + rentAmount + "$ to " + property.getOwner() + ".");
         return makePayment(player, property.getOwner(), rentAmount);
     }
 
@@ -509,7 +509,7 @@ public class Game {
             return false;
 
         int rentAmount = utility.getToPay(); // Assumes getToPay() gives the correct amount due
-        this.getLogger().logMessage(player + " has paid " + rentAmount + " to " + utility.getOwner());
+        this.getLogger().logMessage(player + " has paid " + rentAmount + "$ to " + utility.getOwner() + ".");
         return makePayment(player, utility.getOwner(), rentAmount);
     }
 
@@ -593,7 +593,7 @@ public class Game {
             if (ownableField.getPrice() <= player.getBalance()) {
                 ownableField.setOwner(player);
                 player.subtractBalance(ownableField.getPrice());
-                this.getLogger().logMessage(player + " has bought the field " + field.getName() + " for " + (ownableField.getPrice()));
+                this.getLogger().logMessage(player + " has bought the field " + field.getName() + " for " + (ownableField.getPrice()) + "$ .");
                 return true;
             } else {
                 return false; // Balance to low
