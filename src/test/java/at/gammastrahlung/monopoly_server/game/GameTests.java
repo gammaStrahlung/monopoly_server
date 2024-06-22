@@ -3,6 +3,7 @@ package at.gammastrahlung.monopoly_server.game;
 import at.gammastrahlung.monopoly_server.game.gameboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.Mockito.*;
@@ -480,11 +481,11 @@ class GameTests {
         // This can only work with an actual player object
         Player player1 = new Player();
         player1.setId(UUID.randomUUID());
-        player1.setName("Player");
+        player1.setName("Player1");
 
         Player player2 = new Player();
         player2.setId(UUID.randomUUID());
-        player2.setName("Player");
+        player2.setName("Player2");
 
         DisconnectNotifier disconnectNotifier = disconnectedPlayers::add;
 
@@ -577,5 +578,21 @@ class GameTests {
         // Field not owned and not enough money
         when(players.get(1).getBalance()).thenReturn(10);
         assertFalse(game.buyField(3, players.get(1)));
+    }
+
+    @Test
+    void duplicateNameJoin() {
+        Game g = new Game();
+
+        when(players.get(0).getName()).thenReturn("NAME");
+
+        assertTrue(g.join(players.get(0)));
+
+        Player duplicateNamePlayer = Mockito.mock(Player.class);
+
+        when(duplicateNamePlayer.getId()).thenReturn(UUID.randomUUID());
+        when(duplicateNamePlayer.getName()).thenReturn("NAME");
+
+        assertFalse(g.join(duplicateNamePlayer));
     }
 }
