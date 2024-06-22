@@ -523,6 +523,8 @@ class GameTests {
 
         g.setRoundAmount(5);
         assertEquals(5, g.getRoundAmount());
+
+        assertThrows(IllegalArgumentException.class, () -> game.setRoundAmount(0));
     }
 
     @Test
