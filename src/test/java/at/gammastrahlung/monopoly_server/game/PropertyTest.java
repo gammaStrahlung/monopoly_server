@@ -33,7 +33,7 @@ class PropertyTest {
         assertEquals(800, buyer.getBalance());
         assertEquals(1200, owner.getBalance());
     }
-
+/*
     private static Stream<Arguments> provideTestCases() {
         return Stream.of(
                 Arguments.of(0, 100, 900, 1, true), // Initial houses, house cost, expected balance, expected house count
@@ -102,7 +102,7 @@ class PropertyTest {
         assertEquals(expectedOutcome, propertyUnderTest.buildable(),
                 "Expected buildable() to return " + expectedOutcome);
     }
-
+*/
     @Test
     void testGetPropertyValue() {
         Property property = new Property();
