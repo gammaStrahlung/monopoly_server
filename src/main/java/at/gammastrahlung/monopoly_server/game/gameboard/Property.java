@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.Map;
 
-
 @NoArgsConstructor
 @Getter
 @Setter
@@ -31,18 +30,19 @@ public class Property extends OwnableField {
         this.owner = buyer;
     }
     private static GameBoard gameBoard;
-    public static void setGameBoard(GameBoard gb) {
-        Property.gameBoard = gb;
+    private static Player player;
+    public  void setGameBoard() {
+        gameBoard = player.getCurrentGame().getGameBoard();
     }
 
     public boolean buildHouse() {
-            if (houseCount < 5 && buildable()) {
-                if (houseCount == 4 && buildable()){
-                    this.owner.subtractBalance(hotelCost);
-                } else this.owner.subtractBalance(houseCost);
-                this.houseCount++;
-                return true;
-            } else return false;
+        if (houseCount < 5 && buildable()) {
+            if (houseCount == 4 && buildable()){
+                this.owner.subtractBalance(hotelCost);
+            } else this.owner.subtractBalance(houseCost);
+            this.houseCount++;
+            return true;
+        } else return false;
 
     }
 
@@ -71,3 +71,4 @@ public class Property extends OwnableField {
         }
     }
 }
+
