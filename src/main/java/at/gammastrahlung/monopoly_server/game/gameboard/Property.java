@@ -34,14 +34,18 @@ public class Property extends OwnableField {
     }
 
     public boolean buildHouse() {
-        if (houseCount < 5 ) {
-            if (houseCount == 4 ){
+        if (houseCount < 5) {
+            if (houseCount == 4 && this.owner.getBalance() > hotelCost) {
                 this.owner.subtractBalance(hotelCost);
-            } else this.owner.subtractBalance(houseCost);
-            this.houseCount++;
-            return true;
-        } else return false;
-
+                this.houseCount++;
+                return true;
+            } else if (this.owner.getBalance() > houseCost) {
+                this.owner.subtractBalance(houseCost);
+                this.houseCount++;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -49,7 +53,7 @@ public class Property extends OwnableField {
      * @return The property value
      */
     public int getPropertyValue() {
-        if (houseCount < 4) {
+        if (this.houseCount < 4) {
             return price + houseCount * houseCost;
         } else if (houseCount == 5) {
             return price + houseCount * 4 + hotelCost;
