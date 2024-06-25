@@ -33,9 +33,9 @@ public class Property extends OwnableField {
         this.owner = buyer;
     }
 
-    public  void setGameBoard() {
+    /*public  void setGameBoard() {
         this.gameBoard = owner.getCurrentGame().getGameBoard();
-    }
+    }*/
 
     public boolean buildHouse() {
         if (houseCount < 5 && buildable()) {
