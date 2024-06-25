@@ -25,7 +25,7 @@ public class Property extends OwnableField {
     private int houseCount;
 
     private GameBoard gameBoard;
-    private  Player player = this.owner;
+
 
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
@@ -34,7 +34,7 @@ public class Property extends OwnableField {
     }
 
     public  void setGameBoard() {
-        this.gameBoard = player.getCurrentGame().getGameBoard();
+        this.gameBoard = owner.getCurrentGame().getGameBoard();
     }
 
     public boolean buildHouse() {

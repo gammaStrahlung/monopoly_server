@@ -2,24 +2,17 @@ package at.gammastrahlung.monopoly_server.game;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.UUID;
 
 import at.gammastrahlung.monopoly_server.game.gameboard.Field;
-import at.gammastrahlung.monopoly_server.game.gameboard.GameBoard;
 import at.gammastrahlung.monopoly_server.game.gameboard.Property;
-import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.Arguments;
-import java.util.stream.Stream;
+
 class PropertyTest {
     @Test
     void testBuyAndSellProperty() {
@@ -67,7 +60,6 @@ class PropertyTest {
     void testBuildHouseTrue(){
         Game currentGame = new Game();
         Player player1 = new Player(UUID.randomUUID(),"player1", currentGame, 5000);
-        Player player2 = new Player(UUID.randomUUID(), "player2", currentGame, 5000);
         currentGame.gameBoard.initializeGameBoard();
         Field[] currentGAmeGamebord = player1.getCurrentGame().getGameBoard().getFields();
         Property property1 = (Property) currentGAmeGamebord[1];
@@ -99,6 +91,7 @@ class PropertyTest {
 
         property1.setGameBoard(currentGame.getGameBoard());
         assertEquals(property1.getGameBoard(), property1.getOwner().currentGame.gameBoard);
+        //assertNull(property1.getPlayer());
     }
 /*
     @Test
