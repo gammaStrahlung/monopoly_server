@@ -13,6 +13,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.PropertyColor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -86,7 +87,23 @@ class PropertyTest {
 
 
     }
-    /*
+
+    @Test
+    void testSetGameBoard() {
+        Game currentGame = new Game();
+        Player player1 = new Player(UUID.randomUUID(),"player1", currentGame, 5000);
+        currentGame.gameBoard.initializeGameBoard();
+        Field[] currentGamebord = currentGame.getGameBoard().getFields();
+        Property property1 = (Property) currentGamebord[1];
+        property1.buyAndSellProperty(player1);
+
+        property1.setGameBoard(currentGame.getGameBoard());
+        assertEquals(property1.getGameBoard(), property1.getOwner().currentGame.gameBoard);
+    }
+/*
+    @Test
+    tes
+
         private static Stream<Arguments> provideTestCases() {
             return Stream.of(
                     Arguments.of(0, 100, 900, 1, true), // Initial houses, house cost, expected balance, expected house count

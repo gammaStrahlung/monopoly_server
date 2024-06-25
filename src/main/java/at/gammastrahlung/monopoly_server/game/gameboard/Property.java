@@ -25,7 +25,7 @@ public class Property extends OwnableField {
     private int houseCount;
 
     private GameBoard gameBoard;
-    private static Player player;
+    private  Player player = this.owner;
 
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
