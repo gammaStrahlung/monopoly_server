@@ -10,6 +10,7 @@ import at.gammastrahlung.monopoly_server.game.gameboard.Property;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -87,11 +88,11 @@ class PropertyTest {
         currentGame.gameBoard.initializeGameBoard();
         Field[] currentGamebord = currentGame.getGameBoard().getFields();
         Property property1 = (Property) currentGamebord[1];
+        assertNull(property1.getGameBoard());
         property1.buyAndSellProperty(player1);
 
         property1.setGameBoard(currentGame.getGameBoard());
         assertEquals(property1.getGameBoard(), property1.getOwner().currentGame.gameBoard);
-        //assertNull(property1.getPlayer());
     }
 /*
     @Test
