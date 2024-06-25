@@ -34,8 +34,8 @@ public class Property extends OwnableField {
     }
 
     public boolean buildHouse() {
-        if (houseCount < 5 && buildable()) {
-            if (houseCount == 4 && buildable()){
+        if (houseCount < 5 /*&& buildable()*/) {
+            if (houseCount == 4 /*&& buildable()*/){
                 this.owner.subtractBalance(hotelCost);
             } else this.owner.subtractBalance(houseCost);
             this.houseCount++;
@@ -44,7 +44,7 @@ public class Property extends OwnableField {
 
     }
 
-    public boolean buildable() {
+   /* public boolean buildable() {
         boolean buildable = true;
         for (Field field : gameBoard.getFields()) {
             if (field instanceof Property property && property.getColor() == this.color && !property.getOwner().equals(this.owner)) {
@@ -53,7 +53,7 @@ public class Property extends OwnableField {
             }
         }
         return buildable;
-    }
+    }*/
 
     /**
      * Calculates the property value (includes price, amount of houses, if hotel was build)

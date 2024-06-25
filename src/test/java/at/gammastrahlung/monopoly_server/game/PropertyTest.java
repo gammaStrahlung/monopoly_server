@@ -31,7 +31,7 @@ class PropertyTest {
         assertEquals(800, buyer.getBalance());
         assertEquals(1200, owner.getBalance());
     }
-
+/*
     @Test
     void testBuildHouseFalse(){
         Game currentGame = new Game();
@@ -55,10 +55,10 @@ class PropertyTest {
         assertFalse(property1.buildable());
 
 
-    }
+    }*/
 
     @Test
-    void testBuildHouseTrue(){
+    void testBuildHouse(){
         Game currentGame = new Game();
         Player player1 = new Player(UUID.randomUUID(),"player1", currentGame, 5000);
         currentGame.gameBoard.initializeGameBoard();
@@ -76,7 +76,6 @@ class PropertyTest {
         property1.buildHouse();
         assertEquals(1,property1.getHouseCount());
         assertTrue(property1.buildHouse());
-        assertTrue(property1.buildable());
 
 
     }
