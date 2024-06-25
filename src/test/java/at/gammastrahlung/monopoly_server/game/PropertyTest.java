@@ -31,31 +31,6 @@ class PropertyTest {
         assertEquals(800, buyer.getBalance());
         assertEquals(1200, owner.getBalance());
     }
-/*
-    @Test
-    void testBuildHouseFalse(){
-        Game currentGame = new Game();
-        Player player1 = new Player(UUID.randomUUID(),"player1", currentGame, 5000);
-        Player player2 = new Player(UUID.randomUUID(), "player2", currentGame, 5000);
-        currentGame.gameBoard.initializeGameBoard();
-        Field[] currentGAmeGamebord = player1.getCurrentGame().getGameBoard().getFields();
-        Property property1 = (Property) currentGAmeGamebord[1];
-        Property property2 = (Property) currentGAmeGamebord[3];
-
-
-        property1.setGameBoard(currentGame.getGameBoard()); // Ensure gameBoard is set
-        property2.setGameBoard(currentGame.getGameBoard());
-
-        property1.buyAndSellProperty(player1);
-        property2.buyAndSellProperty(player2);
-
-        property1.buildHouse();
-        assertEquals(0,property1.getHouseCount());
-        assertFalse(property1.buildHouse());
-        assertFalse(property1.buildable());
-
-
-    }*/
 
     @Test
     void testBuildHouse(){
@@ -73,9 +48,19 @@ class PropertyTest {
         property1.buyAndSellProperty(player1);
         property2.buyAndSellProperty(player1);
 
-        property1.buildHouse();
+        assertTrue(property1.buildHouse());
         assertEquals(1,property1.getHouseCount());
         assertTrue(property1.buildHouse());
+        assertEquals(2,property1.getHouseCount());
+        assertTrue(property1.buildHouse());
+        assertEquals(3,property1.getHouseCount());
+        assertTrue(property1.buildHouse());
+        assertEquals(4,property1.getHouseCount());
+        assertTrue(property1.buildHouse());
+        assertEquals(5,property1.getHouseCount());
+        assertFalse(property1.buildHouse());
+        assertEquals(5,property1.getHouseCount());
+
 
 
     }
