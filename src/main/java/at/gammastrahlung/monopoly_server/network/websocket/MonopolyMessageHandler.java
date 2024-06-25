@@ -330,7 +330,7 @@ public class MonopolyMessageHandler {
         Property property = ((Property) player.getCurrentGame().getGameBoard().getFields()[fieldId]);
 
         if (property.buildHouse()) {
-            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, property);
+            return generateUpdateMessage(ServerMessage.MessageType.SUCCESS, player.getCurrentGame());
         } else {
             return ServerMessage.builder()
                     .messagePath("build_property")
