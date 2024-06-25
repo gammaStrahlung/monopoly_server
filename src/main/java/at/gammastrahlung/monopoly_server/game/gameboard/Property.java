@@ -24,15 +24,17 @@ public class Property extends OwnableField {
     @Expose
     private int houseCount;
 
+    private GameBoard gameBoard;
+    private static Player player;
+
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
         buyer.subtractBalance(price);
         this.owner = buyer;
     }
-    private static GameBoard gameBoard;
-    private static Player player;
+
     public  void setGameBoard() {
-        gameBoard = player.getCurrentGame().getGameBoard();
+        this.gameBoard = player.getCurrentGame().getGameBoard();
     }
 
     public boolean buildHouse() {
