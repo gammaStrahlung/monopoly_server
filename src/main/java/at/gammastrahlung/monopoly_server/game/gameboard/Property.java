@@ -34,7 +34,7 @@ public class Property extends OwnableField {
     }
 
     public boolean buildHouse() {
-        if (houseCount < 5 /*&& buildable()*/) {
+        if (houseCount < 5 && buildable()) {
             if (houseCount == 4 && buildable()){
                 this.owner.subtractBalance(hotelCost);
             } else this.owner.subtractBalance(houseCost);
