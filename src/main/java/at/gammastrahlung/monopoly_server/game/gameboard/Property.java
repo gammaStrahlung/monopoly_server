@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.Map;
 
-
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,36 +24,28 @@ public class Property extends OwnableField {
     @Expose
     private int houseCount;
 
+    private GameBoard gameBoard;
+
+
     public void buyAndSellProperty(Player buyer){
         owner.addBalance(price);
         buyer.subtractBalance(price);
         this.owner = buyer;
     }
-    private static GameBoard gameBoard;
-    public static void setGameBoard(GameBoard gb) {
-        Property.gameBoard = gb;
-    }
 
     public boolean buildHouse() {
-            if (houseCount < 5 && buildable()) {
-                if (houseCount == 4 && buildable()){
-                    this.owner.subtractBalance(hotelCost);
-                } else this.owner.subtractBalance(houseCost);
+        if (houseCount < 5) {
+            if (houseCount == 4 && this.owner.getBalance() > hotelCost) {
+                this.owner.subtractBalance(hotelCost);
                 this.houseCount++;
                 return true;
-            } else return false;
-
-    }
-
-    public boolean buildable() {
-        boolean buildable = true;
-        for (Field field : gameBoard.getFields()) {
-            if (field instanceof Property property && property.getColor() == this.color && !property.getOwner().equals(this.owner)) {
-                buildable = false;
-                break;  // If a condition is met that makes it unbuildable, exit the loop early
+            } else if (this.owner.getBalance() > houseCost) {
+                this.owner.subtractBalance(houseCost);
+                this.houseCount++;
+                return true;
             }
         }
-        return buildable;
+        return false;
     }
 
     /**
@@ -62,7 +53,7 @@ public class Property extends OwnableField {
      * @return The property value
      */
     public int getPropertyValue() {
-        if (houseCount < 4) {
+        if (this.houseCount < 4) {
             return price + houseCount * houseCost;
         } else if (houseCount == 5) {
             return price + houseCount * 4 + hotelCost;
@@ -71,3 +62,4 @@ public class Property extends OwnableField {
         }
     }
 }
+
