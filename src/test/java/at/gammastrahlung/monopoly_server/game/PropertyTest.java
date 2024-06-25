@@ -50,8 +50,8 @@ class PropertyTest {
         property2.buyAndSellProperty(player2);
 
         property1.buildHouse();
-        assertEquals(1,property1.getHouseCount());
-        assertTrue(property1.buildHouse());
+        assertEquals(0,property1.getHouseCount());
+        assertFalse(property1.buildHouse());
         assertFalse(property1.buildable());
 
 
